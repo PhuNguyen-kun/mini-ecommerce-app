@@ -9,8 +9,9 @@ export default function Header() {
   const isAboutPage = location.pathname === '/about';
   const isStoresPage = location.pathname === '/stores';
   const isBlogPage = location.pathname === '/blog';
+  const isBlogPostPage = location.pathname === '/blog-post';
   const showAboutSubNav = isAboutPage || isStoresPage;
-  const showSubNav = !showAboutSubNav && !isBlogPage;
+  const showSubNav = !showAboutSubNav && !isBlogPage && !isBlogPostPage;
 
   return (
     <header className="w-full sticky top-0 z-50 bg-white">
