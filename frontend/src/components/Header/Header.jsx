@@ -8,13 +8,16 @@ export default function Header() {
   const location = useLocation();
   const isAboutPage = location.pathname === '/about';
   const isStoresPage = location.pathname === '/stores';
+  const isBlogPage = location.pathname === '/blog';
   const showAboutSubNav = isAboutPage || isStoresPage;
+  const showSubNav = !showAboutSubNav && !isBlogPage;
 
   return (
-    <header className="w-full">
+    <header className="w-full sticky top-0 z-50 bg-white">
       <TopBar />
       <MainNav />
-      {showAboutSubNav ? <AboutSubNav /> : <SubNav />}
+      {showAboutSubNav && <AboutSubNav />}
+      {showSubNav && <SubNav />}
     </header>
   );
 }
