@@ -1,5 +1,5 @@
-import giftImg from '../../../assets/gift-picks.png';
-import cleanerImg from '../../../assets/cleaner-fashion.png';
+import giftImg from '../../../assets/landing/gift-picks.png';
+import cleanerImg from '../../../assets/landing/cleaner-fashion.png';
 
 export default function ContentCards() {
   return (

@@ -5,8 +5,8 @@ import FullWidthImage from './sections/FullWidthImage';
 import QualitySection from './sections/QualitySection';
 import PricesSection from './sections/PricesSection';
 import ExploreSection from './sections/ExploreSection';
-import factoryFullWidth from '../../assets/factory-fullwidth.png';
-import qualityFullWidth from '../../assets/quality-fullwidth.png';
+import factoryFullWidth from '../../assets/about/factory-fullwidth.png';
+import qualityFullWidth from '../../assets/about/quality-fullwidth.png';
 
 const About = () => {
   return (

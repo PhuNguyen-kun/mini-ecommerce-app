@@ -1,9 +1,9 @@
 import { HiChevronLeft, HiChevronRight, HiShoppingCart } from 'react-icons/hi2';
-import insta1 from '../../../assets/insta-1.png';
-import insta2 from '../../../assets/insta-2.png';
-import insta3 from '../../../assets/insta-3.png';
-import insta4 from '../../../assets/insta-4.png';
-import insta5 from '../../../assets/insta-5.png';
+import insta1 from '../../../assets/landing/insta-1.png';
+import insta2 from '../../../assets/landing/insta-2.png';
+import insta3 from '../../../assets/landing/insta-3.png';
+import insta4 from '../../../assets/landing/insta-4.png';
+import insta5 from '../../../assets/landing/insta-5.png';
 
 export default function InstagramGallery() {
   return (

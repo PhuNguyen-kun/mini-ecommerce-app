@@ -1,4 +1,4 @@
-import heroImage from '../../../assets/hero-banner.png';
+import heroImage from '../../../assets/landing/hero-banner.png';
 
 export default function HeroSection() {
   return (

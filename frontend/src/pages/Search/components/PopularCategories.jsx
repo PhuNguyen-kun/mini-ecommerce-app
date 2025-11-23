@@ -1,7 +1,7 @@
-import sweaters from '../../../assets/search-sweaters.png';
-import bottom from '../../../assets/search-bottom.png';
-import boots from '../../../assets/search-boots.png';
-import bestsellers from '../../../assets/search-bestsellers.png';
+import sweaters from '../../../assets/search/search-sweaters.png';
+import bottom from '../../../assets/search/search-bottom.png';
+import boots from '../../../assets/search/search-boots.png';
+import bestsellers from '../../../assets/search/search-bestsellers.png';
 
 const categories = [
   { name: "Women's Sweaters", image: sweaters },

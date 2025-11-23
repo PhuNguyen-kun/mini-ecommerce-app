@@ -7,12 +7,14 @@ import AboutSubNav from './AboutSubNav/AboutSubNav';
 export default function Header() {
   const location = useLocation();
   const isAboutPage = location.pathname === '/about';
+  const isStoresPage = location.pathname === '/stores';
+  const showAboutSubNav = isAboutPage || isStoresPage;
 
   return (
     <header className="w-full">
       <TopBar />
       <MainNav />
-      {isAboutPage ? <AboutSubNav /> : <SubNav />}
+      {showAboutSubNav ? <AboutSubNav /> : <SubNav />}
     </header>
   );
 }
