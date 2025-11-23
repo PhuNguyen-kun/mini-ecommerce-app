@@ -1,12 +1,16 @@
 import Header from './components/Header/Header'
+import Footer from './components/Footer/Footer'
 import './App.css'
 import Landing from './pages/Landing/Landing'
 
 function App() {
   return (
     <div className="app">
-      <Landing />
-      {/* Main content will go here */}
+      <Header />
+      <main className="w-full">
+        <Landing />
+      </main>
+      <Footer />
     </div>
   )
 }
