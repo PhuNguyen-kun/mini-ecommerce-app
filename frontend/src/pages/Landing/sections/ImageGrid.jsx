@@ -1,6 +1,6 @@
-import gridImg1 from '../../../assets/grid-1.png';
-import gridImg2 from '../../../assets/grid-2.png';
-import gridImg3 from '../../../assets/grid-3.png';
+import gridImg1 from '../../../assets/landing/grid-1.png';
+import gridImg2 from '../../../assets/landing/grid-2.png';
+import gridImg3 from '../../../assets/landing/grid-3.png';
 
 export default function ImageGrid() {
   return (

@@ -1,5 +1,5 @@
 import { HiStar, HiChevronLeft, HiChevronRight } from 'react-icons/hi2';
-import testimonialImg from '../../../assets/testimonial.png';
+import testimonialImg from '../../../assets/landing/testimonial.png';
 
 export default function Testimonials() {
   return (

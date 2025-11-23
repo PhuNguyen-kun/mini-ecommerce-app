@@ -1,6 +1,6 @@
-import shippingIcon from '../../../assets/icon-shipping.png';
-import craftedIcon from '../../../assets/icon-crafted.png';
-import storeIcon from '../../../assets/icon-store.png';
+import shippingIcon from '../../../assets/landing/icon-shipping.png';
+import craftedIcon from '../../../assets/landing/icon-crafted.png';
+import storeIcon from '../../../assets/landing/icon-store.png';
 
 export default function Features() {
   return (

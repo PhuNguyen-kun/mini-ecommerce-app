@@ -5,6 +5,15 @@ import NavActions from '../NavActions/NavActions';
 export default function MainNav() {
   const location = useLocation();
   const currentPath = location.pathname;
+  
+  // About section includes: /about, /stores, /factories, etc.
+  const isAboutSection = currentPath.startsWith('/about') || 
+                         currentPath === '/stores' || 
+                         currentPath === '/factories' ||
+                         currentPath === '/environmental' ||
+                         currentPath === '/carbon' ||
+                         currentPath === '/impact' ||
+                         currentPath === '/cleaner-fashion';
 
   return (
     <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
@@ -17,9 +26,9 @@ export default function MainNav() {
           <p className="text-sm font-medium">Men</p>
           {currentPath === '/men' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black" />}
         </Link>
-        <Link to="/about" className={`px-3 py-2 cursor-pointer hover:opacity-70 ${currentPath === '/about' ? 'relative' : ''}`}>
+        <Link to="/about" className={`px-3 py-2 cursor-pointer hover:opacity-70 ${isAboutSection ? 'relative' : ''}`}>
           <p className="text-sm font-medium">About</p>
-          {currentPath === '/about' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black" />}
+          {isAboutSection && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black" />}
         </Link>
         <Link to="/stories" className={`px-3 py-2 cursor-pointer hover:opacity-70 ${currentPath === '/stories' ? 'relative' : ''}`}>
           <p className="text-sm font-medium">Everworld Stories</p>

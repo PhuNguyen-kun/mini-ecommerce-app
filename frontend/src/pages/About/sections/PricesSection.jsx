@@ -1,4 +1,4 @@
-import pricesImage from '../../../assets/prices.png';
+import pricesImage from '../../../assets/about/prices.png';
 
 const PricesSection = () => {
   return (

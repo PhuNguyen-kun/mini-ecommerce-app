@@ -1,4 +1,4 @@
-import factoriesImage from '../../../assets/factories.png';
+import factoriesImage from '../../../assets/about/factories.png';
 
 const FactoriesSection = () => {
   return (

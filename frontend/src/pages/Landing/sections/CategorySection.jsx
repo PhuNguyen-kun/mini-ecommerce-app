@@ -1,9 +1,9 @@
-import shirtsImg from '../../../assets/category-shirts.png';
-import denimImg from '../../../assets/category-denim.png';
-import teesImg from '../../../assets/category-tees.png';
-import pantsImg from '../../../assets/category-pants.png';
-import sweatersImg from '../../../assets/category-sweaters.png';
-import outerwearImg from '../../../assets/category-outerwear.png';
+import shirtsImg from '../../../assets/landing/category-shirts.png';
+import denimImg from '../../../assets/landing/category-denim.png';
+import teesImg from '../../../assets/landing/category-tees.png';
+import pantsImg from '../../../assets/landing/category-pants.png';
+import sweatersImg from '../../../assets/landing/category-sweaters.png';
+import outerwearImg from '../../../assets/landing/category-outerwear.png';
 
 const categories = [
   { name: 'SHIRTS', image: shirtsImg },

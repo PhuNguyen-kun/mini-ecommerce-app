@@ -1,4 +1,4 @@
-import bannerImg from '../../../assets/featured-banner.png';
+import bannerImg from '../../../assets/landing/featured-banner.png';
 
 export default function FeaturedBanner() {
   return (

@@ -1,6 +1,6 @@
-import productsImage from '../../../assets/explore-products.png';
-import storesImage from '../../../assets/explore-stores.png';
-import careersImage from '../../../assets/explore-careers.png';
+import productsImage from '../../../assets/about/explore-products.png';
+import storesImage from '../../../assets/about/explore-stores.png';
+import careersImage from '../../../assets/about/explore-careers.png';
 
 const ExploreSection = () => {
   return (

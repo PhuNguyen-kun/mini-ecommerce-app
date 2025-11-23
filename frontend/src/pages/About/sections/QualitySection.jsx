@@ -1,4 +1,4 @@
-import qualityImage from '../../../assets/quality.png';
+import qualityImage from '../../../assets/about/quality.png';
 
 const QualitySection = () => {
   return (
