@@ -30,9 +30,9 @@ export default function MainNav() {
           <p className="text-sm font-medium">About</p>
           {isAboutSection && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black" />}
         </Link>
-        <Link to="/stories" className={`px-3 py-2 cursor-pointer hover:opacity-70 ${currentPath === '/stories' ? 'relative' : ''}`}>
+        <Link to="/blog" className={`px-3 py-2 cursor-pointer hover:opacity-70 ${currentPath === '/blog' ? 'relative' : ''}`}>
           <p className="text-sm font-medium">Everworld Stories</p>
-          {currentPath === '/stories' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black" />}
+          {currentPath === '/blog' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black" />}
         </Link>
       </div>
 

@@ -6,6 +6,7 @@ import Landing from './pages/Landing/Landing'
 import Search from './pages/Search/Search'
 import About from './pages/About/About'
 import Stores from './pages/Stores/Stores'
+import Blog from './pages/Blog/Blog'
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route path="/search" element={<Search />} />
             <Route path="/about" element={<About />} />
             <Route path="/stores" element={<Stores />} />
+            <Route path="/blog" element={<Blog />} />
           </Routes>
         </main>
         <Footer />
