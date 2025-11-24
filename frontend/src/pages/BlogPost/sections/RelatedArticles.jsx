@@ -9,19 +9,22 @@ const RelatedArticles = () => {
       id: 1,
       image: article1,
       title: 'How To Style Winter Whites',
-      category: 'Style'
+      category: 'Style',
+      slug: 'how-to-style-winter-whites'
     },
     {
       id: 2,
       image: article2,
       title: 'We Won A Glossy Award',
-      category: 'Transparency'
+      category: 'Transparency',
+      slug: 'we-won-a-glossy-award'
     },
     {
       id: 3,
       image: article3,
       title: 'Coordinate Your Style: Matching Outfits for Everyone',
-      category: 'Style'
+      category: 'Style',
+      slug: 'coordinate-your-style-matching-outfits'
     }
   ];
 
@@ -30,7 +33,7 @@ const RelatedArticles = () => {
       {articles.map((article) => (
         <Link 
           key={article.id} 
-          to="/blog-post" 
+          to={`/blog/${article.slug}`}
           className="flex-1 group cursor-pointer"
         >
           <div className="h-[413px] bg-gray-100 mb-5 overflow-hidden">

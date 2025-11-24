@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
-const BlogCard = ({ image, title, category }) => (
-  <Link to="/blog-post" className="flex-1 flex flex-col gap-5 cursor-pointer group">
+const BlogCard = ({ image, title, category, slug }) => (
+  <Link to={`/blog/${slug}`} className="flex-1 flex flex-col gap-5 cursor-pointer group">
     <div className="w-full h-[413px] overflow-hidden">
       <img 
         src={image} 
