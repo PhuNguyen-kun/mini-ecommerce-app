@@ -9,14 +9,14 @@ import blog6 from '../../../assets/blog/blog-6.png';
 const LatestArticles = () => {
   const articles = [
     [
-      { image: blog1, title: 'How To Style Winter Whites', category: 'Style' },
-      { image: blog2, title: 'We Won A Glossy Award', category: 'Transparency' },
-      { image: blog3, title: 'Coordinate Your Style: Matching Outfits for Everyone', category: 'Style' },
+      { image: blog1, title: 'How To Style Winter Whites', category: 'Style', slug: 'how-to-style-winter-whites' },
+      { image: blog2, title: 'We Won A Glossy Award', category: 'Transparency', slug: 'we-won-a-glossy-award' },
+      { image: blog3, title: 'Coordinate Your Style: Matching Outfits for Everyone', category: 'Style', slug: 'coordinate-your-style-matching-outfits' },
     ],
     [
-      { image: blog4, title: 'Black Friday Fund 2023', category: 'Transparency' },
-      { image: blog5, title: 'What to Wear this Season: Holiday Outfits & Ideas', category: 'Style' },
-      { image: blog6, title: 'Thanksgiving Outfit Ideas', category: 'Style' },
+      { image: blog4, title: 'Black Friday Fund 2023', category: 'Transparency', slug: 'black-friday-fund-2023' },
+      { image: blog5, title: 'What to Wear this Season: Holiday Outfits & Ideas', category: 'Style', slug: 'what-to-wear-this-season-holiday-outfits' },
+      { image: blog6, title: 'Thanksgiving Outfit Ideas', category: 'Style', slug: 'thanksgiving-outfit-ideas' },
     ],
   ];
 

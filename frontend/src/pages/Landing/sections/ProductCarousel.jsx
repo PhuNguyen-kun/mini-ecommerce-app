@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { HiChevronLeft, HiChevronRight } from 'react-icons/hi2';
 import product1 from '../../../assets/landing/product-1.png';
 import product2 from '../../../assets/landing/product-2.png';
@@ -7,30 +8,35 @@ import product5 from '../../../assets/landing/product-5.png';
 
 const products = [
   {
+    id: 1,
     name: 'The Waffle Long-Sleeve Crew',
     price: '$60',
     color: 'Bone',
     image: product1,
   },
   {
+    id: 2,
     name: 'The Bomber Jacket | Uniform',
     price: '$148',
     color: 'Toasted Coconut',
     image: product2,
   },
   {
+    id: 3,
     name: 'The Slim 4-Way Stretch Organic Jean | Uniform',
     price: '$98',
     color: 'Dark Indigo',
     image: product3,
   },
   {
+    id: 4,
     name: 'The Essential Organic Crew',
     price: '$30',
     color: 'Vintage Black',
     image: product4,
   },
   {
+    id: 5,
     name: 'The Heavyweight',
     price: '',
     color: 'Heathered Brown',
@@ -59,22 +65,22 @@ export default function ProductCarousel() {
         {/* Products */}
         <div className="flex gap-4 overflow-x-auto scrollbar-hide px-3">
           {products.map((product, index) => (
-            <div key={index} className="flex-shrink-0 w-[282px]">
+            <Link key={index} to={`/product/${product.id}`} className="flex-shrink-0 w-[282px] group cursor-pointer">
               <div className="w-full h-[420px] rounded-lg overflow-hidden mb-2">
                 <img 
                   src={product.image} 
                   alt={product.name} 
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
               </div>
               <div className="space-y-1">
                 <div className="flex justify-between items-start">
-                  <p className="text-sm flex-1">{product.name}</p>
+                  <p className="text-sm flex-1 group-hover:underline">{product.name}</p>
                   {product.price && <p className="text-sm font-medium">{product.price}</p>}
                 </div>
                 <p className="text-sm text-gray-600">{product.color}</p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 

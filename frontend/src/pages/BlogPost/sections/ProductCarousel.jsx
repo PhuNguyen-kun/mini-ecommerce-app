@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import product1 from '../../../assets/blogpost/product-1.png';
 import product2 from '../../../assets/blogpost/product-2.png';
@@ -56,22 +57,22 @@ const ProductCarousel = () => {
         </button>
         
         {products.map((product) => (
-          <div key={product.id} className={`flex flex-col gap-1.5 ${product.id === 5 ? 'w-[120px]' : 'flex-1'}`}>
-            <div className={`${product.id === 5 ? 'w-[120px]' : 'w-full'} h-[350px] bg-gray-100`}>
+          <Link key={product.id} to={`/product/${product.id}`} className={`flex flex-col gap-1.5 group cursor-pointer ${product.id === 5 ? 'w-[120px]' : 'flex-1'}`}>
+            <div className={`${product.id === 5 ? 'w-[120px]' : 'w-full'} h-[350px] bg-gray-100 overflow-hidden`}>
               <img 
                 src={product.image} 
                 alt={product.name}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
             </div>
             <div className="flex flex-col gap-[3px]">
               <div className="flex justify-between gap-3 text-xs text-black">
-                <p className="flex-1">{product.name}</p>
+                <p className="flex-1 group-hover:underline">{product.name}</p>
                 {product.price && <p className="text-right">{product.price}</p>}
               </div>
               <p className="text-xs text-gray-500">{product.color}</p>
             </div>
-          </div>
+          </Link>
         ))}
         
         <button className="w-10 h-10 flex items-center justify-center hover:opacity-70 transition-opacity">

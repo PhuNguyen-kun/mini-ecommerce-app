@@ -9,27 +9,34 @@ import Stores from './pages/Stores/Stores'
 import Blog from './pages/Blog/Blog'
 import BlogPost from './pages/BlogPost/BlogPost'
 import ProductListing from './pages/ProductListing/ProductListing'
+import ProductDetail from './pages/ProductDetail/ProductDetail'
+import { CartProvider } from './context/CartContext'
+import CartSidebar from './components/Cart/CartSidebar'
 
 function App() {
   return (
-    <BrowserRouter>
-      <div className="app">
-        <Header />
-        <main className="w-full overflow-x-hidden">
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/stores" element={<Stores />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog-post" element={<BlogPost />} />
-            <Route path="/women" element={<ProductListing />} />
-            <Route path="/men" element={<ProductListing />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </BrowserRouter>
+    <CartProvider>
+      <BrowserRouter>
+        <div className="app">
+          <Header />
+          <main className="w-full overflow-x-hidden">
+            <Routes>
+              <Route path="/" element={<Landing />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/stores" element={<Stores />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/women" element={<ProductListing />} />
+              <Route path="/men" element={<ProductListing />} />
+              <Route path="/product/:id" element={<ProductDetail />} />
+            </Routes>
+          </main>
+          <Footer />
+          <CartSidebar />
+        </div>
+      </BrowserRouter>
+    </CartProvider>
   )
 }
 
