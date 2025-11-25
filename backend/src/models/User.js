@@ -3,6 +3,9 @@ const bcrypt = require("bcryptjs");
 
 module.exports = (sequelize) => {
   class User extends Model {
+    static associate(models) {
+      // Sau này sẽ điền: models.User.hasOne(models.Cart, ...)
+    }
     async comparePassword(password) {
       return bcrypt.compare(password, this.password_hash);
     }
