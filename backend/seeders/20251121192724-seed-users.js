@@ -32,7 +32,7 @@ module.exports = {
 
   async down(queryInterface, Sequelize) {
     await queryInterface.bulkDelete("users", {
-      email: ["customer@example.com", "admin@example.com"],
+      email: ["customer@gmail.com", "admin@gmail.com"],
     });
   },
 };
