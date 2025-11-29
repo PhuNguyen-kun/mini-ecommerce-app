@@ -3,13 +3,32 @@ const { Model, DataTypes } = require("sequelize");
 module.exports = (sequelize) => {
     class Product extends Model {
         static associate(models) {
-            // Link tới Category
+            // 1 Product thuộc 1 Category
             Product.belongsTo(models.Category, { foreignKey: "category_id", as: "category" });
 
-            // Link tới các bảng con (Sẽ tạo sau)
-            // Product.hasMany(models.ProductOption, ...);
-            // Product.hasMany(models.ProductVariant, ...);
-            // Product.hasMany(models.ProductImage, ...);
+            // 1 Product có nhiều Option
+            Product.hasMany(models.ProductOption, {
+                foreignKey: "product_id",
+                as: "options",
+            });
+
+            // 1 Product có nhiều Variant
+            Product.hasMany(models.ProductVariant, {
+                foreignKey: "product_id",
+                as: "variants",
+            });
+
+            // 1 Product có nhiều Image
+            Product.hasMany(models.ProductImage, {
+                foreignKey: "product_id",
+                as: "images",
+            });
+
+            // 1 Product có nhiều Video
+            Product.hasMany(models.ProductVideo, {
+                foreignKey: "product_id",
+                as: "videos",
+            });
         }
     }
 
@@ -33,7 +52,6 @@ module.exports = (sequelize) => {
                 allowNull: false,
                 unique: true,
             },
-            // Gender mà bạn mới thêm
             gender: {
                 type: DataTypes.ENUM("male", "female", "unisex"),
                 allowNull: false,
