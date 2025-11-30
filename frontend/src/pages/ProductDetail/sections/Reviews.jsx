@@ -1,9 +1,91 @@
-const Reviews = () => {
-  const renderStars = (count, size = 22) => {
+import { useState, useEffect } from 'react';
+
+const Reviews = ({ productId }) => {
+  const [reviews, setReviews] = useState([]);
+  const [stats, setStats] = useState({
+    overallRating: 0,
+    totalReviews: 0,
+    distribution: [0, 0, 0, 0, 0],
+    sizeFit: 2 // 0=runs small, 2=true to size, 4=runs large
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // TODO: Replace with API call when backend is ready
+    // const fetchReviews = async () => {
+    //   const response = await fetch(`/api/products/${productId}/reviews`);
+    //   const data = await response.json();
+    //   setReviews(data.reviews);
+    //   setStats(data.stats);
+    // };
+    
+    // Mock data for now
+    const mockReviews = [
+      {
+        id: 1,
+        username: "NguyenVanA",
+        verified: true,
+        height: "1m70 - 1m75",
+        weight: "65 - 70 kg",
+        bodyType: "Athletic",
+        sizePurchased: "L",
+        usualSize: "L",
+        rating: 5,
+        title: "Chất lượng tuyệt vời",
+        comment: "Áo rất đẹp, chất liệu mềm mại và thoáng mát. Mặc rất thoải mái và vừa vặn. Sẽ ủng hộ shop tiếp.",
+        daysAgo: 7
+      },
+      {
+        id: 2,
+        username: "ThiThiB",
+        verified: true,
+        height: "1m60 - 1m65",
+        weight: "50 - 55 kg",
+        bodyType: "Slim",
+        sizePurchased: "M",
+        usualSize: "M",
+        rating: 4,
+        title: "Đẹp nhưng hơi rộng",
+        comment: "Áo đẹp, chất lượng ok. Tuy nhiên size hơi rộng một chút so với mong đợi. Nên order nhỏ hơn 1 size.",
+        daysAgo: 14
+      },
+      {
+        id: 3,
+        username: "TranVanC",
+        verified: true,
+        height: "1m75 - 1m80",
+        weight: "70 - 75 kg",
+        bodyType: "Regular",
+        sizePurchased: "XL",
+        usualSize: "L",
+        rating: 5,
+        title: "Rất hài lòng",
+        comment: "Giao hàng nhanh, đóng gói cẩn thận. Áo đẹp như hình, màu sắc chuẩn. Giá cả hợp lý.",
+        daysAgo: 21
+      }
+    ];
+
+    const mockStats = {
+      overallRating: 4.7,
+      totalReviews: 3,
+      distribution: [0, 0, 0, 1, 2], // [1star, 2star, 3star, 4star, 5star]
+      sizeFit: 3 // Runs slightly large
+    };
+
+    setTimeout(() => {
+      setReviews(mockReviews);
+      setStats(mockStats);
+      setLoading(false);
+    }, 300);
+  }, [productId]);
+
+  const renderStars = (rating, size = 22) => {
+    const fullStars = Math.floor(rating);
+    
     return (
       <div className="flex gap-1">
-        {[...Array(count)].map((_, i) => (
-          <svg key={i} width={size} height={size} viewBox="0 0 16 16" fill="currentColor" className="text-black">
+        {[...Array(5)].map((_, i) => (
+          <svg key={i} width={size} height={size} viewBox="0 0 16 16" fill={i < fullStars ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1" className="text-black">
             <path d="M8 1.5l1.902 5.853h6.153l-4.975 3.615 1.902 5.853L8 13.206l-4.982 3.615 1.902-5.853L0 7.353h6.153z" />
           </svg>
         ))}
@@ -11,36 +93,29 @@ const Reviews = () => {
     );
   };
 
-  const reviews = [
-    {
-      id: 1,
-      username: "ElizabethRBklyn",
-      verified: true,
-      height: "5'9\" - 5'11\"",
-      weight: "161 - 180 lb",
-      bodyType: "Petite",
-      sizePurchased: "L",
-      usualSize: "L",
-      rating: 5,
-      title: "Warm and very attractive on",
-      comment: "Got this to keep my husband warm on those chilly late fall days. He loves it as it not only is pretty warm but he looks good in it and he knows it.",
-      daysAgo: 14
-    },
-    {
-      id: 2,
-      username: "Anonymous",
-      verified: true,
-      height: "5'9\" - 5'11\"",
-      weight: "161 - 180 lb",
-      bodyType: "Petite",
-      sizePurchased: "L",
-      usualSize: "L",
-      rating: 5,
-      title: "Super comfy",
-      comment: "Great quality, warm and super comfy. Got the XL cuz I have a large back and it fits perfect. It does run a bit oversized which is good.",
-      daysAgo: 14
-    }
-  ];
+  const sizeFitLabels = ['Runs very small', 'Runs small', 'True to size', 'Runs large', 'Runs very large'];
+
+  if (loading) {
+    return (
+      <div className="px-[196px] flex flex-col gap-10">
+        <p className="text-2xl text-center text-neutral-800 leading-[33.24px] font-semibold font-['Maison_Neue']">
+          Reviews
+        </p>
+        <div className="animate-pulse bg-gray-200 h-64" />
+      </div>
+    );
+  }
+
+  if (reviews.length === 0) {
+    return (
+      <div className="px-[196px] flex flex-col gap-10">
+        <p className="text-2xl text-center text-neutral-800 leading-[33.24px] font-semibold font-['Maison_Neue']">
+          Reviews
+        </p>
+        <p className="text-center text-gray-500">No reviews yet. Be the first to review this product!</p>
+      </div>
+    );
+  }
 
   return (
     <div className="px-[196px] flex flex-col gap-10">
@@ -54,45 +129,50 @@ const Reviews = () => {
         {/* Overall Rating */}
         <div className="flex-1 flex flex-col gap-[15px]">
           <p className="text-base font-semibold text-neutral-800 tracking-[0.2px] font-['Maison_Neue']">
-            5.0 Overall Rating
+            {stats.overallRating.toFixed(1)} Overall Rating
           </p>
-          {renderStars(5)}
+          {renderStars(stats.overallRating)}
+          <p className="text-xs text-neutral-500">Based on {stats.totalReviews} reviews</p>
         </div>
 
         {/* Rating Distribution */}
         <div className="flex-1 flex flex-col gap-2">
-          {[
-            { stars: 5, count: 2, filled: true },
-            { stars: 4, count: 0, filled: false },
-            { stars: 3, count: 0, filled: false },
-            { stars: 2, count: 0, filled: false },
-            { stars: 1, count: 0, filled: false }
-          ].map((rating) => (
-            <div key={rating.stars} className="flex gap-1 items-center">
-              <p className="text-xs text-neutral-500 tracking-[0.2px] font-['Maison_Neue']">
-                {rating.stars}
-              </p>
-              <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" className="text-black">
-                <path d="M8 1.5l1.902 5.853h6.153l-4.975 3.615 1.902 5.853L8 13.206l-4.982 3.615 1.902-5.853L0 7.353h6.153z" />
-              </svg>
-              <div className={`flex-1 h-1.5 ${rating.filled ? 'bg-neutral-800' : 'bg-[#DDDBDC]'}`} />
-              <p className="text-xs text-neutral-500 tracking-[0.2px] font-['Maison_Neue']">
-                {rating.count}
-              </p>
-            </div>
-          ))}
+          {[5, 4, 3, 2, 1].map((starNum) => {
+            const count = stats.distribution[starNum - 1];
+            const percentage = stats.totalReviews > 0 ? (count / stats.totalReviews) * 100 : 0;
+            
+            return (
+              <div key={starNum} className="flex gap-1 items-center">
+                <p className="text-xs text-neutral-500 tracking-[0.2px] font-['Maison_Neue']">
+                  {starNum}
+                </p>
+                <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" className="text-black">
+                  <path d="M8 1.5l1.902 5.853h6.153l-4.975 3.615 1.902 5.853L8 13.206l-4.982 3.615 1.902-5.853L0 7.353h6.153z" />
+                </svg>
+                <div className="flex-1 h-1.5 bg-[#DDDBDC] relative">
+                  <div 
+                    className="absolute left-0 top-0 h-full bg-neutral-800" 
+                    style={{ width: `${percentage}%` }}
+                  />
+                </div>
+                <p className="text-xs text-neutral-500 tracking-[0.2px] font-['Maison_Neue'] w-6 text-right">
+                  {count}
+                </p>
+              </div>
+            );
+          })}
         </div>
 
         {/* Size Fit */}
         <div className="flex-1 flex flex-col">
           <p className="text-base font-semibold text-neutral-800 tracking-[0.2px] font-['Maison_Neue']">
-            Runs slightly large
+            {sizeFitLabels[stats.sizeFit]}
           </p>
           <div className="flex gap-1 items-center pt-4 pb-2">
             {[0, 1, 2, 3, 4].map((index) => (
               <div
                 key={index}
-                className={`flex-1 h-2 ${index === 3 ? 'bg-neutral-800' : 'bg-[#DDDBDC]'}`}
+                className={`flex-1 h-2 ${index === stats.sizeFit ? 'bg-neutral-800' : 'bg-[#DDDBDC]'}`}
               />
             ))}
           </div>

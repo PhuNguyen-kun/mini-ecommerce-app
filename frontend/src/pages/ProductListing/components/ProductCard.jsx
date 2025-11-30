@@ -5,6 +5,12 @@ const ProductCard = ({ product }) => {
   const primaryImage = product.images?.find(img => img.is_primary)?.image_url || product.images?.[0]?.image_url || '/placeholder.png';
   const minPrice = product.variants?.reduce((min, variant) => Math.min(min, variant.price), Infinity) || 0;
   
+  // Format price to VND
+  const formatPrice = (price) => {
+    if (!price) return '0';
+    return new Intl.NumberFormat('vi-VN').format(price);
+  };
+  
   // Get unique colors from variants
   const colors = product.variants?.reduce((acc, variant) => {
     variant.option_values?.forEach(opt => {
@@ -17,21 +23,10 @@ const ProductCard = ({ product }) => {
     return acc;
   }, []) || [];
 
-  // Calculate discount if applicable
-  const hasDiscount = product.variants?.some(v => v.original_price > v.price);
-  const discountPercent = hasDiscount 
-    ? Math.round((1 - minPrice / product.variants[0].original_price) * 100)
-    : null;
-
   return (
     <Link to={`/product/${product.slug || product.id}`} className="group cursor-pointer flex flex-col gap-2.5">
       {/* Image Container */}
       <div className="relative w-full h-[392px] overflow-hidden bg-gray-100">
-        {discountPercent && (
-          <div className="absolute top-2 left-2 bg-white px-1.5 py-1 text-xs text-[#d0021b] z-10">
-            {discountPercent}% off
-          </div>
-        )}
         <img 
           src={primaryImage} 
           alt={product.name}
@@ -50,13 +45,8 @@ const ProductCard = ({ product }) => {
             {product.name}
           </p>
           <div className="flex gap-1 items-center text-xs leading-4 text-right">
-            {hasDiscount && product.variants?.[0]?.original_price && (
-              <p className="text-gray-500 line-through">
-                ${product.variants[0].original_price}
-              </p>
-            )}
             <p className="text-black font-semibold">
-              ${minPrice}
+              {formatPrice(minPrice)}₫
             </p>
           </div>
         </div>
