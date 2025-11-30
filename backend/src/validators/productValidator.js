@@ -3,7 +3,7 @@ const Joi = require("joi");
 // Validate bộ lọc khi lấy danh sách
 const filterProductSchema = Joi.object({
     page: Joi.number().integer().min(1).default(1),
-    limit: Joi.number().integer().min(1).max(100).default(10),
+    limit: Joi.number().integer().min(1).max(1000).default(10),
     search: Joi.string().allow("", null),
 
     // 1 category cũ (vẫn hỗ trợ để không gãy FE cũ)
