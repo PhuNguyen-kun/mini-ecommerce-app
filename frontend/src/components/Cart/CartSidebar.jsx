@@ -1,28 +1,21 @@
 import { useCart } from '../../context/CartContext';
+import { useNavigate } from 'react-router-dom';
 import { TbX, TbPlus, TbMinus, TbTrash } from 'react-icons/tb';
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
 
 const CartSidebar = () => {
-  const { cart, isCartOpen, setIsCartOpen, updateQuantity, removeFromCart, getCartTotal, getCartCount, addToCart } = useCart();
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const { cart, isCartOpen, setIsCartOpen, updateQuantity, removeFromCart, getCartTotal, getCartCount } = useCart();
+  const navigate = useNavigate();
 
-  const recommendedProducts = [
-    {
-      id: 1,
-      name: 'The Good Merino Wool Beanie',
-      price: 35,
-      originalPrice: null,
-      sizes: ['One Size'],
-      colors: [{ name: 'Chambray Blue', value: '#6B9AC4' }],
-      image: 'https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=140&h=200&fit=crop',
-      category: 'Accessories',
-      description: 'One Size | Chambray Blue'
-    }
-  ];
+  // Format price to VND
+  const formatPrice = (price) => {
+    if (!price) return '0';
+    return new Intl.NumberFormat('vi-VN').format(price);
+  };
 
-  const handleAddRecommended = (product) => {
-    addToCart(product, product.sizes[0], product.colors[0].name);
+  const handleCheckout = () => {
+    setIsCartOpen(false);
+    navigate('/checkout');
   };
 
   if (!isCartOpen) return null;
@@ -58,14 +51,22 @@ const CartSidebar = () => {
             </div>
           ) : (
             <div className="space-y-4">
-              {cart.map((item) => (
-                <div key={item.cartId} className="flex gap-4">
+              {cart.map((item) => {
+                // Get primary image or first image
+                const itemImage = item.images?.find(img => img.is_primary)?.image_url 
+                  || item.images?.[0]?.image_url 
+                  || item.image 
+                  || '/placeholder.png';
+                
+                return (
+                  <div key={item.cartId} className="flex gap-4">
                   {/* Product Image */}
-                  <Link to={`/product/${item.id}`} onClick={() => setIsCartOpen(false)}>
+                  <Link to={`/product/${item.slug || item.id}`} onClick={() => setIsCartOpen(false)}>
                     <img 
-                      src={item.image} 
+                      src={itemImage} 
                       alt={item.name}
                       className="w-[70px] h-[100px] object-cover"
+                      onError={(e) => { e.target.src = '/placeholder.png'; }}
                     />
                   </Link>
 
@@ -98,20 +99,10 @@ const CartSidebar = () => {
                     <div className="flex items-end justify-between">
                       <div className="flex flex-col leading-4 tracking-[0.2px]">
                         <div className="flex items-center gap-0.5">
-                          {item.originalPrice && (
-                            <span className="text-xs text-[#737373] line-through font-[400]" style={{ fontFamily: 'Maison Neue, sans-serif' }}>
-                              ${item.originalPrice}
-                            </span>
-                          )}
                           <span className="text-xs text-[#262626] font-[600]" style={{ fontFamily: 'Maison Neue, sans-serif' }}>
-                            ${item.price}
+                            {formatPrice(item.selectedVariant?.price || item.price)}₫
                           </span>
                         </div>
-                        {item.originalPrice && (
-                          <span className="text-xs text-[#D0021B] font-[400]" style={{ fontFamily: 'Maison Neue, sans-serif' }}>
-                            ({Math.round((1 - item.price / item.originalPrice) * 100)}% Off)
-                          </span>
-                        )}
                       </div>
 
                       {/* Quantity Controls */}
@@ -135,67 +126,8 @@ const CartSidebar = () => {
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
-
-          {/* Before You Go Section */}
-          {cart.length > 0 && (
-            <div className="mt-6 pt-0">
-              <h3 className="text-sm font-[600] mb-2 leading-[21px] tracking-[0.42px]" style={{ fontFamily: 'Maison Neue, sans-serif' }}>
-                Before You Go
-              </h3>
-              <div className="space-y-2">
-                {recommendedProducts.map((product) => (
-                  <div 
-                    key={product.id}
-                    className="border border-[#DDDBDC] p-[10px]"
-                  >
-                    <div className="flex gap-4">
-                      <img 
-                        src={product.image} 
-                        alt={product.name}
-                        className="w-[70px] h-[100px] object-cover"
-                      />
-                      <div className="flex-1 flex flex-col justify-between">
-                        <div>
-                          <h4 className="text-sm font-[400] text-black leading-[16.8px] tracking-[1.4px]" style={{ fontFamily: 'Maison Neue, sans-serif' }}>
-                            {product.name}
-                          </h4>
-                          <p className="text-xs text-[#737373] mt-0.5 leading-4 tracking-[0.2px]" style={{ fontFamily: 'Maison Neue, sans-serif' }}>
-                            {product.description}
-                          </p>
-                        </div>
-                        
-                        <div className="flex items-end justify-between">
-                          <span className="text-xs font-[600] text-[#262626] leading-4 tracking-[0.2px]" style={{ fontFamily: 'Maison Neue, sans-serif' }}>
-                            ${product.price}
-                          </span>
-                          <button 
-                            onClick={() => handleAddRecommended(product)}
-                            className="bg-[#262626] text-white px-0 py-3 text-sm font-[400] leading-[16.8px] tracking-[1.4px] hover:bg-black transition-colors w-[81px]"
-                            style={{ fontFamily: 'Maison Neue, sans-serif' }}
-                          >
-                            ADD
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                
-                {/* Indicator Dots */}
-                <div className="flex gap-3 items-center justify-start">
-                  {[0, 1, 2, 3].map((index) => (
-                    <div 
-                      key={index}
-                      className={`w-[7px] h-[7px] rounded-full ${
-                        index === currentSlide ? 'bg-black' : 'bg-[#DDDBDC]'
-                      }`}
-                    />
-                  ))}
-                </div>
-              </div>
+              );
+              })}
             </div>
           )}
         </div>
@@ -213,11 +145,15 @@ const CartSidebar = () => {
                 </span>
               </div>
               <span className="text-base font-[600] text-black leading-6 tracking-[0.2px]" style={{ fontFamily: 'Maison Neue, sans-serif' }}>
-                ${getCartTotal()}
+                {formatPrice(getCartTotal())}₫
               </span>
             </div>
             
-            <button className="w-full bg-[#262626] text-white py-3 font-[400] text-sm leading-[16.8px] tracking-[1.4px] hover:bg-black transition-colors mb-8" style={{ fontFamily: 'Maison Neue, sans-serif' }}>
+            <button 
+              onClick={handleCheckout}
+              className="w-full bg-[#262626] text-white py-3 font-[400] text-sm leading-[16.8px] tracking-[1.4px] hover:bg-black transition-colors mb-8" 
+              style={{ fontFamily: 'Maison Neue, sans-serif' }}
+            >
               CONTINUE TO CHECKOUT
             </button>
             

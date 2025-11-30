@@ -72,7 +72,12 @@ export const CartProvider = ({ children }) => {
   };
 
   const getCartTotal = () => {
-    return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    const total = cart.reduce((sum, item) => {
+      // Get price from selected variant
+      const price = item.selectedVariant?.price || item.price || 0;
+      return sum + (price * item.quantity);
+    }, 0);
+    return total;
   };
 
   const getCartCount = () => {

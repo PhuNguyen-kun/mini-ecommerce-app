@@ -254,6 +254,7 @@ class ProductService {
                     as: "variants",
                     where: { is_active: true, deleted_at: null },
                     required: false,
+                    attributes: ["id", "price", "stock", "sku"],
                     include: [
                         {
                             model: db.ProductImage,
@@ -264,7 +265,14 @@ class ProductService {
                         {
                             model: db.ProductOptionValue,
                             as: "option_values",
-                            through: { attributes: [] }
+                            through: { attributes: [] },
+                            include: [
+                                {
+                                    model: db.ProductOption,
+                                    as: "option",
+                                    attributes: ["name"]
+                                }
+                            ]
                         }
                     ]
                 }
