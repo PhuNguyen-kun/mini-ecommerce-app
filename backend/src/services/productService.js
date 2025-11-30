@@ -134,6 +134,28 @@ class ProductService {
                     value: { [Op.in]: valueList },
                 },
                 required: true, // Inner join: variant phải match ít nhất 1 trong các value này
+                include: [
+                    {
+                        model: db.ProductOption,
+                        as: "option",
+                        attributes: ["name"],
+                    },
+                ],
+            });
+        } else {
+            // Nếu không có filter, vẫn include option_values để frontend có thể lấy colors/sizes
+            variantInclude.push({
+                model: db.ProductOptionValue,
+                as: "option_values",
+                through: { attributes: [] },
+                required: false,
+                include: [
+                    {
+                        model: db.ProductOption,
+                        as: "option",
+                        attributes: ["name"],
+                    },
+                ],
             });
         }
 
@@ -149,7 +171,7 @@ class ProductService {
                 ? variantWhere
                 : { is_active: true, deleted_at: null },
             required: hasVariantFilter, // Nếu có filter thì bắt buộc phải có variant match
-            attributes: ["price", "stock"],
+            attributes: ["id", "price", "stock", "sku"],
             include: variantInclude,
         };
 
