@@ -1,11 +1,47 @@
-import { HiChevronLeft, HiChevronRight, HiShoppingCart } from 'react-icons/hi2';
-import insta1 from '../../../assets/landing/insta-1.png';
-import insta2 from '../../../assets/landing/insta-2.png';
-import insta3 from '../../../assets/landing/insta-3.png';
-import insta4 from '../../../assets/landing/insta-4.png';
-import insta5 from '../../../assets/landing/insta-5.png';
+import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import { HiChevronLeft, HiChevronRight } from 'react-icons/hi2';
+import { API_ENDPOINTS } from '../../../config/api';
 
 export default function InstagramGallery() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const scrollContainerRef = useRef(null);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(`${API_ENDPOINTS.PRODUCTS.LIST}?limit=8&offset=5`);
+        const data = await response.json();
+        // API returns { data: { products: [...], pagination: {...} } }
+        const productsArray = data.data?.products || [];
+        setProducts(Array.isArray(productsArray) ? productsArray : []);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const scroll = (direction) => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = 235.6; // width of one image (225.6px) + gap (10px)
+      const currentScroll = scrollContainerRef.current.scrollLeft;
+      const newScroll = direction === 'left' 
+        ? currentScroll - scrollAmount 
+        : currentScroll + scrollAmount;
+      
+      scrollContainerRef.current.scrollTo({
+        left: newScroll,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   return (
     <section className="w-full py-[90px]">
       {/* Header */}
@@ -24,29 +60,55 @@ export default function InstagramGallery() {
       {/* Gallery */}
       <div className="px-10 flex items-center gap-[18px]">
         {/* Left Arrow */}
-        <button className="w-10 h-10 flex items-center justify-center hover:bg-gray-100 transition-colors flex-shrink-0">
+        <button 
+          onClick={() => scroll('left')}
+          className="w-10 h-10 flex items-center justify-center hover:bg-gray-100 transition-colors flex-shrink-0"
+        >
           <HiChevronLeft className="w-6 h-6" />
         </button>
 
         {/* Images */}
-        <div className="flex gap-2.5 overflow-x-auto scrollbar-hide">
-          {[insta1, insta2, insta3, insta4, insta5].map((img, index) => (
-            <div key={index} className="relative w-[225.6px] h-[225px] flex-shrink-0 overflow-hidden cursor-pointer group">
-              <img 
-                src={img} 
-                alt={`Instagram ${index + 1}`} 
-                className="w-full h-full object-cover"
-              />
-              {/* Icon Button */}
-              <button className="absolute top-2.5 right-2.5 w-[30px] h-[30px] bg-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-100 transition-colors opacity-0 group-hover:opacity-100">
-                <HiShoppingCart className="w-4 h-4 text-neutral-800" />
-              </button>
+        <div 
+          ref={scrollContainerRef}
+          className="flex gap-2.5 overflow-x-auto scrollbar-hide scroll-smooth"
+        >
+          {loading ? (
+            [...Array(5)].map((_, i) => (
+              <div key={i} className="w-[225.6px] h-[225px] flex-shrink-0 bg-gray-200 animate-pulse"></div>
+            ))
+          ) : products.length > 0 ? (
+            products.slice(0, 8).map((product) => {
+              const mainImage = product.images?.[0]?.image_url || 'https://via.placeholder.com/225';
+              
+              return (
+                <Link
+                  key={product.id}
+                  to={`/product/${product.id}`}
+                  className="relative w-[225.6px] h-[225px] flex-shrink-0 overflow-hidden cursor-pointer group"
+                >
+                  <img 
+                    src={mainImage} 
+                    alt={product.name} 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    onError={(e) => {
+                      e.target.src = 'https://via.placeholder.com/225?text=' + encodeURIComponent(product.name);
+                    }}
+                  />
+                </Link>
+              );
+            })
+          ) : (
+            <div className="flex items-center justify-center w-full h-[225px] text-gray-400">
+              No products available
             </div>
-          ))}
+          )}
         </div>
 
         {/* Right Arrow */}
-        <button className="w-10 h-10 flex items-center justify-center hover:bg-gray-100 transition-colors flex-shrink-0">
+        <button 
+          onClick={() => scroll('right')}
+          className="w-10 h-10 flex items-center justify-center hover:bg-gray-100 transition-colors flex-shrink-0"
+        >
           <HiChevronRight className="w-6 h-6" />
         </button>
       </div>

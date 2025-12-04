@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 
 const ProductCard = ({ product }) => {
+  
   // Extract data from API response
   const primaryImage = product.images?.find(img => img.is_primary)?.image_url || product.images?.[0]?.image_url || '/placeholder.png';
   const minPrice = product.variants?.reduce((min, variant) => Math.min(min, variant.price), Infinity) || 0;
@@ -35,6 +36,13 @@ const ProductCard = ({ product }) => {
             e.target.src = '/placeholder.png';
           }}
         />
+        
+        {/* View Details Overlay - Shows on Hover */}
+        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center">
+          <span className="text-white font-medium text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            View Details
+          </span>
+        </div>
       </div>
 
       {/* Product Info */}
