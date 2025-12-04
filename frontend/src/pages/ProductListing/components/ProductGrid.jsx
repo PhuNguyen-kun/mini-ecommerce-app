@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import ProductCard from './ProductCard';
 import productService from '../../../services/productService';
 
@@ -13,6 +13,15 @@ const ProductGrid = ({ category, onTotalChange, selectedFilters }) => {
     total_pages: 0
   });
   const [sortBy, setSortBy] = useState('featured');
+
+  // Create stable filter string to prevent unnecessary re-renders
+  const filterKey = useMemo(() => {
+    return JSON.stringify({
+      categoryIds: selectedFilters?.categoryIds?.sort() || [],
+      colors: selectedFilters?.colors?.sort() || [],
+      sizes: selectedFilters?.sizes?.sort() || []
+    });
+  }, [selectedFilters]);
 
   // Fetch products from API
   useEffect(() => {
@@ -66,7 +75,8 @@ const ProductGrid = ({ category, onTotalChange, selectedFilters }) => {
     };
 
     fetchProducts();
-  }, [category, pagination.page, pagination.limit, sortBy, onTotalChange, selectedFilters]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [category, pagination.page, sortBy, filterKey]); // Use filterKey instead of selectedFilters
 
   const handleSortChange = (e) => {
     setSortBy(e.target.value);
@@ -76,7 +86,7 @@ const ProductGrid = ({ category, onTotalChange, selectedFilters }) => {
   // Reset to page 1 when filters change
   useEffect(() => {
     setPagination(prev => ({ ...prev, page: 1 }));
-  }, [selectedFilters]);
+  }, [filterKey]); // Use filterKey instead of selectedFilters
 
   return (
     <div className="flex-1">

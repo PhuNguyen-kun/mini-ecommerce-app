@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import gridImg1 from '../../../assets/landing/grid-1.png';
 import gridImg2 from '../../../assets/landing/grid-2.png';
 import gridImg3 from '../../../assets/landing/grid-3.png';
@@ -15,9 +16,12 @@ export default function ImageGrid() {
         <h2 className="relative z-10 text-[40px] leading-[48px] tracking-[0.2px] text-white text-center font-normal">
           New Arrivals
         </h2>
-        <button className="relative z-10 bg-white text-neutral-800 px-0 py-3 w-60 text-sm tracking-[1.4px] font-normal hover:bg-gray-100 transition-colors">
+        <Link 
+          to="/products?sort=newest"
+          className="relative z-10 bg-white text-neutral-800 px-0 py-3 w-60 text-sm tracking-[1.4px] font-normal hover:bg-gray-100 transition-colors text-center"
+        >
           SHOP THE LATEST
-        </button>
+        </Link>
       </div>
 
       {/* Best-Sellers */}
@@ -30,9 +34,12 @@ export default function ImageGrid() {
         <h2 className="relative z-10 text-[40px] leading-[48px] tracking-[0.2px] text-white text-center font-normal">
           Best-Sellers
         </h2>
-        <button className="relative z-10 bg-white text-neutral-800 px-0 py-3 w-60 text-sm tracking-[1.4px] font-normal hover:bg-gray-100 transition-colors">
+        <Link 
+          to="/products?sort=featured"
+          className="relative z-10 bg-white text-neutral-800 px-0 py-3 w-60 text-sm tracking-[1.4px] font-normal hover:bg-gray-100 transition-colors text-center"
+        >
           SHOP YOUR FAVORITES
-        </button>
+        </Link>
       </div>
 
       {/* The Holiday Outfit */}
@@ -45,9 +52,12 @@ export default function ImageGrid() {
         <h2 className="relative z-10 text-[40px] leading-[48px] tracking-[0.2px] text-white text-center font-normal">
           The Holiday Outfit
         </h2>
-        <button className="relative z-10 bg-white text-neutral-800 px-0 py-3 w-60 text-sm tracking-[1.4px] font-normal hover:bg-gray-100 transition-colors">
+        <Link 
+          to="/products"
+          className="relative z-10 bg-white text-neutral-800 px-0 py-3 w-60 text-sm tracking-[1.4px] font-normal hover:bg-gray-100 transition-colors text-center"
+        >
           SHOP OCCASION
-        </button>
+        </Link>
       </div>
     </section>
   );

@@ -29,7 +29,8 @@ const FilterSidebar = ({ totalProducts = 0, gender, availableFilters, onFiltersC
     if (gender) {
       fetchFilters();
     }
-  }, [gender, onFiltersChange]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gender]); // Only re-fetch when gender changes
 
   const toggleSection = (section) => {
     setExpandedSections(prev => ({

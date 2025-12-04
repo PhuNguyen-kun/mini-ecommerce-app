@@ -1,45 +1,45 @@
-import { Link } from 'react-router-dom';
-import { HiChevronLeft, HiChevronRight } from 'react-icons/hi2';
-import product1 from '../../../assets/landing/product-1.png';
-import product2 from '../../../assets/landing/product-2.png';
-import product3 from '../../../assets/landing/product-3.png';
-import product4 from '../../../assets/landing/product-4.png';
-import product5 from '../../../assets/landing/product-5.png';
+import { Link } from "react-router-dom";
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
+import product1 from "../../../assets/landing/product-1.png";
+import product2 from "../../../assets/landing/product-2.png";
+import product3 from "../../../assets/landing/product-3.png";
+import product4 from "../../../assets/landing/product-4.png";
+import product5 from "../../../assets/landing/product-5.png";
 
 const products = [
   {
     id: 1,
-    name: 'The Waffle Long-Sleeve Crew',
-    price: '$60',
-    color: 'Bone',
+    name: "The Waffle Long-Sleeve Crew",
+    price: "$60",
+    color: "Bone",
     image: product1,
   },
   {
     id: 2,
-    name: 'The Bomber Jacket | Uniform',
-    price: '$148',
-    color: 'Toasted Coconut',
+    name: "The Bomber Jacket | Uniform",
+    price: "$148",
+    color: "Toasted Coconut",
     image: product2,
   },
   {
     id: 3,
-    name: 'The Slim 4-Way Stretch Organic Jean | Uniform',
-    price: '$98',
-    color: 'Dark Indigo',
+    name: "The Slim 4-Way Stretch Organic Jean | Uniform",
+    price: "$98",
+    color: "Dark Indigo",
     image: product3,
   },
   {
     id: 4,
-    name: 'The Essential Organic Crew',
-    price: '$30',
-    color: 'Vintage Black',
+    name: "The Essential Organic Crew",
+    price: "$30",
+    color: "Vintage Black",
     image: product4,
   },
   {
     id: 5,
-    name: 'The Heavyweight',
-    price: '',
-    color: 'Heathered Brown',
+    name: "The Heavyweight",
+    price: "",
+    color: "Heathered Brown",
     image: product5,
   },
 ];
@@ -49,7 +49,9 @@ export default function ProductCarousel() {
     <section className="w-full py-[90px]">
       {/* Title Section */}
       <div className="px-10 mb-[100px]">
-        <h2 className="text-[34px] font-normal mb-3 text-center">Everlane Favorites</h2>
+        <h2 className="text-[34px] font-normal mb-3 text-center">
+          Everlane Favorites
+        </h2>
         <p className="text-lg text-gray-600 text-center">
           Beautifully Functional. Purposefully Designed. Consciously Crafted.
         </p>
@@ -65,18 +67,26 @@ export default function ProductCarousel() {
         {/* Products */}
         <div className="flex gap-4 overflow-x-auto scrollbar-hide px-3">
           {products.map((product, index) => (
-            <Link key={index} to={`/product/${product.id}`} className="flex-shrink-0 w-[282px] group cursor-pointer">
+            <Link
+              key={index}
+              to={`/product/${product.id}`}
+              className="flex-shrink-0 w-[282px] group cursor-pointer"
+            >
               <div className="w-full h-[420px] rounded-lg overflow-hidden mb-2">
-                <img 
-                  src={product.image} 
-                  alt={product.name} 
+                <img
+                  src={product.image}
+                  alt={product.name}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
               </div>
               <div className="space-y-1">
                 <div className="flex justify-between items-start">
-                  <p className="text-sm flex-1 group-hover:underline">{product.name}</p>
-                  {product.price && <p className="text-sm font-medium">{product.price}</p>}
+                  <p className="text-sm flex-1 group-hover:underline">
+                    {product.name}
+                  </p>
+                  {product.price && (
+                    <p className="text-sm font-medium">{product.price}</p>
+                  )}
                 </div>
                 <p className="text-sm text-gray-600">{product.color}</p>
               </div>

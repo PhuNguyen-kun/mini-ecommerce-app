@@ -9,6 +9,7 @@ import Stores from './pages/Stores/Stores'
 import Blog from './pages/Blog/Blog'
 import BlogPost from './pages/BlogPost/BlogPost'
 import ProductListing from './pages/ProductListing/ProductListing'
+import CategoryProducts from './pages/CategoryProducts/CategoryProducts'
 import ProductDetail from './pages/ProductDetail/ProductDetail'
 import Checkout from './pages/Checkout/Checkout'
 import { CartProvider } from './context/CartContext'
@@ -30,6 +31,7 @@ function App() {
               <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/women" element={<ProductListing />} />
               <Route path="/men" element={<ProductListing />} />
+              <Route path="/products" element={<CategoryProducts />} />
               <Route path="/product/:slug" element={<ProductDetail />} />
               <Route path="/checkout" element={<Checkout />} />
             </Routes>

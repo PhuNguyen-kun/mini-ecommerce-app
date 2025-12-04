@@ -34,9 +34,9 @@ module.exports = {
         shipping_district: "Quận Ba Đình",
         shipping_ward: "Phường Kim Mã",
         // Money
-        items_total: 200000, // Mua 2 cái
+        items_total: 311342, // Mua 2 cái
         shipping_fee: 30000,
-        total_amount: 230000,
+        total_amount: 341342,
         payment_method: "COD",
         payment_status: "SUCCESS",
         created_at: new Date(),
@@ -44,19 +44,19 @@ module.exports = {
       },
     ]);
 
-    // 3. Order Items (Mua 2 cái Áo Đen Size M - Variant ID 1)
+    // 3. Order Items (Mua 2 cái Áo Len Cổ Lọ Nữ - Variant ID 1: Đen + M)
     await queryInterface.bulkInsert("order_items", [
       {
         id: 1,
         order_id: 1,
-        product_variant_id: 1, // Áo Đen M
+        product_variant_id: 1, // Áo Len Cổ Lọ Nữ - Đen - M
         // Snapshot Product
-        product_name_snapshot: "Áo Thun Basic Cotton",
+        product_name_snapshot: "Áo Len Cổ Lọ Nữ",
         product_variant_description_snapshot: "Màu sắc: Đen, Kích cỡ: M",
-        product_sku_snapshot: "AT-DEN-M",
-        unit_price: 100000,
+        product_sku_snapshot: "VAR-1",
+        unit_price: 155671,
         quantity: 2,
-        subtotal: 200000,
+        subtotal: 311342,
       },
     ]);
 
@@ -65,9 +65,9 @@ module.exports = {
       { id: 1, user_id: 1, created_at: new Date(), updated_at: new Date() },
     ]);
 
-    // 5. Cart Item (Đang me cái Áo Trắng Size L - Variant ID 4)
+    // 5. Cart Item (Đang thêm Quần Jeans Skinny - Variant ID 26: Đen + M)
     await queryInterface.bulkInsert("cart_items", [
-      { id: 1, cart_id: 1, product_variant_id: 4, quantity: 1, unit_price: 120000 },
+      { id: 1, cart_id: 1, product_variant_id: 26, quantity: 1, unit_price: 167123 },
     ]);
   },
 
