@@ -4,7 +4,23 @@ const bcrypt = require("bcryptjs");
 module.exports = (sequelize) => {
   class User extends Model {
     static associate(models) {
-      // Sau này sẽ điền: models.User.hasOne(models.Cart, ...)
+      // 1. User có 1 Giỏ hàng
+      User.hasOne(models.Cart, { foreignKey: "user_id", as: "cart" });
+
+      // 2. User có nhiều Địa chỉ
+      User.hasMany(models.UserAddress, { foreignKey: "user_id", as: "addresses" });
+
+      // 3. User có nhiều sản phẩm yêu thích
+      User.hasMany(models.Wishlist, { foreignKey: "user_id", as: "wishlist" });
+
+      // 4. User có nhiều Đơn hàng
+      User.hasMany(models.Order, { foreignKey: "user_id", as: "orders" });
+
+      // 5. User viết nhiều Đánh giá
+      User.hasMany(models.ProductReview, { foreignKey: "user_id", as: "reviews" });
+
+      // 6. User xem nhiều sản phẩm (Lịch sử xem)
+      User.hasMany(models.ProductView, { foreignKey: "user_id", as: "viewed_products" });
     }
     async comparePassword(password) {
       return bcrypt.compare(password, this.password_hash);
