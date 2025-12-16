@@ -21,6 +21,12 @@ export const API_ENDPOINTS = {
     LIST: `${API_BASE_URL}/categories`,
     DETAIL: (slug) => `${API_BASE_URL}/categories/${slug}`,
   },
+
+  // Wishlist
+  WISHLIST: {
+    LIST: `${API_BASE_URL}/wishlist`,
+    TOGGLE: `${API_BASE_URL}/wishlist/toggle`,
+  },
 };
 
 export default API_BASE_URL;

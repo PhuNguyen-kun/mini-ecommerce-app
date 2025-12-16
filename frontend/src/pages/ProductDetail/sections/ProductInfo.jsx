@@ -1,5 +1,6 @@
 import { TbTruckDelivery, TbPackage, TbGift } from 'react-icons/tb';
 import { useCart } from '../../../context/CartContext';
+import WishlistButton from '../../../components/WishlistButton';
 import { useState, useMemo } from 'react';
 
 const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, setSelectedColor }) => {
@@ -126,8 +127,11 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
           <p className="flex-1 text-2xl text-black leading-[33.24px] font-['Maison_Neue']">
             {product.name}
           </p>
-          <div className="flex gap-1 items-center text-2xl leading-[33.24px] font-['Maison_Neue']">
-            <p className="text-black">{minPrice}₫</p>
+          <div className="flex gap-2 items-center">
+            <div className="flex gap-1 items-center text-2xl leading-[33.24px] font-['Maison_Neue']">
+              <p className="text-black">{minPrice}₫</p>
+            </div>
+            <WishlistButton productId={product.id} productData={product} size="md" />
           </div>
         </div>
         <div className="flex gap-2.5 items-center">

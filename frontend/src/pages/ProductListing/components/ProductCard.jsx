@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import WishlistButton from '../../../components/WishlistButton';
 
 const ProductCard = ({ product }) => {
   
@@ -36,6 +37,11 @@ const ProductCard = ({ product }) => {
             e.target.src = '/placeholder.png';
           }}
         />
+        
+        {/* Wishlist Button - Shows on Hover */}
+        <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" onClick={(e) => e.preventDefault()}>
+          <WishlistButton productId={product.id} productData={product} size="md" />
+        </div>
         
         {/* View Details Overlay - Shows on Hover */}
         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center">

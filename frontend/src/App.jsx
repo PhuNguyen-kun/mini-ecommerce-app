@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { ConfigProvider } from 'antd'
 import Header from './components/Header/Header'
 import Footer from './components/Footer/Footer'
 import './App.css'
@@ -12,35 +13,49 @@ import ProductListing from './pages/ProductListing/ProductListing'
 import CategoryProducts from './pages/CategoryProducts/CategoryProducts'
 import ProductDetail from './pages/ProductDetail/ProductDetail'
 import Checkout from './pages/Checkout/Checkout'
+import Wishlist from './pages/Wishlist/Wishlist'
 import { CartProvider } from './context/CartContext'
+import { WishlistProvider } from './context/WishlistContext'
 import CartSidebar from './components/Cart/CartSidebar'
 
 function App() {
   return (
-    <CartProvider>
-      <BrowserRouter>
-        <div className="app">
-          <Header />
-          <main className="w-full overflow-x-hidden">
-            <Routes>
-              <Route path="/" element={<Landing />} />
-              <Route path="/search" element={<Search />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/stores" element={<Stores />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/blog/:slug" element={<BlogPost />} />
-              <Route path="/women" element={<ProductListing />} />
-              <Route path="/men" element={<ProductListing />} />
-              <Route path="/products" element={<CategoryProducts />} />
-              <Route path="/product/:slug" element={<ProductDetail />} />
-              <Route path="/checkout" element={<Checkout />} />
-            </Routes>
-          </main>
-          <Footer />
-          <CartSidebar />
-        </div>
-      </BrowserRouter>
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: '#000000',
+          borderRadius: 2,
+        },
+      }}
+    >
+      <CartProvider>
+        <WishlistProvider>
+          <BrowserRouter>
+          <div className="app">
+            <Header />
+            <main className="w-full overflow-x-hidden">
+              <Routes>
+                <Route path="/" element={<Landing />} />
+                <Route path="/search" element={<Search />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/stores" element={<Stores />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/blog/:slug" element={<BlogPost />} />
+                <Route path="/women" element={<ProductListing />} />
+                <Route path="/men" element={<ProductListing />} />
+                <Route path="/products" element={<CategoryProducts />} />
+                <Route path="/product/:slug" element={<ProductDetail />} />
+                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/wishlist" element={<Wishlist />} />
+              </Routes>
+            </main>
+            <Footer />
+            <CartSidebar />
+          </div>
+        </BrowserRouter>
+      </WishlistProvider>
     </CartProvider>
+    </ConfigProvider>
   )
 }
 
