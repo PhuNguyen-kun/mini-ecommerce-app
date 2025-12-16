@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import productService from '../../../services/productService';
+import WishlistButton from '../../../components/WishlistButton';
 
 const RecommendedProducts = ({ currentProductId, gender, categoryId }) => {
   const [products, setProducts] = useState([]);
@@ -151,6 +152,11 @@ const RecommendedProducts = ({ currentProductId, gender, categoryId }) => {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     onError={(e) => { e.target.src = '/placeholder.png'; }}
                   />
+                  
+                  {/* Wishlist Button */}
+                  <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" onClick={(e) => e.preventDefault()}>
+                    <WishlistButton productId={product.id} productData={product} size="md" />
+                  </div>
                 </div>
                 <div className="flex flex-col gap-[3px]">
                   <div className="py-2 flex gap-3 items-start">

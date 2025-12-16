@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import productService from '../../services/productService';
+import WishlistButton from '../../components/WishlistButton';
 
 const CategoryProducts = () => {
   const [searchParams] = useSearchParams();
   const categoryId = searchParams.get('category');
+  const searchQuery = searchParams.get('search');
   
   const [products, setProducts] = useState([]);
   const [categoryInfo, setCategoryInfo] = useState(null);
@@ -17,10 +19,11 @@ const CategoryProducts = () => {
     total_pages: 0
   });
 
-  // Fetch products by category
+  // Fetch products by category or search
   useEffect(() => {
     const fetchProducts = async () => {
-      if (!categoryId) return;
+      // Need at least category or search query
+      if (!categoryId && !searchQuery) return;
       
       try {
         setLoading(true);
@@ -29,8 +32,17 @@ const CategoryProducts = () => {
         const params = {
           page: pagination.page,
           limit: pagination.limit,
-          category_ids: categoryId,
         };
+
+        // Add category filter if present
+        if (categoryId) {
+          params.category_ids = categoryId;
+        }
+
+        // Add search query if present
+        if (searchQuery) {
+          params.search = searchQuery;
+        }
 
         const response = await productService.getProducts(params);
         
@@ -38,9 +50,11 @@ const CategoryProducts = () => {
           setProducts(response.data.products);
           setPagination(response.data.pagination);
           
-          // Get category name from first product
-          if (response.data.products.length > 0) {
+          // Get category name from first product if filtering by category
+          if (categoryId && response.data.products.length > 0) {
             setCategoryInfo(response.data.products[0].category);
+          } else {
+            setCategoryInfo(null);
           }
         }
       } catch (err) {
@@ -52,7 +66,7 @@ const CategoryProducts = () => {
     };
 
     fetchProducts();
-  }, [categoryId, pagination.page]);
+  }, [categoryId, searchQuery, pagination.page]);
 
   // Format price to VND
   const formatPrice = (price) => {
@@ -87,13 +101,15 @@ const CategoryProducts = () => {
         {/* Header */}
         <div className="mb-8">
           <p className="text-xs text-gray-600 mb-2">
-            Home / {categoryInfo?.name || 'Products'}
+            Home / {searchQuery ? 'Tìm kiếm' : (categoryInfo?.name || 'Products')}
           </p>
           <h1 className="text-[32px] font-semibold text-black mb-4">
-            {categoryInfo?.name || 'Products'}
+            {searchQuery 
+              ? `Kết quả tìm kiếm cho "${searchQuery}"` 
+              : (categoryInfo?.name || 'Products')}
           </h1>
           <p className="text-sm text-gray-600">
-            {pagination.total} {pagination.total === 1 ? 'product' : 'products'}
+            {pagination.total} {pagination.total === 1 ? 'sản phẩm' : 'sản phẩm'}
           </p>
         </div>
 
@@ -122,6 +138,12 @@ const CategoryProducts = () => {
                         e.target.src = '/placeholder.png';
                       }}
                     />
+                    
+                    {/* Wishlist Button */}
+                    <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" onClick={(e) => e.preventDefault()}>
+                      <WishlistButton productId={product.id} productData={product} size="md" />
+                    </div>
+                    
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center">
                       <span className="text-white font-medium text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         View Details
