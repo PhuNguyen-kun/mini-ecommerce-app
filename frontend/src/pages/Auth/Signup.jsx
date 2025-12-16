@@ -130,9 +130,12 @@ const Signup = () => {
     <div className="min-h-screen bg-white">
       <div className="flex min-h-screen">
         {/* Left side - Image Gallery */}
-        <div className="hidden lg:flex lg:w-[60%] relative bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 overflow-hidden">
+        <div className="hidden lg:flex lg:w-[65%] relative bg-gradient-to-br from-gray-200 via-[#d4d4d8] to-gray-300 overflow-hidden">
           {/* Decorative gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-br from-black/5 via-transparent to-black/10 z-10"></div>
+          
+          {/* Gradient transition overlay - fades to white on the right (matching form container) */}
+          <div className="absolute right-0 top-0 bottom-0 w-56 bg-gradient-to-l from-white via-white/95 via-white/85 via-white/60 via-white/30 to-transparent z-20 pointer-events-none"></div>
           
           {/* Gallery Container */}
           <div className="relative w-full h-full p-6 pt-12 flex items-start justify-center">
@@ -262,8 +265,15 @@ const Signup = () => {
         </div>
 
         {/* Right side - Form */}
-        <div className="flex-1 lg:w-[40%] flex items-center justify-center p-6 lg:p-8">
-          <div className="w-full max-w-sm">
+        <div className="flex-1 lg:w-[35%] flex items-center justify-center p-6 lg:pl-0 lg:pr-20 lg:py-8 relative bg-white">
+          {/* Subtle gradient overlay on the left edge for smooth transition */}
+          <div className="absolute left-0 top-0 bottom-0 w-40 bg-gradient-to-r from-white via-white/98 via-white/90 via-white/70 to-transparent pointer-events-none"></div>
+          
+          {/* Subtle decorative elements */}
+          <div className="absolute top-20 right-8 w-24 h-24 bg-gray-50/30 rounded-full blur-2xl pointer-events-none"></div>
+          <div className="absolute bottom-32 left-12 w-32 h-32 bg-gray-100/20 rounded-full blur-3xl pointer-events-none"></div>
+          
+          <div className="w-full max-w-sm relative z-10">
             <div className="mb-6">
               <h1 className="text-3xl font-bold mb-2">Đăng ký</h1>
               <p className="text-gray-600">
