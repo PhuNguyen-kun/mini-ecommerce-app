@@ -23,7 +23,7 @@ export default function Header() {
 
   return (
     <header className="w-full sticky top-0 z-50 bg-white">
-      <TopBar />
+      {/* <TopBar /> */}
       <MainNav />
       {showAboutSubNav && <AboutSubNav />}
       {showSubNav && <SubNav />}

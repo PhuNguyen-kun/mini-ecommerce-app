@@ -61,6 +61,42 @@ export const WishlistProvider = ({ children }) => {
     fetchWishlist();
   }, []);
 
+  // Watch for token changes (login/logout)
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        // User logged in, fetch from API
+        fetchWishlist();
+      } else {
+        // User logged out, load from localStorage
+        const localWishlist = loadLocalWishlist();
+        setWishlist(localWishlist);
+      }
+    };
+
+    // Listen for storage changes (when login/logout happens)
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Also check on mount and periodically (for same-tab login/logout)
+    const interval = setInterval(() => {
+      const token = localStorage.getItem('token');
+      const currentToken = token;
+      if (currentToken !== (window._lastToken || null)) {
+        window._lastToken = currentToken;
+        handleStorageChange();
+      }
+    }, 500);
+
+    // Initial check
+    window._lastToken = localStorage.getItem('token');
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, []);
+
   // Check if a product is in wishlist
   const isInWishlist = (productId) => {
     return wishlist.some(item => item.product_id === productId || item.product?.id === productId);

@@ -2,10 +2,13 @@ import { TbTruckDelivery, TbPackage, TbGift } from 'react-icons/tb';
 import { useCart } from '../../../context/CartContext';
 import WishlistButton from '../../../components/WishlistButton';
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, setSelectedColor }) => {
   const { addToCart } = useCart();
+  const navigate = useNavigate();
   const [addedToCart, setAddedToCart] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
 
   // Format price to VND with thousands separator
   const formatPrice = (price) => {
@@ -64,7 +67,14 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
     };
   }, [product.variants, formatPrice]);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
+    // Check if user is logged in
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login?from=' + encodeURIComponent(window.location.pathname));
+      return;
+    }
+
     if (!selectedSize || !selectedColor) {
       alert('Please select a size and color');
       return;
@@ -88,18 +98,21 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
       return;
     }
 
-    addToCart({
-      ...product,
-      selectedVariant: variant,
-      selectedSize,
-      selectedColor
-    }, selectedSize, selectedColor);
-    
-    setAddedToCart(true);
-    
-    setTimeout(() => {
-      setAddedToCart(false);
-    }, 2000);
+    setIsAdding(true);
+    try {
+      // Add to cart using variant ID
+      await addToCart(variant.id, 1);
+      
+      setAddedToCart(true);
+      
+      setTimeout(() => {
+        setAddedToCart(false);
+      }, 2000);
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    } finally {
+      setIsAdding(false);
+    }
   };
 
   const renderStars = (rating, size = 12) => {
@@ -192,12 +205,13 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
       <div className="py-8 flex flex-col gap-2.5 items-center justify-center">
         <button 
           onClick={handleAddToCart}
+          disabled={isAdding}
           className={`w-full py-3 flex items-center justify-center transition-colors ${
             addedToCart ? 'bg-green-600' : 'bg-neutral-800 hover:bg-black'
-          }`}
+          } ${isAdding ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
           <p className="text-sm text-white text-center tracking-[1.4px] font-['Maison_Neue']">
-            {addedToCart ? 'ADDED TO CART!' : 'ADD TO BAG'}
+            {addedToCart ? 'ADDED TO CART!' : isAdding ? 'ADDING...' : 'ADD TO BAG'}
           </p>
         </button>
       </div>

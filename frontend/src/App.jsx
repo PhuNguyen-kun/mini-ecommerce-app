@@ -1,29 +1,69 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { ConfigProvider } from 'antd'
-import Header from './components/Header/Header'
-import Footer from './components/Footer/Footer'
-import './App.css'
-import Landing from './pages/Landing/Landing'
-import Search from './pages/Search/Search'
-import About from './pages/About/About'
-import Stores from './pages/Stores/Stores'
-import Blog from './pages/Blog/Blog'
-import BlogPost from './pages/BlogPost/BlogPost'
-import ProductListing from './pages/ProductListing/ProductListing'
-import CategoryProducts from './pages/CategoryProducts/CategoryProducts'
-import ProductDetail from './pages/ProductDetail/ProductDetail'
-import Checkout from './pages/Checkout/Checkout'
-import Wishlist from './pages/Wishlist/Wishlist'
-import { CartProvider } from './context/CartContext'
-import { WishlistProvider } from './context/WishlistContext'
-import CartSidebar from './components/Cart/CartSidebar'
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { ConfigProvider } from "antd";
+import Header from "./components/Header/Header";
+import Footer from "./components/Footer/Footer";
+import "./App.css";
+import Landing from "./pages/Landing/Landing";
+import Search from "./pages/Search/Search";
+import About from "./pages/About/About";
+import Stores from "./pages/Stores/Stores";
+import Blog from "./pages/Blog/Blog";
+import BlogPost from "./pages/BlogPost/BlogPost";
+import ProductListing from "./pages/ProductListing/ProductListing";
+import CategoryProducts from "./pages/CategoryProducts/CategoryProducts";
+import ProductDetail from "./pages/ProductDetail/ProductDetail";
+import Checkout from "./pages/Checkout/Checkout";
+import Wishlist from "./pages/Wishlist/Wishlist";
+import Login from "./pages/Auth/Login";
+import Signup from "./pages/Auth/Signup";
+import { CartProvider } from "./context/CartContext";
+import { WishlistProvider } from "./context/WishlistContext";
+import CartSidebar from "./components/Cart/CartSidebar";
+
+function AppContent() {
+  const location = useLocation();
+  const isAuthPage =
+    location.pathname === "/login" || location.pathname === "/signup";
+
+  // Scroll to top when route changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
+  return (
+    <div className="app">
+      {!isAuthPage && <Header />}
+      <main className="w-full overflow-x-hidden">
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/stores" element={<Stores />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/women" element={<ProductListing />} />
+          <Route path="/men" element={<ProductListing />} />
+          <Route path="/products" element={<CategoryProducts />} />
+          <Route path="/product/:slug" element={<ProductDetail />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+        </Routes>
+      </main>
+      {!isAuthPage && <Footer />}
+      {!isAuthPage && <CartSidebar />}
+    </div>
+  );
+}
 
 function App() {
   return (
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: '#000000',
+          colorPrimary: "#000000",
           borderRadius: 2,
         },
       }}
@@ -31,32 +71,12 @@ function App() {
       <CartProvider>
         <WishlistProvider>
           <BrowserRouter>
-          <div className="app">
-            <Header />
-            <main className="w-full overflow-x-hidden">
-              <Routes>
-                <Route path="/" element={<Landing />} />
-                <Route path="/search" element={<Search />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/stores" element={<Stores />} />
-                <Route path="/blog" element={<Blog />} />
-                <Route path="/blog/:slug" element={<BlogPost />} />
-                <Route path="/women" element={<ProductListing />} />
-                <Route path="/men" element={<ProductListing />} />
-                <Route path="/products" element={<CategoryProducts />} />
-                <Route path="/product/:slug" element={<ProductDetail />} />
-                <Route path="/checkout" element={<Checkout />} />
-                <Route path="/wishlist" element={<Wishlist />} />
-              </Routes>
-            </main>
-            <Footer />
-            <CartSidebar />
-          </div>
-        </BrowserRouter>
-      </WishlistProvider>
-    </CartProvider>
+            <AppContent />
+          </BrowserRouter>
+        </WishlistProvider>
+      </CartProvider>
     </ConfigProvider>
-  )
+  );
 }
 
-export default App
+export default App;

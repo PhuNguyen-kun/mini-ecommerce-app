@@ -27,6 +27,15 @@ export const API_ENDPOINTS = {
     LIST: `${API_BASE_URL}/wishlist`,
     TOGGLE: `${API_BASE_URL}/wishlist/toggle`,
   },
+
+  // Cart
+  CART: {
+    GET: `${API_BASE_URL}/cart`,
+    ADD: `${API_BASE_URL}/cart/add`,
+    UPDATE: (cartItemId) => `${API_BASE_URL}/cart/item/${cartItemId}`,
+    REMOVE: (cartItemId) => `${API_BASE_URL}/cart/item/${cartItemId}`,
+    CLEAR: `${API_BASE_URL}/cart/clear`,
+  },
 };
 
 export default API_BASE_URL;

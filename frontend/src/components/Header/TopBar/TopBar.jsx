@@ -1,7 +1,5 @@
-import { HiArrowRight } from 'react-icons/hi2';
-import vnimage from '../../../assets/vn.png';
-
-
+import { HiArrowRight } from "react-icons/hi2";
+import vnimage from "../../../assets/vn.png";
 
 export default function TopBar() {
   return (
@@ -16,11 +14,7 @@ export default function TopBar() {
         <HiArrowRight className="w-3 h-3" />
       </div>
       <div className="flex items-center gap-2 absolute right-6">
-        <img 
-          src={vnimage} 
-          alt="VN" 
-          className="w-5 h-3.5 object-cover"
-        />
+        <img src={vnimage} alt="VN" className="w-5 h-3.5 object-cover" />
         <p>Đồng</p>
       </div>
     </div>
