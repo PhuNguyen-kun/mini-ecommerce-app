@@ -6,12 +6,30 @@ module.exports = (sequelize) => {
             // Thuộc về Product gốc
             ProductVariant.belongsTo(models.Product, { foreignKey: "product_id", as: "product" });
 
-            // Quan hệ Many-to-Many để lấy ra các thuộc tính của biến thể này (VD: Màu Đỏ, Size M)
+            // Quan hệ Many-to-Many để lấy toàn bộ option values của variant (dùng để hiển thị)
             ProductVariant.belongsToMany(models.ProductOptionValue, {
                 through: models.ProductVariantOption,
                 foreignKey: "product_variant_id",
                 otherKey: "product_option_value_id",
                 as: "option_values",
+            });
+
+            /**
+             * ✅ Thêm 2 alias để filter AND màu/size
+             * Không đổi DB, chỉ tạo thêm association alias trỏ cùng bảng join
+             */
+            ProductVariant.belongsToMany(models.ProductOptionValue, {
+                through: models.ProductVariantOption,
+                foreignKey: "product_variant_id",
+                otherKey: "product_option_value_id",
+                as: "color_values",
+            });
+
+            ProductVariant.belongsToMany(models.ProductOptionValue, {
+                through: models.ProductVariantOption,
+                foreignKey: "product_variant_id",
+                otherKey: "product_option_value_id",
+                as: "size_values",
             });
 
             // Link tới ảnh (nếu biến thể có ảnh riêng)

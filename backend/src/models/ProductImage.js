@@ -13,6 +13,7 @@ module.exports = (sequelize) => {
         product_id: { type: DataTypes.BIGINT, allowNull: false },
         product_variant_id: { type: DataTypes.BIGINT, allowNull: true },
         image_url: { type: DataTypes.STRING(500), allowNull: false },
+        public_id: { type: DataTypes.STRING(255), allowNull: true }, // Lưu ID của Cloudinary 
         is_primary: { type: DataTypes.BOOLEAN, defaultValue: false },
         sort_order: { type: DataTypes.INTEGER, defaultValue: 0 },
         deleted_at: { type: DataTypes.DATE, field: "deleted_at" },

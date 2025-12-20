@@ -16,6 +16,7 @@ module.exports = (sequelize) => {
         order_id: { type: DataTypes.BIGINT, allowNull: true },
         rating: { type: DataTypes.TINYINT, allowNull: false },
         comment: { type: DataTypes.TEXT, allowNull: true },
+        images: { type: DataTypes.JSON, allowNull: true },
         is_approved: { type: DataTypes.BOOLEAN, defaultValue: true },
         created_at: { type: DataTypes.DATE, field: "created_at" },
         updated_at: { type: DataTypes.DATE, field: "updated_at" },
