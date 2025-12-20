@@ -3,7 +3,7 @@ const Joi = require("joi");
 // CLIENT: filter list
 const filterProductSchema = Joi.object({
     page: Joi.number().integer().min(1).default(1),
-    limit: Joi.number().integer().min(1).max(100).default(10),
+    limit: Joi.number().integer().min(1).max(1000).default(10),
     search: Joi.string().allow("", null),
 
     category_id: Joi.number().integer().allow(null),
@@ -28,6 +28,8 @@ const filterProductSchema = Joi.object({
     sizes: Joi.alternatives()
         .try(Joi.string(), Joi.array().items(Joi.string()))
         .optional(),
+
+    view: Joi.string().valid("card", "full").default("card"),
 });
 
 // ADMIN: create product (JSON-only)

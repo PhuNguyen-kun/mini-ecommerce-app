@@ -19,7 +19,8 @@ const RecommendedProducts = ({ currentProductId, gender, categoryId }) => {
           gender,
           category_ids: categoryId ? [categoryId] : [],
           limit: 12, // Increased to 12 products for carousel
-          sort: 'newest'
+          sort: 'newest',
+          view: 'full' // Request full product details
         });
 
         if (response.success) {
@@ -131,8 +132,14 @@ const RecommendedProducts = ({ currentProductId, gender, categoryId }) => {
           style={{ scrollBehavior: 'smooth' }}
         >
           {products.map((product) => {
-            const primaryImage = product.images?.find(img => img.is_primary)?.image_url || product.images?.[0]?.image_url || '/placeholder.png';
-            const minPrice = product.variants?.reduce((min, variant) => Math.min(min, variant.price), Infinity) || 0;
+            // Handle both card mode (primary_image) and full mode (images array)
+            const primaryImage = product.primary_image || 
+                                product.images?.find(img => img.is_primary)?.image_url || 
+                                product.images?.[0]?.image_url || 
+                                '/placeholder.png';
+            const minPrice = product.min_price || 
+                           product.variants?.reduce((min, variant) => Math.min(min, variant.price), Infinity) || 
+                           0;
             
             // Get first color from variants
             const firstColor = product.variants?.[0]?.option_values?.find(opt => 

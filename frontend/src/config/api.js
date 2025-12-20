@@ -9,6 +9,13 @@ export const API_ENDPOINTS = {
     LOGOUT: `${API_BASE_URL}/auth/logout`,
     PROFILE: `${API_BASE_URL}/auth/me`,
   },
+
+  // Users
+  USERS: {
+    UPDATE_PROFILE: `${API_BASE_URL}/users/me`,
+    UPLOAD_AVATAR: `${API_BASE_URL}/users/me/avatar`,
+    DELETE_AVATAR: `${API_BASE_URL}/users/me/avatar`,
+  },
   
   // Products
   PRODUCTS: {

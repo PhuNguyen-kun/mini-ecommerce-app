@@ -66,18 +66,25 @@ class ProductService {
    */
   async getAvailableFilters(gender) {
     try {
-      // Get all products for this gender to extract unique colors and sizes
-      const response = await fetch(`${API_ENDPOINTS.PRODUCTS.LIST}?gender=${gender}&limit=1000`);
+      // Get all products with full data to extract unique colors and sizes
+      const response = await fetch(`${API_ENDPOINTS.PRODUCTS.LIST}?gender=${gender}&limit=1000&view=full`);
       
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        console.error('Filter fetch failed with status:', response.status);
+        return { colors: [], sizes: [], categories: [] };
       }
       
       const data = await response.json();
+      console.log('Filter response:', data); // Debug log
       
-      if (!data.success) return { colors: [], sizes: [], categories: [] };
+      if (!data.success || !data.data || !data.data.products) {
+        console.error('Invalid filter response structure:', data);
+        return { colors: [], sizes: [], categories: [] };
+      }
       
       const products = data.data.products;
+      console.log('Number of products for filters:', products.length); // Debug log
+      
       const colorsMap = new Map(); // { colorName: count }
       const sizesMap = new Map(); // { sizeName: count }
       const categoriesMap = new Map();
@@ -103,17 +110,25 @@ class ProductService {
         const productSizes = new Set();
         
         // Extract colors and sizes from variants
-        product.variants?.forEach(variant => {
-          variant.option_values?.forEach(optVal => {
-            const optionName = optVal.option?.name?.toLowerCase();
-            
-            if (optionName === 'color' || optionName === 'màu sắc' || optionName === 'màu') {
-              productColors.add(optVal.value);
-            } else if (optionName === 'size' || optionName === 'kích cỡ' || optionName === 'kích thước') {
-              productSizes.add(optVal.value);
+        if (product.variants && Array.isArray(product.variants)) {
+          product.variants.forEach(variant => {
+            if (variant.option_values && Array.isArray(variant.option_values)) {
+              variant.option_values.forEach(optVal => {
+                // Check both possible structures
+                const optionName = (optVal.option?.name || optVal.ProductOption?.name || '').toLowerCase();
+                const value = optVal.value;
+                
+                if (!value) return;
+                
+                if (optionName.includes('color') || optionName.includes('màu')) {
+                  productColors.add(value);
+                } else if (optionName.includes('size') || optionName.includes('kích')) {
+                  productSizes.add(value);
+                }
+              });
             }
           });
-        });
+        }
         
         // Count products for each color
         productColors.forEach(color => {
@@ -132,10 +147,23 @@ class ProductService {
         .sort((a, b) => a.name.localeCompare(b.name));
       
       const sizes = Array.from(sizesMap.entries())
-        .map(([name, count]) => ({ name, count }));
+        .map(([name, count]) => ({ name, count }))
+        .sort((a, b) => {
+          // Custom sort for sizes (XS, S, M, L, XL, XXL)
+          const sizeOrder = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '2XL', '3XL'];
+          const aIndex = sizeOrder.indexOf(a.name.toUpperCase());
+          const bIndex = sizeOrder.indexOf(b.name.toUpperCase());
+          
+          if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
+          if (aIndex !== -1) return -1;
+          if (bIndex !== -1) return 1;
+          return a.name.localeCompare(b.name);
+        });
       
       const categories = Array.from(categoriesMap.values())
         .sort((a, b) => b.count - a.count); // Sort by count descending
+      
+      console.log('Extracted filters:', { colors: colors.length, sizes: sizes.length, categories: categories.length }); // Debug log
       
       return { colors, sizes, categories };
     } catch (error) {

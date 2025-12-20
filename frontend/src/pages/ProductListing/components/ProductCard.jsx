@@ -3,9 +3,18 @@ import WishlistButton from '../../../components/WishlistButton';
 
 const ProductCard = ({ product }) => {
   
-  // Extract data from API response
-  const primaryImage = product.images?.find(img => img.is_primary)?.image_url || product.images?.[0]?.image_url || '/placeholder.png';
-  const minPrice = product.variants?.reduce((min, variant) => Math.min(min, variant.price), Infinity) || 0;
+  // Handle both card and full view modes
+  // Card mode: has primary_image, price_from
+  // Full mode: has images[], variants[]
+  
+  const primaryImage = product.primary_image || 
+                       product.images?.find(img => img.is_primary)?.image_url || 
+                       product.images?.[0]?.image_url || 
+                       '/placeholder.png';
+  
+  const minPrice = product.price_from || 
+                   product.variants?.reduce((min, variant) => Math.min(min, variant.price), Infinity) || 
+                   0;
   
   // Format price to VND
   const formatPrice = (price) => {
@@ -13,7 +22,7 @@ const ProductCard = ({ product }) => {
     return new Intl.NumberFormat('vi-VN').format(price);
   };
   
-  // Get unique colors from variants
+  // Get unique colors from variants (only in full mode)
   const colors = product.variants?.reduce((acc, variant) => {
     variant.option_values?.forEach(opt => {
       if (opt.ProductOption?.name?.toLowerCase() === 'color' || opt.ProductOption?.name?.toLowerCase() === 'màu') {

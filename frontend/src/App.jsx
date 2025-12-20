@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import { ConfigProvider } from "antd";
+import { ConfigProvider, App as AntApp } from "antd";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import "./App.css";
@@ -15,6 +15,7 @@ import CategoryProducts from "./pages/CategoryProducts/CategoryProducts";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
 import Checkout from "./pages/Checkout/Checkout";
 import Wishlist from "./pages/Wishlist/Wishlist";
+import Profile from "./pages/Profile/Profile";
 import Login from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Signup";
 import { CartProvider } from "./context/CartContext";
@@ -48,6 +49,7 @@ function AppContent() {
           <Route path="/product/:slug" element={<ProductDetail />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
         </Routes>
@@ -68,13 +70,15 @@ function App() {
         },
       }}
     >
-      <CartProvider>
-        <WishlistProvider>
-          <BrowserRouter>
-            <AppContent />
-          </BrowserRouter>
-        </WishlistProvider>
-      </CartProvider>
+      <AntApp>
+        <CartProvider>
+          <WishlistProvider>
+            <BrowserRouter>
+              <AppContent />
+            </BrowserRouter>
+          </WishlistProvider>
+        </CartProvider>
+      </AntApp>
     </ConfigProvider>
   );
 }

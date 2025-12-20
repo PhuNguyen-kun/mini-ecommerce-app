@@ -32,6 +32,7 @@ const CategoryProducts = () => {
         const params = {
           page: pagination.page,
           limit: pagination.limit,
+          view: 'full', // Need full data for images and variants
         };
 
         // Add category filter if present
@@ -117,10 +118,13 @@ const CategoryProducts = () => {
         {products.length > 0 ? (
           <div className="grid grid-cols-4 gap-5">
             {products.map((product) => {
-              const primaryImage = product.images?.find(img => img.is_primary)?.image_url || 
+              // Handle both card and full view modes
+              const primaryImage = product.primary_image || 
+                                  product.images?.find(img => img.is_primary)?.image_url || 
                                   product.images?.[0]?.image_url || '/placeholder.png';
-              const minPrice = product.variants?.reduce((min, variant) => 
-                Math.min(min, variant.price), Infinity) || 0;
+              const minPrice = product.price_from || 
+                              product.variants?.reduce((min, variant) => 
+                                Math.min(min, variant.price), Infinity) || 0;
 
               return (
                 <Link 
