@@ -1,36 +1,72 @@
 const express = require("express");
 const router = express.Router();
-const productController = require("../controllers/productController");
-const { validateFilterProduct, validateCreateProduct, validateUpdateProduct } = require("../validators/productValidator");
-const { authMiddleware, requireAdmin } = require("../middlewares/auth");
 
-// Public Routes (Ai cũng xem được)
+const productController = require("../controllers/productController");
+
+const {
+    validateFilterProduct,
+    validateCreateProduct,
+    validateUpdateProduct,
+    validateAddMedia,
+} = require("../validators/productValidator");
+
+const { authMiddleware, requireAdmin } = require("../middlewares/auth");
+const { uploadProductFiles, handleUploadError } = require("../middlewares/upload");
+const { parseProductMediaFormData } = require("../middlewares/productFormData");
+
+// ======================
+// CLIENT / PUBLIC
+// ======================
 router.get("/", validateFilterProduct, productController.getProducts);
 router.get("/:slug", productController.getProductBySlug);
 
-// Admin Routes (Cần đăng nhập + Quyền Admin)
+// ======================
+// ADMIN / PRIVATE
+// ======================
+router.use(authMiddleware, requireAdmin);
+
+/**
+ * (ADMIN) 1) Create product (JSON)
+ * - KHÔNG upload files tại đây
+ */
 router.post(
-    "/",
-    authMiddleware,         // 1. Check Login
-    requireAdmin,           // 2. Check Admin
-    validateCreateProduct,  // 3. Check Data đầu vào
-    productController.createProduct // 4. Xử lý
+    "/admin",
+    validateCreateProduct,
+    productController.createProduct
 );
 
+/**
+ * (ADMIN) 2) Upload media cho product đã có ID (FORM-DATA)
+ * - field: images[] , videos[]
+ * - Lưu DB ProductImage/ProductVideo
+ */
+router.post(
+    "/admin/:id/media",
+    uploadProductFiles,
+    handleUploadError,
+    parseProductMediaFormData,
+    validateAddMedia,
+    productController.addProductMedia
+);
 
+/**
+ * (ADMIN) 3) Update product basic info/variants (JSON)
+ * - KHÔNG upload ở đây (media có API riêng)
+ */
 router.put(
-    "/:id",
-    authMiddleware,         // 1. Check Login
-    requireAdmin,           // 2. Check Admin
-    validateUpdateProduct,  // 3. Check Data đầu vào
-    productController.updateProduct // 4. Xử lý
-)
+    "/admin/:id",
+    validateUpdateProduct,
+    productController.updateProduct
+);
 
-router.delete(
-    "/:id",
-    authMiddleware,         // 1. Check Login
-    requireAdmin,           // 2. Check Admin
-    productController.deleteProduct // 4. Xử lý
-)
+// Delete product
+router.delete("/admin/:id", productController.deleteProduct);
+
+// Delete single image/video
+router.delete("/admin/images/:id", productController.deleteImage);
+router.delete("/admin/videos/:id", productController.deleteVideo);
+
+// OPTIONAL: gán ảnh cho variant (không làm cũng không sao)
+router.post("/admin/variants/image", productController.setVariantImage);
 
 module.exports = router;
