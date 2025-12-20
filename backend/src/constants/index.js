@@ -42,6 +42,26 @@ const ERROR_TYPES = {
   TOKEN_EXPIRED: "TOKEN_EXPIRED",
 };
 
+const UPLOAD_LIMITS = {
+  FILE_SIZE: {
+    IMAGE: 5 * 1024 * 1024,      // 5MB
+    VIDEO: 50 * 1024 * 1024,     // 50MB
+    AVATAR: 2 * 1024 * 1024,     // 2MB
+  },
+  MAX_COUNT: {
+    PRODUCT_IMAGES: 10,
+    PRODUCT_VIDEOS: 2,
+  }
+};
+
+const ALLOWED_FORMATS = {
+  IMAGES: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+  VIDEOS: ['mp4', 'mov', 'avi', 'mkv'],
+};
+
+const COLOR_OPTION_NAMES = ["Màu", "Màu sắc"];
+const SIZE_OPTION_NAMES = ["Size", "Kích cỡ"];
+
 module.exports = {
   USER_ROLES,
   USER_STATUS,
@@ -49,4 +69,8 @@ module.exports = {
   JWT_CONFIG,
   PAGINATION,
   ERROR_TYPES,
+  UPLOAD_LIMITS,
+  ALLOWED_FORMATS,
+  COLOR_OPTION_NAMES,
+  SIZE_OPTION_NAMES,
 };
