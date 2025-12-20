@@ -19,6 +19,7 @@ export default function NavActions() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState("");
+  const [userAvatar, setUserAvatar] = useState("");
 
   const cartCount = getCartCount();
   const wishlistCount = getWishlistCount();
@@ -30,20 +31,23 @@ export default function NavActions() {
       const isAuth = !!token;
       setIsLoggedIn(isAuth);
 
-      // Get user name if logged in
+      // Get user name and avatar if logged in
       if (isAuth) {
         const userStr = localStorage.getItem("user");
         if (userStr) {
           try {
             const user = JSON.parse(userStr);
             setUserName(user.full_name || "");
+            setUserAvatar(user.avatar_url || "");
           } catch (e) {
             console.error("Error parsing user data:", e);
             setUserName("");
+            setUserAvatar("");
           }
         }
       } else {
         setUserName("");
+        setUserAvatar("");
       }
     };
 
@@ -121,7 +125,18 @@ export default function NavActions() {
               className="flex items-center gap-2 hover:opacity-70 transition-opacity"
               aria-label="Account"
             >
-              <HiUser className="w-5 h-5" />
+              {userAvatar ? (
+                <img
+                  src={userAvatar}
+                  alt={userName}
+                  className="w-8 h-8 rounded-full object-cover border border-gray-200"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.nextElementSibling.style.display = 'block';
+                  }}
+                />
+              ) : null}
+              <HiUser className="w-5 h-5" style={{ display: userAvatar ? 'none' : 'block' }} />
               {userName && (
                 <span className="text-sm font-medium text-black max-w-[100px] truncate">
                   {userName}

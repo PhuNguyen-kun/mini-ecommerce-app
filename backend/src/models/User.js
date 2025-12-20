@@ -63,6 +63,14 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING(20),
         allowNull: true,
       },
+      avatar_url: {
+        type: DataTypes.STRING(500),
+        allowNull: true,
+      },
+      avatar_public_id: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+      },
       is_active: {
         type: DataTypes.BOOLEAN,
         allowNull: false,

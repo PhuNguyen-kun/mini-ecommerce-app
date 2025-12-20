@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { Pagination } from 'antd';
 import ProductCard from './ProductCard';
 import productService from '../../../services/productService';
 
@@ -6,13 +7,10 @@ const ProductGrid = ({ category, onTotalChange, selectedFilters }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [pagination, setPagination] = useState({
-    page: 1,
-    limit: 12,
-    total: 0,
-    total_pages: 0
-  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [total, setTotal] = useState(0);
   const [sortBy, setSortBy] = useState('featured');
+  const pageSize = 12;
 
   // Create stable filter string to prevent unnecessary re-renders
   const filterKey = useMemo(() => {
@@ -23,7 +21,12 @@ const ProductGrid = ({ category, onTotalChange, selectedFilters }) => {
     });
   }, [selectedFilters]);
 
-  // Fetch products from API
+  // Reset page when category, sort, or filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [category, sortBy, filterKey]);
+
+  // Fetch products
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -33,8 +36,8 @@ const ProductGrid = ({ category, onTotalChange, selectedFilters }) => {
         const gender = category.toLowerCase() === 'men' ? 'male' : 'female';
         
         const params = {
-          page: pagination.page,
-          limit: pagination.limit,
+          page: currentPage,
+          limit: pageSize,
           gender: gender,
         };
 
@@ -59,7 +62,7 @@ const ProductGrid = ({ category, onTotalChange, selectedFilters }) => {
         
         if (response.success) {
           setProducts(response.data.products);
-          setPagination(response.data.pagination);
+          setTotal(response.data.pagination.total);
           
           // Update total products count in parent
           if (onTotalChange) {
@@ -75,18 +78,16 @@ const ProductGrid = ({ category, onTotalChange, selectedFilters }) => {
     };
 
     fetchProducts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [category, pagination.page, sortBy, filterKey]); // Use filterKey instead of selectedFilters
+  }, [category, currentPage, sortBy, filterKey, selectedFilters, onTotalChange]);
 
   const handleSortChange = (e) => {
     setSortBy(e.target.value);
-    setPagination(prev => ({ ...prev, page: 1 })); // Reset to page 1
   };
 
-  // Reset to page 1 when filters change
-  useEffect(() => {
-    setPagination(prev => ({ ...prev, page: 1 }));
-  }, [filterKey]); // Use filterKey instead of selectedFilters
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <div className="flex-1">
@@ -111,7 +112,7 @@ const ProductGrid = ({ category, onTotalChange, selectedFilters }) => {
           </select>
           {!loading && (
             <p className="text-sm text-gray-600">
-              {pagination.total} products
+              {total} products
             </p>
           )}
         </div>
@@ -149,25 +150,16 @@ const ProductGrid = ({ category, onTotalChange, selectedFilters }) => {
       )}
 
       {/* Pagination */}
-      {!loading && pagination.total_pages > 1 && (
-        <div className="flex justify-center items-center gap-4 mt-12">
-          <button
-            onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}
-            disabled={pagination.page === 1}
-            className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Previous
-          </button>
-          <span className="text-sm text-gray-600">
-            Page {pagination.page} of {pagination.total_pages}
-          </span>
-          <button
-            onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
-            disabled={pagination.page === pagination.total_pages}
-            className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Next
-          </button>
+      {!loading && total > pageSize && (
+        <div className="flex justify-center mt-12">
+          <Pagination
+            current={currentPage}
+            total={total}
+            pageSize={pageSize}
+            onChange={handlePageChange}
+            showSizeChanger={false}
+            showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} products`}
+          />
         </div>
       )}
     </div>

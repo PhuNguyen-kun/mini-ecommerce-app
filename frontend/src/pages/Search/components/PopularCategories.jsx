@@ -23,11 +23,15 @@ export default function PopularCategories() {
               try {
                 const productsResponse = await productService.getProducts({
                   category_ids: category.id,
-                  limit: 1
+                  limit: 1,
+                  view: 'card'
                 });
                 
-                const image = productsResponse.data?.products?.[0]?.images?.find(img => img.is_primary)?.image_url ||
-                             productsResponse.data?.products?.[0]?.images?.[0]?.image_url;
+                // Handle both card mode (primary_image) and full mode (images[])
+                const product = productsResponse.data?.products?.[0];
+                const image = product?.primary_image ||
+                             product?.images?.find(img => img.is_primary)?.image_url ||
+                             product?.images?.[0]?.image_url;
                 
                 return {
                   ...category,

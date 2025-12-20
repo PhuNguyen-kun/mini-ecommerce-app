@@ -13,6 +13,7 @@ app.get("/health", (req, res) => {
 });
 
 app.use("/api/auth", require("./routes/authRoutes"));
+app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/categories", require("./routes/categoryRoutes"));
 app.use("/api/products", require("./routes/productRoutes"));
 app.use("/api/wishlist", require("./routes/wishlistRoutes"));
