@@ -14,6 +14,8 @@ import ProductListing from "./pages/ProductListing/ProductListing";
 import CategoryProducts from "./pages/CategoryProducts/CategoryProducts";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
 import Checkout from "./pages/Checkout/Checkout";
+import Orders from "./pages/Orders/Orders";
+import OrderDetail from "./pages/OrderDetail/OrderDetail";
 import Wishlist from "./pages/Wishlist/Wishlist";
 import Profile from "./pages/Profile/Profile";
 import Login from "./pages/Auth/Login";
@@ -48,6 +50,8 @@ function AppContent() {
           <Route path="/products" element={<CategoryProducts />} />
           <Route path="/product/:slug" element={<ProductDetail />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/orders/:id" element={<OrderDetail />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/login" element={<Login />} />

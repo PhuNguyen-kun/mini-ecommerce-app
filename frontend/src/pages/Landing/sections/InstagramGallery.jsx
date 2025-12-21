@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { HiChevronLeft, HiChevronRight } from 'react-icons/hi2';
-import { API_ENDPOINTS } from '../../../config/api';
+import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
+import { API_ENDPOINTS } from "../../../config/api";
 
 export default function InstagramGallery() {
   const [products, setProducts] = useState([]);
@@ -11,13 +11,15 @@ export default function InstagramGallery() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`${API_ENDPOINTS.PRODUCTS.LIST}?limit=8&offset=5`);
+        const response = await fetch(
+          `${API_ENDPOINTS.PRODUCTS.LIST}?limit=8&offset=5`
+        );
         const data = await response.json();
         // API returns { data: { products: [...], pagination: {...} } }
         const productsArray = data.data?.products || [];
         setProducts(Array.isArray(productsArray) ? productsArray : []);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error("Error fetching products:", error);
         setProducts([]);
       } finally {
         setLoading(false);
@@ -31,13 +33,14 @@ export default function InstagramGallery() {
     if (scrollContainerRef.current) {
       const scrollAmount = 235.6; // width of one image (225.6px) + gap (10px)
       const currentScroll = scrollContainerRef.current.scrollLeft;
-      const newScroll = direction === 'left' 
-        ? currentScroll - scrollAmount 
-        : currentScroll + scrollAmount;
-      
+      const newScroll =
+        direction === "left"
+          ? currentScroll - scrollAmount
+          : currentScroll + scrollAmount;
+
       scrollContainerRef.current.scrollTo({
         left: newScroll,
-        behavior: 'smooth'
+        behavior: "smooth",
       });
     }
   };
@@ -46,10 +49,13 @@ export default function InstagramGallery() {
     <section className="w-full py-[90px]">
       {/* Header */}
       <div className="text-center mb-12 px-[54px] pt-[90px] pb-0 border-t border-neutral-800">
-        <h2 className="text-[32px] leading-[40px] font-normal mb-6">Everlane On You</h2>
+        <h2 className="text-[32px] leading-[40px] font-normal mb-6">
+          Everlane On You
+        </h2>
         <div className="space-y-1">
           <p className="text-sm leading-[16.8px] tracking-[1.4px]">
-            Share your latest look with #EverlaneOnYou for a chance to be featured.
+            Share your latest look with #EverlaneOnYou for a chance to be
+            featured.
           </p>
           <p className="text-sm leading-5 tracking-[1.4px] underline cursor-pointer hover:opacity-70">
             Add Your Photo
@@ -60,38 +66,48 @@ export default function InstagramGallery() {
       {/* Gallery */}
       <div className="px-10 flex items-center gap-[18px]">
         {/* Left Arrow */}
-        <button 
-          onClick={() => scroll('left')}
+        <button
+          onClick={() => scroll("left")}
           className="w-10 h-10 flex items-center justify-center hover:bg-gray-100 transition-colors flex-shrink-0"
         >
           <HiChevronLeft className="w-6 h-6" />
         </button>
 
         {/* Images */}
-        <div 
+        <div
           ref={scrollContainerRef}
           className="flex gap-2.5 overflow-x-auto scrollbar-hide scroll-smooth"
         >
           {loading ? (
             [...Array(5)].map((_, i) => (
-              <div key={i} className="w-[225.6px] h-[225px] flex-shrink-0 bg-gray-200 animate-pulse"></div>
+              <div
+                key={i}
+                className="w-[225.6px] h-[225px] flex-shrink-0 bg-gray-200 animate-pulse"
+              ></div>
             ))
           ) : products.length > 0 ? (
             products.slice(0, 8).map((product) => {
-              const mainImage = product.images?.[0]?.image_url || 'https://via.placeholder.com/225';
-              
+              const mainImage =
+                product.images?.[0]?.image_url || "/placeholder.png";
+
               return (
                 <Link
                   key={product.id}
                   to={`/product/${product.id}`}
                   className="relative w-[225.6px] h-[225px] flex-shrink-0 overflow-hidden cursor-pointer group"
                 >
-                  <img 
-                    src={mainImage} 
-                    alt={product.name} 
+                  <img
+                    src={mainImage}
+                    alt={product.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     onError={(e) => {
-                      e.target.src = 'https://via.placeholder.com/225?text=' + encodeURIComponent(product.name);
+                      // Prevent infinite loop by checking if already set to placeholder
+                      if (
+                        e.target.src !==
+                        window.location.origin + "/placeholder.png"
+                      ) {
+                        e.target.src = "/placeholder.png";
+                      }
                     }}
                   />
                 </Link>
@@ -105,8 +121,8 @@ export default function InstagramGallery() {
         </div>
 
         {/* Right Arrow */}
-        <button 
-          onClick={() => scroll('right')}
+        <button
+          onClick={() => scroll("right")}
           className="w-10 h-10 flex items-center justify-center hover:bg-gray-100 transition-colors flex-shrink-0"
         >
           <HiChevronRight className="w-6 h-6" />

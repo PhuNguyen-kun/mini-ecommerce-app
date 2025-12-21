@@ -94,6 +94,11 @@ export default function NavActions() {
       onClick: () => navigate("/profile"),
     },
     {
+      key: "orders",
+      label: "Lịch sử đặt hàng",
+      onClick: () => navigate("/orders"),
+    },
+    {
       key: "logout",
       label: "Đăng xuất",
       style: {
@@ -131,12 +136,15 @@ export default function NavActions() {
                   alt={userName}
                   className="w-8 h-8 rounded-full object-cover border border-gray-200"
                   onError={(e) => {
-                    e.target.style.display = 'none';
-                    e.target.nextElementSibling.style.display = 'block';
+                    e.target.style.display = "none";
+                    e.target.nextElementSibling.style.display = "block";
                   }}
                 />
               ) : null}
-              <HiUser className="w-5 h-5" style={{ display: userAvatar ? 'none' : 'block' }} />
+              <HiUser
+                className="w-5 h-5"
+                style={{ display: userAvatar ? "none" : "block" }}
+              />
               {userName && (
                 <span className="text-sm font-medium text-black max-w-[100px] truncate">
                   {userName}

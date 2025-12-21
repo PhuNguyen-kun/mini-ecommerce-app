@@ -135,7 +135,10 @@ export default function ProductCarousel() {
                       alt={product.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       onError={(e) => {
-                        e.target.src = '/placeholder.png';
+                        // Prevent infinite loop by checking if already set to placeholder
+                        if (e.target.src !== window.location.origin + '/placeholder.png') {
+                          e.target.src = '/placeholder.png';
+                        }
                       }}
                     />
                     

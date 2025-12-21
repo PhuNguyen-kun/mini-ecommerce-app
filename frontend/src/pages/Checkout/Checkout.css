@@ -1,0 +1,12 @@
+.address-select {
+  border-radius: 7px;
+  height: 35px;
+}
+
+.ant-select-item-option-selected {
+  color: #fff !important;
+}
+
+.ant-select-item-option-selected .ant-select-item-option-content {
+  color: #fff !important;
+}

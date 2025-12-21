@@ -43,6 +43,13 @@ export const API_ENDPOINTS = {
     REMOVE: (cartItemId) => `${API_BASE_URL}/cart/item/${cartItemId}`,
     CLEAR: `${API_BASE_URL}/cart/clear`,
   },
+
+  // Locations
+  LOCATIONS: {
+    PROVINCES: `${API_BASE_URL}/locations/provinces`,
+    DISTRICTS: (provinceId) => `${API_BASE_URL}/locations/districts/${provinceId}`,
+    WARDS: (districtId) => `${API_BASE_URL}/locations/wards/${districtId}`,
+  },
 };
 
 export default API_BASE_URL;

@@ -2,6 +2,27 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
+    // Query IDs từ database thay vì hardcode
+    // Tìm Hà Nội (có thể là "Thành phố Hà Nội" hoặc "Hà Nội")
+    const [provinces] = await queryInterface.sequelize.query(
+      "SELECT id FROM provinces WHERE name LIKE '%Hà Nội%' LIMIT 1"
+    );
+    const provinceId = provinces[0]?.id || 1;
+
+    // Tìm Quận Ba Đình trong Hà Nội
+    const [districts] = await queryInterface.sequelize.query(
+      "SELECT id FROM districts WHERE name LIKE '%Ba Đình%' AND province_id = ? LIMIT 1",
+      { replacements: [provinceId] }
+    );
+    const districtId = districts[0]?.id || 1;
+
+    // Tìm Phường Kim Mã trong Quận Ba Đình
+    const [wards] = await queryInterface.sequelize.query(
+      "SELECT id FROM wards WHERE name LIKE '%Kim Mã%' AND district_id = ? LIMIT 1",
+      { replacements: [districtId] }
+    );
+    const wardId = wards[0]?.id || 1;
+
     // 1. User Address (Giả sử User ID 1 là Customer đã tạo ở seeder user cũ)
     await queryInterface.bulkInsert("user_addresses", [
       {
@@ -10,9 +31,9 @@ module.exports = {
         receiver_name: "Nguyễn Văn Mua",
         phone: "0909123456",
         address_line: "Số 10 Ngõ 5",
-        province_id: 1, // HN
-        district_id: 1, // Ba Đình
-        ward_id: 1,     // Kim Mã
+        province_id: provinceId,
+        district_id: districtId,
+        ward_id: wardId,
         is_default: true,
         created_at: new Date(),
         updated_at: new Date(),
@@ -67,7 +88,13 @@ module.exports = {
 
     // 5. Cart Item (Đang thêm Quần Jeans Skinny - Variant ID 26: Đen + M)
     await queryInterface.bulkInsert("cart_items", [
-      { id: 1, cart_id: 1, product_variant_id: 26, quantity: 1, unit_price: 167123 },
+      {
+        id: 1,
+        cart_id: 1,
+        product_variant_id: 26,
+        quantity: 1,
+        unit_price: 167123,
+      },
     ]);
   },
 
