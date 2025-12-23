@@ -12,7 +12,7 @@ export default function InstagramGallery() {
     const fetchProducts = async () => {
       try {
         const response = await fetch(
-          `${API_ENDPOINTS.PRODUCTS.LIST}?limit=8&offset=5`
+          `${API_ENDPOINTS.PRODUCTS.LIST}?limit=8&offset=5&view=full`
         );
         const data = await response.json();
         // API returns { data: { products: [...], pagination: {...} } }
@@ -87,13 +87,17 @@ export default function InstagramGallery() {
             ))
           ) : products.length > 0 ? (
             products.slice(0, 8).map((product) => {
+              // Handle both card mode (primary_image) and full mode (images array)
               const mainImage =
-                product.images?.[0]?.image_url || "/placeholder.png";
+                product.primary_image ||
+                product.images?.find((img) => img.is_primary)?.image_url ||
+                product.images?.[0]?.image_url ||
+                "https://via.placeholder.com/225";
 
               return (
                 <Link
                   key={product.id}
-                  to={`/product/${product.id}`}
+                  to={`/product/${product.slug}`}
                   className="relative w-[225.6px] h-[225px] flex-shrink-0 overflow-hidden cursor-pointer group"
                 >
                   <img
@@ -101,13 +105,9 @@ export default function InstagramGallery() {
                     alt={product.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     onError={(e) => {
-                      // Prevent infinite loop by checking if already set to placeholder
-                      if (
-                        e.target.src !==
-                        window.location.origin + "/placeholder.png"
-                      ) {
-                        e.target.src = "/placeholder.png";
-                      }
+                      e.target.src =
+                        "https://via.placeholder.com/225?text=" +
+                        encodeURIComponent(product.name);
                     }}
                   />
                 </Link>

@@ -99,6 +99,48 @@ const uploadAvatar = multer({
     fileFilter: avatarFileFilter,
 }).single("avatar");
 
+// ==========================
+// C) STORAGE: REVIEW MEDIA
+// route: /api/reviews
+// ==========================
+const getReviewMediaParams = async (req, file) => {
+    const isVideo = file.mimetype.startsWith("video/");
+    const userId = req.user?.id;
+    const productId = req.body?.productId;
+    const reviewId = req.params?.reviewId; // For update route
+
+    if (!userId) {
+        throw new BadRequestError("Missing user info for review media upload");
+    }
+
+    // For update: use reviewId, for create: use productId
+    const folderIdentifier = reviewId ? `review_${reviewId}` : `product_${productId || 'unknown'}`;
+    const folder = `ecommerce_project/reviews/${folderIdentifier}/${isVideo ? "videos" : "images"}`;
+    const public_id = `user_${userId}_${Date.now()}-${safeBaseName(file.originalname)}`;
+
+    return {
+        folder,
+        resource_type: isVideo ? "video" : "image",
+        allowed_formats: isVideo ? ALLOWED_FORMATS.VIDEOS : ALLOWED_FORMATS.IMAGES,
+        public_id,
+        overwrite: false,
+    };
+};
+
+const reviewMediaStorage = new CloudinaryStorage({
+    cloudinary,
+    params: getReviewMediaParams,
+});
+
+const uploadReviewFiles = multer({
+    storage: reviewMediaStorage,
+    limits: { fileSize: UPLOAD_LIMITS.FILE_SIZE.VIDEO }, // Max video size
+    fileFilter: productMediaFileFilter, // Same as product (image or video)
+}).fields([
+    { name: "images", maxCount: 5 }, // Max 5 images
+    { name: "videos", maxCount: 1 }, // Max 1 video
+]);
+
 const handleUploadError = (err, req, res, next) => {
     if (err instanceof multer.MulterError) {
         return res.status(400).json({
@@ -115,5 +157,6 @@ const handleUploadError = (err, req, res, next) => {
 module.exports = {
     uploadProductFiles,
     uploadAvatar,
+    uploadReviewFiles,
     handleUploadError,
 };
