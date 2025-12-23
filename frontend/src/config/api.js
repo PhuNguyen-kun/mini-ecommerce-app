@@ -50,6 +50,17 @@ export const API_ENDPOINTS = {
     DISTRICTS: (provinceId) => `${API_BASE_URL}/locations/districts/${provinceId}`,
     WARDS: (districtId) => `${API_BASE_URL}/locations/wards/${districtId}`,
   },
+
+  // Reviews
+  REVIEWS: {
+    CHECK_ELIGIBILITY: (productId) => `${API_BASE_URL}/reviews/check-eligibility/${productId}`,
+    CREATE: `${API_BASE_URL}/reviews`,
+    PRODUCT_REVIEWS: (productId) => `${API_BASE_URL}/reviews/product/${productId}`,
+    PRODUCT_STATS: (productId) => `${API_BASE_URL}/reviews/product/${productId}/stats`,
+    UPDATE: (reviewId) => `${API_BASE_URL}/reviews/${reviewId}`,
+    DELETE: (reviewId) => `${API_BASE_URL}/reviews/${reviewId}`,
+    MY_REVIEWS: `${API_BASE_URL}/reviews/my-reviews`,
+  },
 };
 
 export default API_BASE_URL;

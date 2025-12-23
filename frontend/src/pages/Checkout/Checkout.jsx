@@ -30,6 +30,19 @@ const Checkout = () => {
     wards: false,
   });
 
+  // Auto-fill user info from localStorage
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (user && user.id) {
+      setFormData(prev => ({
+        ...prev,
+        fullName: user.full_name || '',
+        phone: user.phone || '',
+        email: user.email || '',
+      }));
+    }
+  }, []);
+
   useEffect(() => {
     const fetchProvinces = async () => {
       try {
