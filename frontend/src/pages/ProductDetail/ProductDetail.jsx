@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import productService from '../../services/productService';
 import ProductGallery from './sections/ProductGallery';
 import ProductInfo from './sections/ProductInfo';
@@ -9,6 +9,9 @@ import TransparentPricing from './sections/TransparentPricing';
 
 const ProductDetail = () => {
   const { slug } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const reviewsRef = useRef(null);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -66,6 +69,21 @@ const ProductDetail = () => {
     }
   }, [slug]);
 
+  // Handle scroll to reviews and open modal when review query param is present
+  useEffect(() => {
+    if (product && searchParams.get('review') === 'true') {
+      // Wait for reviews section to render
+      setTimeout(() => {
+        if (reviewsRef.current) {
+          reviewsRef.current.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+          });
+        }
+      }, 500);
+    }
+  }, [product, searchParams]);
+
   if (loading) {
     return (
       <div className="bg-white w-full min-h-screen flex items-center justify-center">
@@ -113,7 +131,20 @@ const ProductDetail = () => {
       />
 
       {/* Reviews Section */}
-      <Reviews productId={product.id} />
+      <div ref={reviewsRef}>
+        <Reviews 
+          productId={product.id} 
+          autoOpenModal={searchParams.get('review') === 'true'}
+          onModalClose={() => {
+            // Remove review query param when modal closes
+            if (searchParams.get('review') === 'true') {
+              const newSearchParams = new URLSearchParams(searchParams);
+              newSearchParams.delete('review');
+              setSearchParams(newSearchParams, { replace: true });
+            }
+          }}
+        />
+      </div>
 
       {/* Transparent Pricing Section */}
       <TransparentPricing />

@@ -1,5 +1,6 @@
 const db = require("../models");
 const cartService = require("./cartService");
+const vnpayService = require("./vnpayService");
 const { BadRequestError, NotFoundError } = require("../utils/ApiError");
 const { Sequelize } = require("sequelize");
 
@@ -130,7 +131,7 @@ class OrderService {
         : "COD";
 
     const orderStatus =
-      paymentMethod === "cod" ? "PENDING_PAYMENT" : "PENDING_PAYMENT";
+      paymentMethod === "cod" ? "CONFIRMED" : "PENDING_PAYMENT";
     const paymentStatus = paymentMethod === "cod" ? "PENDING" : "PENDING";
 
     const transaction = await db.sequelize.transaction();
@@ -200,6 +201,21 @@ class OrderService {
           },
         ],
       });
+
+      if (paymentMethod === "vnpay") {
+        const ipAddr = checkoutData.ipAddr || "127.0.0.1";
+        const paymentUrl = vnpayService.createPaymentUrl(
+          order.id,
+          totalAmount,
+          orderCode,
+          ipAddr
+        );
+
+        return {
+          order: orderWithItems,
+          paymentUrl: paymentUrl,
+        };
+      }
 
       return orderWithItems;
     } catch (error) {
@@ -382,10 +398,11 @@ class OrderService {
 
     if (
       order.status !== "PENDING_PAYMENT" &&
+      order.status !== "CONFIRMED" &&
       order.status !== "PAYMENT_FAILED"
     ) {
       throw new BadRequestError(
-        "Only orders with PENDING_PAYMENT or PAYMENT_FAILED status can be cancelled"
+        "Only orders with PENDING_PAYMENT, CONFIRMED or PAYMENT_FAILED status can be cancelled"
       );
     }
 
@@ -397,6 +414,38 @@ class OrderService {
       status: "CANCELLED",
       cancelled_at: new Date(),
     });
+
+    return order;
+  }
+
+  async confirmOrderReceived(userId, orderId) {
+    const order = await db.Order.findOne({
+      where: {
+        id: orderId,
+        user_id: userId,
+      },
+    });
+
+    if (!order) {
+      throw new NotFoundError("Order not found");
+    }
+
+    if (order.status !== "SHIPPING") {
+      throw new BadRequestError(
+        "Only orders with SHIPPING status can be confirmed as received"
+      );
+    }
+
+    const updateData = {
+      status: "COMPLETED",
+    };
+
+    if (order.payment_method === "COD" && order.payment_status === "PENDING") {
+      updateData.payment_status = "SUCCESS";
+      updateData.paid_at = new Date();
+    }
+
+    await order.update(updateData);
 
     return order;
   }

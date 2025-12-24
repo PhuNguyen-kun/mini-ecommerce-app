@@ -12,51 +12,11 @@ import {
 import { SearchOutlined } from "@ant-design/icons";
 import {
   FiPackage,
-  FiClock,
-  FiCheckCircle,
-  FiXCircle,
-  FiTruck,
 } from "react-icons/fi";
 import orderService from "../../services/orderService";
+import { getStatusConfig } from "../../constants/orderStatusConfig";
 
 const { RangePicker } = DatePicker;
-
-const getStatusConfig = (status, paymentStatus) => {
-  const statusMap = {
-    PENDING_PAYMENT: {
-      label: "Chờ thanh toán",
-      color: "bg-yellow-100 text-yellow-800 border-yellow-200",
-      icon: <FiClock className="w-4 h-4" />,
-    },
-    PAID: {
-      label: "Đã thanh toán",
-      color: "bg-blue-100 text-blue-800 border-blue-200",
-      icon: <FiCheckCircle className="w-4 h-4" />,
-    },
-    SHIPPING: {
-      label: "Đang giao hàng",
-      color: "bg-purple-100 text-purple-800 border-purple-200",
-      icon: <FiTruck className="w-4 h-4" />,
-    },
-    COMPLETED: {
-      label: "Hoàn thành",
-      color: "bg-green-100 text-green-800 border-green-200",
-      icon: <FiCheckCircle className="w-4 h-4" />,
-    },
-    CANCELLED: {
-      label: "Đã hủy",
-      color: "bg-gray-100 text-gray-800 border-gray-200",
-      icon: <FiXCircle className="w-4 h-4" />,
-    },
-    PAYMENT_FAILED: {
-      label: "Thanh toán thất bại",
-      color: "bg-red-100 text-red-800 border-red-200",
-      icon: <FiXCircle className="w-4 h-4" />,
-    },
-  };
-
-  return statusMap[status] || statusMap.PENDING_PAYMENT;
-};
 
 const formatPrice = (price) => {
   if (!price) return "0";
@@ -79,9 +39,24 @@ const OrderCard = ({ order, onCancel, onRefresh }) => {
   const navigate = useNavigate();
   const statusConfig = getStatusConfig(order.status, order.payment_status);
   const [isCancelling, setIsCancelling] = useState(false);
+  const [isConfirming, setIsConfirming] = useState(false);
 
   const canCancel =
-    order.status === "PENDING_PAYMENT" || order.status === "PAYMENT_FAILED";
+    order.status === "PENDING_PAYMENT" ||
+    order.status === "CONFIRMED" ||
+    order.status === "PAYMENT_FAILED";
+
+  const canConfirmReceived = order.status === "SHIPPING";
+
+  const getCancelTooltip = () => {
+    if (canCancel) return "";
+    
+    if (order.payment_method === "COD") {
+      return "Bạn chỉ có thể hủy khi đơn hàng chưa được giao";
+    } else {
+      return "Bạn chỉ có thể hủy khi chưa thanh toán";
+    }
+  };
 
   const handleCancelClick = () => {
     Modal.confirm({
@@ -112,6 +87,33 @@ const OrderCard = ({ order, onCancel, onRefresh }) => {
     });
   };
 
+  const handleConfirmReceived = () => {
+    Modal.confirm({
+      title: "Xác nhận đã nhận hàng",
+      content:
+        "Bạn có chắc chắn đã nhận được hàng? Hành động này không thể hoàn tác.",
+      okText: "Xác nhận",
+      cancelText: "Hủy",
+      onOk: async () => {
+        try {
+          setIsConfirming(true);
+          const response = await orderService.confirmOrderReceived(order.id);
+          if (response.success) {
+            message.success("Xác nhận đã nhận hàng thành công!");
+            if (onRefresh) {
+              onRefresh();
+            }
+          }
+        } catch (error) {
+          console.error("Error confirming order received:", error);
+          message.error(error.message || "Không thể xác nhận đã nhận hàng");
+        } finally {
+          setIsConfirming(false);
+        }
+      },
+    });
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
       <div className="p-6">
@@ -130,7 +132,7 @@ const OrderCard = ({ order, onCancel, onRefresh }) => {
           <div
             className={`px-3 py-1.5 rounded-full border flex items-center gap-2 ${statusConfig.color}`}
           >
-            {statusConfig.icon}
+            <statusConfig.IconComponent className="w-4 h-4" />
             <span className="text-sm font-medium">{statusConfig.label}</span>
           </div>
         </div>
@@ -255,7 +257,7 @@ const OrderCard = ({ order, onCancel, onRefresh }) => {
                             <button
                               onClick={() =>
                                 productSlug &&
-                                navigate(`/product/${productSlug}`)
+                                navigate(`/product/${productSlug}?review=true`)
                               }
                               className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded hover:bg-yellow-200 transition-colors"
                             >
@@ -293,9 +295,7 @@ const OrderCard = ({ order, onCancel, onRefresh }) => {
           </div>
 
           <div className="mt-4 pt-4 border-t flex justify-end gap-3">
-            <Tooltip
-              title={!canCancel ? "Bạn chỉ có thể hủy khi chưa thanh toán" : ""}
-            >
+            <Tooltip title={getCancelTooltip()}>
               <button
                 onClick={handleCancelClick}
                 disabled={!canCancel || isCancelling}
@@ -304,6 +304,15 @@ const OrderCard = ({ order, onCancel, onRefresh }) => {
                 {isCancelling ? "Đang xử lý..." : "Hủy"}
               </button>
             </Tooltip>
+            {canConfirmReceived && (
+              <button
+                onClick={handleConfirmReceived}
+                disabled={isConfirming}
+                className="bg-green-600 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+              >
+                {isConfirming ? "Đang xử lý..." : "Đã nhận được hàng"}
+              </button>
+            )}
             <button
               onClick={() => navigate(`/orders/${order.id}`)}
               className="bg-black text-white py-2.5 px-4 rounded-lg font-medium hover:bg-gray-800 transition-colors"
@@ -457,6 +466,7 @@ const Orders = () => {
               >
                 {[
                   "PENDING_PAYMENT",
+                  "CONFIRMED",
                   "PAID",
                   "SHIPPING",
                   "COMPLETED",
@@ -464,10 +474,11 @@ const Orders = () => {
                   "PAYMENT_FAILED",
                 ].map((status) => {
                   const config = getStatusConfig(status);
+                  const IconComponent = config.IconComponent;
                   return (
                     <Select.Option key={status} value={status}>
                       <div className="flex items-center gap-2">
-                        {config.icon}
+                        <IconComponent className="w-4 h-4" />
                         <span>{config.label}</span>
                       </div>
                     </Select.Option>

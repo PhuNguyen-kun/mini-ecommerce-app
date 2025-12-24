@@ -20,6 +20,7 @@ import Wishlist from "./pages/Wishlist/Wishlist";
 import Profile from "./pages/Profile/Profile";
 import Login from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Signup";
+import PaymentReturn from "./pages/PaymentReturn/PaymentReturn";
 import { CartProvider } from "./context/CartContext";
 import { WishlistProvider } from "./context/WishlistContext";
 import CartSidebar from "./components/Cart/CartSidebar";
@@ -52,6 +53,7 @@ function AppContent() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/orders/:id" element={<OrderDetail />} />
+          <Route path="/payment/result" element={<PaymentReturn />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/login" element={<Login />} />

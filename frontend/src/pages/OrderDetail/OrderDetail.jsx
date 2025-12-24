@@ -8,10 +8,12 @@ import {
   FiCheckCircle,
   FiStar,
   FiArrowLeft,
-  FiClock,
-  FiXCircle,
 } from "react-icons/fi";
 import orderService from "../../services/orderService";
+import {
+  getStatusLabel,
+  getStatusConfig,
+} from "../../constants/orderStatusConfig";
 
 const formatPrice = (price) => {
   if (!price) return "0";
@@ -31,67 +33,82 @@ const formatDate = (dateString) => {
 };
 
 const getTimelineSteps = (order) => {
-  const steps = [
-    {
-      id: "placed",
-      label: "Đơn hàng đã đặt",
-      icon: <FiPackage className="w-5 h-5" />,
-      date: order.created_at,
-      completed: true,
-    },
-    {
-      id: "paid",
-      label: "Đơn hàng đã thanh toán",
-      icon: <FiDollarSign className="w-5 h-5" />,
-      date:
-        order.paid_at ||
-        (order.status !== "PENDING_PAYMENT" &&
-        order.payment_status === "SUCCESS"
-          ? order.created_at
-          : null),
-      amount: order.total_amount,
-      completed:
-        order.status !== "PENDING_PAYMENT" &&
-        order.status !== "PAYMENT_FAILED" &&
-        order.status !== "CANCELLED",
-    },
-    {
-      id: "shipping",
-      label: "Đã giao cho đơn vị vận chuyển",
-      icon: <FiTruck className="w-5 h-5" />,
-      date:
-        order.status === "SHIPPING" || order.status === "COMPLETED"
-          ? order.updated_at
-          : null,
-      completed: order.status === "SHIPPING" || order.status === "COMPLETED",
-    },
-    {
-      id: "received",
-      label: "Đã nhận được hàng",
-      icon: <FiCheckCircle className="w-5 h-5" />,
-      date: order.status === "COMPLETED" ? order.updated_at : null,
-      completed: order.status === "COMPLETED",
-    },
-  ];
+  const isCOD = order.payment_method === "COD";
 
-  return steps;
-};
-
-const getStatusLabel = (status, paymentStatus) => {
-  const statusMap = {
-    PENDING_PAYMENT: "Chờ thanh toán",
-    PAID: "Đã thanh toán",
-    SHIPPING: "Đang giao hàng",
-    COMPLETED: "Đơn hàng đã hoàn thành",
-    CANCELLED: "Đã hủy",
-    PAYMENT_FAILED: "Thanh toán thất bại",
-  };
-
-  if (status === "COMPLETED") {
-    return "Đơn hàng đã hoàn thành";
+  if (isCOD) {
+    // COD: 3 steps - hide PAID step, auto-mark as paid when confirmed
+    return [
+      {
+        id: "placed",
+        label: "Đơn hàng đã đặt",
+        icon: <FiPackage className="w-5 h-5" />,
+        date: order.created_at,
+        completed: true,
+      },
+      {
+        id: "shipping",
+        label: "Đã giao cho đơn vị vận chuyển",
+        icon: <FiTruck className="w-5 h-5" />,
+        date:
+          order.status === "SHIPPING" || order.status === "COMPLETED"
+            ? order.updated_at
+            : null,
+        completed: order.status === "SHIPPING" || order.status === "COMPLETED",
+      },
+      {
+        id: "received",
+        label: "Đã nhận được hàng",
+        icon: <FiCheckCircle className="w-5 h-5" />,
+        date: order.status === "COMPLETED" ? order.updated_at : null,
+        completed: order.status === "COMPLETED",
+        showPaymentNote: order.status === "COMPLETED",
+      },
+    ];
+  } else {
+    // VNPAY: 4 steps - show all including PAID
+    return [
+      {
+        id: "placed",
+        label: "Đơn hàng đã đặt",
+        icon: <FiPackage className="w-5 h-5" />,
+        date: order.created_at,
+        completed: true,
+      },
+      {
+        id: "paid",
+        label: "Đơn hàng đã thanh toán",
+        icon: <FiDollarSign className="w-5 h-5" />,
+        date:
+          order.paid_at ||
+          (order.status !== "PENDING_PAYMENT" &&
+          order.payment_status === "SUCCESS"
+            ? order.created_at
+            : null),
+        amount: order.total_amount,
+        completed:
+          order.status !== "PENDING_PAYMENT" &&
+          order.status !== "PAYMENT_FAILED" &&
+          order.status !== "CANCELLED",
+      },
+      {
+        id: "shipping",
+        label: "Đã giao cho đơn vị vận chuyển",
+        icon: <FiTruck className="w-5 h-5" />,
+        date:
+          order.status === "SHIPPING" || order.status === "COMPLETED"
+            ? order.updated_at
+            : null,
+        completed: order.status === "SHIPPING" || order.status === "COMPLETED",
+      },
+      {
+        id: "received",
+        label: "Đã nhận được hàng",
+        icon: <FiCheckCircle className="w-5 h-5" />,
+        date: order.status === "COMPLETED" ? order.updated_at : null,
+        completed: order.status === "COMPLETED",
+      },
+    ];
   }
-
-  return statusMap[status] || status;
 };
 
 const OrderDetail = () => {
@@ -156,17 +173,21 @@ const OrderDetail = () => {
               <FiArrowLeft className="w-5 h-5" />
               <span className="font-medium">Trở lại</span>
             </button>
-            <div
-              className={`px-4 py-2 rounded-full font-semibold ${
-                isCancelled
-                  ? "bg-red-100 text-red-800"
-                  : order.status === "COMPLETED"
-                  ? "bg-green-100 text-green-800"
-                  : "bg-yellow-100 text-yellow-800"
-              }`}
-            >
-              {getStatusLabel(order.status, order.payment_status)}
-            </div>
+            {(() => {
+              const statusConfig = getStatusConfig(
+                order.status,
+                order.payment_status
+              );
+              const IconComponent = statusConfig.IconComponent;
+              return (
+                <div
+                  className={`px-4 py-2 rounded-full border flex items-center gap-2 ${statusConfig.color}`}
+                >
+                  <IconComponent className="w-4 h-4" />
+                  <span className="font-semibold">{statusConfig.label}</span>
+                </div>
+              );
+            })()}
           </div>
           <div className="flex items-center justify-between">
             <div>
@@ -186,9 +207,11 @@ const OrderDetail = () => {
 
         {/* Timeline */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-6">
-          <h2 className="text-xl font-bold mb-6 text-gray-900">
-            Trạng thái đơn hàng
-          </h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold text-gray-900">
+              Trạng thái đơn hàng
+            </h2>
+          </div>
           <div className="relative">
             {/* Timeline line */}
             <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gray-200">
@@ -259,6 +282,11 @@ const OrderDetail = () => {
                       {step.amount && step.completed && (
                         <p className="text-sm text-gray-600 font-medium">
                           {formatPrice(step.amount)}₫
+                        </p>
+                      )}
+                      {step.showPaymentNote && (
+                        <p className="text-sm text-green-600 font-medium mt-1">
+                          Đã thanh toán khi nhận hàng
                         </p>
                       )}
                       {!step.date && !step.completed && (

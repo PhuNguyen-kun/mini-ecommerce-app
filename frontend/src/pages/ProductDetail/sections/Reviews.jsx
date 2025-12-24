@@ -21,7 +21,7 @@ import reviewService from "../../../services/reviewService";
 import CreateReviewModal from "../../../components/reviews/CreateReviewModal";
 import ReviewItem from "../../../components/reviews/ReviewItem";
 
-const Reviews = ({ productId }) => {
+const Reviews = ({ productId, autoOpenModal = false, onModalClose }) => {
   const [reviews, setReviews] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -63,6 +63,13 @@ const Reviews = ({ productId }) => {
   useEffect(() => {
     checkEligibility();
   }, [productId]);
+
+  // Auto open modal when autoOpenModal prop is true and user can review
+  useEffect(() => {
+    if (autoOpenModal && canReview && !loading) {
+      setShowCreateModal(true);
+    }
+  }, [autoOpenModal, canReview, loading]);
 
   // Fetch reviews and stats
   useEffect(() => {
@@ -318,7 +325,12 @@ const Reviews = ({ productId }) => {
       {/* Create Review Modal */}
       <CreateReviewModal
         isOpen={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
+        onClose={() => {
+          setShowCreateModal(false);
+          if (onModalClose) {
+            onModalClose();
+          }
+        }}
         productId={productId}
         onReviewCreated={handleReviewCreated}
       />

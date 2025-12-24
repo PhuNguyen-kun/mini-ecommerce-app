@@ -22,6 +22,7 @@ app.use("/api/orders", require("./routes/orderRoutes"));
 app.use("/api/locations", require("./routes/locationRoutes"));
 app.use("/api/addresses", require("./routes/addressRoutes"));
 app.use("/api/reviews", require("./routes/reviewRoutes"));
+app.use("/api/payment", require("./routes/paymentRoutes"));
 
 app.use(errorHandler);
 

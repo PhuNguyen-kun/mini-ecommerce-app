@@ -155,6 +155,40 @@ class OrderService {
       throw error;
     }
   }
+
+  async confirmOrderReceived(orderId) {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("User not authenticated");
+      }
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/orders/${orderId}/confirm-received`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        const error = new Error(data.message || "Failed to confirm order received");
+        error.response = response;
+        error.data = data;
+        throw error;
+      }
+
+      return data;
+    } catch (error) {
+      console.error("Error confirming order received:", error);
+      throw error;
+    }
+  }
 }
 
 export default new OrderService();

@@ -10,6 +10,7 @@ router.post("/checkout", validateCheckout, orderController.checkout);
 router.get("/", orderController.getUserOrders);
 router.get("/:id", orderController.getOrderById);
 router.put("/:id/cancel", orderController.cancelOrder);
+router.put("/:id/confirm-received", orderController.confirmOrderReceived);
 
 module.exports = router;
 

@@ -294,6 +294,7 @@ CREATE TABLE orders (
     order_code VARCHAR(50) NOT NULL UNIQUE,
     status ENUM(
         'PENDING_PAYMENT',
+        'CONFIRMED',
         'PAID',
         'SHIPPING',
         'COMPLETED',

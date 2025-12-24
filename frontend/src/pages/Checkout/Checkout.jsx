@@ -32,13 +32,13 @@ const Checkout = () => {
 
   // Auto-fill user info from localStorage
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
     if (user && user.id) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        fullName: user.full_name || '',
-        phone: user.phone || '',
-        email: user.email || '',
+        fullName: user.full_name || "",
+        phone: user.phone || "",
+        email: user.email || "",
       }));
     }
   }, []);
@@ -189,6 +189,11 @@ const Checkout = () => {
       const response = await orderService.checkout(checkoutData);
 
       if (response.success) {
+        if (paymentMethod === "vnpay" && response.data.paymentUrl) {
+          window.location.href = response.data.paymentUrl;
+          return;
+        }
+
         message.success("Bạn đã đặt hàng thành công");
         setIsSuccess(true);
 
@@ -196,7 +201,6 @@ const Checkout = () => {
           await fetchCart();
         }
 
-        // Fake loading 1.5 seconds before redirect
         setTimeout(() => {
           navigate("/orders");
         }, 1500);
