@@ -9,5 +9,7 @@ const reviewController = require("../controllers/admin/reviewController");
 
 router.use(authMiddleware, requireAdmin);
 
-module.exports = router;
+// Dashboard routes
+router.get("/dashboard/stats", dashboardController.getStats);
 
+module.exports = router;

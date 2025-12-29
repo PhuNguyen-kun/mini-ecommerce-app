@@ -117,7 +117,7 @@ const AdminLayout = () => {
   const currentPath = location.pathname;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="h-screen bg-gray-50 flex overflow-hidden">
       <aside
         className={`bg-black text-white flex-shrink-0 transition-all duration-300 ${
           isCollapsed ? "w-20" : "w-64"
@@ -187,8 +187,8 @@ const AdminLayout = () => {
         </nav>
       </aside>
 
-      <div className="flex-1 flex flex-col">
-        <header className="bg-white border-b border-gray-200 px-6 py-4">
+      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
+        <header className="bg-white border-b border-gray-200 px-6 py-4 flex-shrink-0 sticky top-0 z-10">
           <div className="flex items-center justify-end">
             <Dropdown
               menu={{ items: menuItems }}
