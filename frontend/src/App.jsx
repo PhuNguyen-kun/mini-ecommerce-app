@@ -1,4 +1,10 @@
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useLocation,
+  Navigate,
+} from "react-router-dom";
 import { useEffect } from "react";
 import { ConfigProvider, App as AntApp } from "antd";
 import Header from "./components/Header/Header";
@@ -21,6 +27,14 @@ import Profile from "./pages/Profile/Profile";
 import Login from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Signup";
 import PaymentReturn from "./pages/PaymentReturn/PaymentReturn";
+import AdminLogin from "./pages/Admin/AdminLogin";
+import AdminLayout from "./components/Admin/AdminLayout";
+import Dashboard from "./pages/Admin/Dashboard";
+import AdminOrders from "./pages/Admin/Orders";
+import Products from "./pages/Admin/Products";
+import Categories from "./pages/Admin/Categories";
+import Users from "./pages/Admin/Users";
+import Reviews from "./pages/Admin/Reviews";
 import { CartProvider } from "./context/CartContext";
 import { WishlistProvider } from "./context/WishlistContext";
 import CartSidebar from "./components/Cart/CartSidebar";
@@ -29,11 +43,29 @@ function AppContent() {
   const location = useLocation();
   const isAuthPage =
     location.pathname === "/login" || location.pathname === "/signup";
+  const isAdminPage = location.pathname.startsWith("/admin");
 
   // Scroll to top when route changes
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
+
+  if (isAdminPage) {
+    return (
+      <Routes>
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Navigate to="/admin/dashboard" replace />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="orders" element={<AdminOrders />} />
+          <Route path="products" element={<Products />} />
+          <Route path="categories" element={<Categories />} />
+          <Route path="users" element={<Users />} />
+          <Route path="reviews" element={<Reviews />} />
+        </Route>
+      </Routes>
+    );
+  }
 
   return (
     <div className="app">
