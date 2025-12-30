@@ -245,19 +245,31 @@ const Orders = () => {
 
       <div className="grid grid-cols-4 gap-4 mb-6">
         <div className="bg-white p-4 rounded-lg shadow">
-          <p className="text-gray-600 text-sm">Tổng đơn hàng</p>
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-gray-600 text-sm">Tổng đơn hàng</p>
+            <FiPackage className="w-5 h-5 text-gray-400" />
+          </div>
           <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
-          <p className="text-gray-600 text-sm">Đang chờ xử lý</p>
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-gray-600 text-sm">Đang chờ xử lý</p>
+            <FiClock className="w-5 h-5 text-yellow-500" />
+          </div>
           <p className="text-2xl font-bold text-yellow-600">{stats.pending}</p>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
-          <p className="text-gray-600 text-sm">Đang giao hàng</p>
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-gray-600 text-sm">Đang giao hàng</p>
+            <FiTruck className="w-5 h-5 text-purple-500" />
+          </div>
           <p className="text-2xl font-bold text-purple-600">{stats.shipping}</p>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
-          <p className="text-gray-600 text-sm">Hoàn thành</p>
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-gray-600 text-sm">Hoàn thành</p>
+            <FiCheckCircle className="w-5 h-5 text-green-500" />
+          </div>
           <p className="text-2xl font-bold text-green-600">{stats.completed}</p>
         </div>
       </div>
