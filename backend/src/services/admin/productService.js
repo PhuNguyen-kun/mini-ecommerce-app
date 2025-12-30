@@ -50,7 +50,7 @@ class ProductAdminService {
 
                 for (const variantData of data.variants || []) {
 
-                    
+
                     const newVariant = await db.ProductVariant.create(
                         {
                             product_id: product.id,
@@ -184,20 +184,20 @@ class ProductAdminService {
     // 5. ADMIN - XÓA SẢN PHẨM
     // ============================================================
     async deleteProduct(productId) {
-        
-        
+
+
         // First check if product exists
-        const productCheck = await db.Product.findOne({ 
-            where: { id: productId, deleted_at: null } 
+        const productCheck = await db.Product.findOne({
+            where: { id: productId, deleted_at: null }
         });
-        
+
         if (!productCheck) {
-           
+
             throw new NotFoundError("Product not found");
         }
-        
-        
-        
+
+
+
         const [images, videos] = await Promise.all([
             db.ProductImage.findAll({ where: { product_id: productId, deleted_at: null }, attributes: ["public_id"] }),
             db.ProductVideo.findAll({ where: { product_id: productId, deleted_at: null }, attributes: ["public_id"] }),
@@ -215,31 +215,31 @@ class ProductAdminService {
         await db.sequelize.transaction(async (t) => {
             // Soft delete images
             const imageUpdateResult = await db.ProductImage.update(
-                { deleted_at: deletedAt }, 
+                { deleted_at: deletedAt },
                 { where: { product_id: productId, deleted_at: null }, transaction: t }
             );
-           
-            
+
+
             // Soft delete videos
             const videoUpdateResult = await db.ProductVideo.update(
-                { deleted_at: deletedAt }, 
+                { deleted_at: deletedAt },
                 { where: { product_id: productId, deleted_at: null }, transaction: t }
             );
-            
-            
+
+
             // Soft delete product
             const productUpdateResult = await db.Product.update(
                 { deleted_at: deletedAt },
                 { where: { id: productId, deleted_at: null }, transaction: t }
             );
-           
+
             if (productUpdateResult[0] === 0) {
                 throw new Error('Failed to update product - no rows affected');
             }
-            
-           
+
+
         });
-        
+
         // Verify deletion (use paranoid: false to include soft-deleted records)
         const verifyProduct = await db.Product.findByPk(productId, { paranoid: false });
 
@@ -248,11 +248,11 @@ class ProductAdminService {
             await deleteMultipleFiles(uniqueImageIds, "image");
         }
         if (uniqueVideoIds.length) {
-           
+
             await deleteMultipleFiles(uniqueVideoIds, "video");
         }
-        
-        
+
+
         return true;
     }
 
@@ -341,6 +341,7 @@ class ProductAdminService {
             const product = await db.Product.findOne({ where: { id: productId, deleted_at: null }, transaction: t });
             if (!product) throw new NotFoundError("Product not found");
 
+            // 1. Update Basic Info
             const updateData = {};
             if (data.name) { updateData.name = data.name; updateData.slug = slugify(data.name) + "-" + Date.now(); }
             if (data.description !== undefined) updateData.description = data.description;
@@ -351,40 +352,114 @@ class ProductAdminService {
 
             if (Object.keys(updateData).length > 0) await product.update(updateData, { transaction: t });
 
+            // 2. Handle Variants
             if (data.variants && data.variants.length > 0) {
-                const updatePromises = data.variants.map((v) => {
-                    const variantUpdateData = {};
-                    if (v.price !== undefined) variantUpdateData.price = v.price;
-                    if (v.stock !== undefined) variantUpdateData.stock = v.stock;
-                    if (v.sku !== undefined) variantUpdateData.sku = v.sku;
-                    if (v.is_active !== undefined) variantUpdateData.is_active = v.is_active;
-                    if (Object.keys(variantUpdateData).length === 0) return Promise.resolve();
 
-                    return db.ProductVariant.update(variantUpdateData, {
-                        where: { id: v.id, product_id: product.id, deleted_at: null },
-                        transaction: t,
+                // Lấy tất cả Option Values hiện có
+                const existingOptions = await db.ProductOption.findAll({
+                    where: { product_id: product.id },
+                    include: [{ model: db.ProductOptionValue, as: "values" }],
+                    transaction: t
+                });
+
+                // Map 1: Tra cứu ID của Value ("Màu-Đỏ" => 10)
+                const optionValueMap = {};
+                // Map 2: Tra cứu ID của Option Name ("Màu sắc" => 1) -> Để biết đường tạo value mới
+                const optionNameMap = {};
+
+                existingOptions.forEach(opt => {
+                    optionNameMap[opt.name] = opt.id; // Lưu ID của Option cha
+                    opt.values.forEach(val => {
+                        optionValueMap[`${opt.name}-${val.value}`] = val.id;
                     });
                 });
-                await Promise.all(updatePromises);
+
+                // Duyệt qua từng variant gửi lên
+                for (const v of data.variants) {
+
+                    // CASE A: UPDATE VARIANT CŨ
+                    if (v.id && typeof v.id === 'number') {
+                        const variantUpdateData = {};
+                        if (v.price !== undefined) variantUpdateData.price = v.price;
+                        if (v.stock !== undefined) variantUpdateData.stock = v.stock;
+                        if (v.sku !== undefined) variantUpdateData.sku = v.sku;
+                        if (v.is_active !== undefined) variantUpdateData.is_active = v.is_active;
+
+                        if (Object.keys(variantUpdateData).length > 0) {
+                            await db.ProductVariant.update(variantUpdateData, {
+                                where: { id: v.id, product_id: product.id },
+                                transaction: t,
+                            });
+                        }
+                    }
+                    // CASE B: CREATE NEW VARIANT
+                    else {
+                        if (!v.options || Object.keys(v.options).length === 0) continue;
+
+                        // 1. Tạo Variant Record
+                        const newVariant = await db.ProductVariant.create({
+                            product_id: product.id,
+                            sku: v.sku,
+                            price: v.price,
+                            stock: v.stock,
+                            is_active: v.is_active !== false,
+                        }, { transaction: t });
+
+                        // 2. Link Variant với Option Values
+                        for (const [optNameRaw, optValRaw] of Object.entries(v.options)) {
+                            const optName = String(optNameRaw).trim();
+                            const optVal = String(optValRaw).trim();
+                            const lookupKey = `${optName}-${optVal}`;
+
+                            // Tìm ID của value
+                            let valueId = optionValueMap[lookupKey];
+
+                            // LOGIC SỬA LỖI Ở ĐÂY: Nếu không thấy Value ID -> TẠO MỚI
+                            if (!valueId) {
+                                // Tìm Option cha (Ví dụ: tìm ID của "Màu sắc")
+                                const optionId = optionNameMap[optName];
+
+                                if (!optionId) {
+                                    // Nếu tên Option cũng không tồn tại (Ví dụ user gửi "Chất liệu" mà DB chưa có)
+                                    // Tùy logic: Có thể tạo luôn Option mới hoặc báo lỗi. 
+                                    // Để an toàn, ở đây mình báo lỗi vì Option Name phải được định nghĩa trước.
+                                    throw new BadRequestError(`Option name '${optName}' not found. Please add this option group first.`);
+                                }
+
+                                // Tạo Value mới (Ví dụ: tạo "Hồng" cho "Màu sắc")
+                                const createdValue = await db.ProductOptionValue.create({
+                                    product_option_id: optionId,
+                                    value: optVal
+                                }, { transaction: t });
+
+                                // Cập nhật lại Map và biến valueId để dùng ngay
+                                valueId = createdValue.id;
+                                optionValueMap[lookupKey] = valueId;
+                            }
+
+                            // Tạo liên kết
+                            await db.ProductVariantOption.create({
+                                product_variant_id: newVariant.id,
+                                product_option_value_id: valueId
+                            }, { transaction: t });
+                        }
+                    }
+                }
             }
 
+            // Return full product
             const fullProduct = await db.Product.findOne({
                 where: { id: product.id },
                 include: [
                     { model: db.Category, as: "category", attributes: ["id", "name", "slug"] },
-                    {
-                        model: db.ProductImage, as: "images", where: { deleted_at: null }, required: false,
-                        attributes: ["id", "image_url", "product_option_value_id"]
-                    },
+                    { model: db.ProductImage, as: "images", where: { deleted_at: null }, required: false, attributes: ["id", "image_url", "product_option_value_id"] },
                     { model: db.ProductVideo, as: "videos", attributes: ["id", "video_url"], required: false },
                     {
                         model: db.ProductVariant,
                         as: "variants",
                         where: { deleted_at: null },
                         required: false,
-                        include: [
-                            { model: db.ProductOptionValue, as: "option_values", through: { attributes: [] } },
-                        ],
+                        include: [{ model: db.ProductOptionValue, as: "option_values", through: { attributes: [] } }],
                     },
                     {
                         model: db.ProductOption,
@@ -399,5 +474,4 @@ class ProductAdminService {
         });
     }
 }
-
 module.exports = new ProductAdminService();
