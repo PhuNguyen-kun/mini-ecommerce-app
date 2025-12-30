@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import productService from '../../services/productService';
 import ProductGallery from './sections/ProductGallery';
 import ProductInfo from './sections/ProductInfo';
@@ -10,13 +10,18 @@ import TransparentPricing from './sections/TransparentPricing';
 const ProductDetail = () => {
   const { slug } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
+  
   const reviewsRef = useRef(null);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
+  
+  // State cho gallery ảnh
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [selectedVariant, setSelectedVariant] = useState(null);
+  const [selectedColorId, setSelectedColorId] = useState(null); // Track color option value ID
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -28,8 +33,6 @@ const ProductDetail = () => {
         
         if (response.success) {
           const productData = response.data;
-          console.log('Product Data:', productData);
-          console.log('Variants:', productData.variants);
           setProduct(productData);
           
           // Extract available colors and sizes from variants
@@ -37,9 +40,7 @@ const ProductDetail = () => {
           const sizes = new Set();
           
           productData.variants?.forEach(variant => {
-            console.log('Variant:', variant);
             variant.option_values?.forEach(optVal => {
-              console.log('Option Value:', optVal);
               const optionName = optVal.option?.name?.toLowerCase();
               if (optionName === 'màu sắc' || optionName === 'color') {
                 colors.add(optVal.value);
@@ -48,9 +49,6 @@ const ProductDetail = () => {
               }
             });
           });
-          
-          console.log('Colors:', Array.from(colors));
-          console.log('Sizes:', Array.from(sizes));
           
           // Set default selections
           if (colors.size > 0) setSelectedColor(Array.from(colors)[0]);
@@ -68,6 +66,64 @@ const ProductDetail = () => {
       fetchProduct();
     }
   }, [slug]);
+
+  // Tự động tìm variant khi chọn màu/size
+  useEffect(() => {
+    if (!product || !selectedColor || !selectedSize) {
+      setSelectedVariant(null);
+      return;
+    }
+
+    // Tìm variant có cả màu và size đã chọn
+    const matchedVariant = product.variants?.find(variant => {
+      const hasColor = variant.option_values?.some(optVal => 
+        (optVal.option?.name?.toLowerCase().includes('màu') || 
+         optVal.option?.name?.toLowerCase().includes('color')) &&
+        optVal.value === selectedColor
+      );
+      
+      const hasSize = variant.option_values?.some(optVal => 
+        (optVal.option?.name?.toLowerCase().includes('kích cỡ') || 
+         optVal.option?.name?.toLowerCase().includes('size')) &&
+        optVal.value === selectedSize
+      );
+      
+      return hasColor && hasSize;
+    });
+
+    setSelectedVariant(matchedVariant || null);
+  }, [selectedColor, selectedSize, product]);
+
+  // Xử lý chọn màu → Nhảy ảnh và lọc ảnh theo màu
+  const handleColorSelect = (color) => {
+    setSelectedColor(color);
+    
+    // Tìm option value ID của màu này và jump đến ảnh tương ứng
+    if (product?.options) {
+      const colorOption = product.options.find(opt => 
+        opt.name.toLowerCase().includes('màu') || opt.name.toLowerCase().includes('color')
+      );
+      
+      if (colorOption) {
+        const colorValue = colorOption.values?.find(val => val.value === color);
+        
+        if (colorValue) {
+          setSelectedColorId(colorValue.id);
+          
+          // Tìm index của ảnh có product_option_value_id tương ứng
+          if (product.images) {
+            const imageIndex = product.images.findIndex(
+              img => img.product_option_value_id === colorValue.id
+            );
+            
+            if (imageIndex !== -1) {
+              setCurrentImageIndex(imageIndex);
+            }
+          }
+        }
+      }
+    }
+  };
 
   // Handle scroll to reviews and open modal when review query param is present
   useEffect(() => {
@@ -109,17 +165,21 @@ const ProductDetail = () => {
   return (
     <div className="bg-white w-full">
       {/* Product Details Section */}
-      <div className="flex gap-6 px-20 py-8">
+      <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 px-4 sm:px-6 md:px-10 lg:px-20 py-4 lg:py-8">
         <ProductGallery 
           images={product.images || []} 
           discount={product.discount}
+          currentImageIndex={currentImageIndex}
+          setCurrentImageIndex={setCurrentImageIndex}
+          selectedColorId={selectedColorId}
         />
         <ProductInfo
           product={product}
           selectedSize={selectedSize}
           setSelectedSize={setSelectedSize}
           selectedColor={selectedColor}
-          setSelectedColor={setSelectedColor}
+          setSelectedColor={handleColorSelect}
+          selectedVariant={selectedVariant}
         />
       </div>
 

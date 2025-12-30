@@ -20,21 +20,36 @@ class WishlistService {
                             as: "category",
                             attributes: ["id", "name", "slug"]
                         },
-                        // 2. Lấy ĐÚNG 1 ảnh đại diện
+                        // 2. Lấy TẤT CẢ ảnh (để hiển thị theo màu)
                         {
                             model: db.ProductImage,
                             as: "images",
-                            where: { is_primary: true },
-                            required: false, // Left join (đề phòng ko có ảnh bìa thì ko mất sp)
-                            attributes: ["image_url"],
+                            where: { deleted_at: null },
+                            required: false, // Left join (đề phòng ko có ảnh thì ko mất sp)
+                            attributes: ["id", "image_url", "product_option_value_id", "is_primary"],
                         },
-                        // 3. Lấy Variants (Chỉ để tính Giá Min-Max và check Tồn kho)
+                        // 3. Lấy Variants với option_values (để frontend biết màu/size)
                         {
                             model: db.ProductVariant,
                             as: "variants",
                             where: { is_active: true, deleted_at: null },
                             required: false,
-                            attributes: ["price", "stock"], // Frontend sẽ dùng cái này tính range giá
+                            attributes: ["id", "price", "stock"],
+                            include: [
+                                {
+                                    model: db.ProductOptionValue,
+                                    as: "option_values",
+                                    attributes: ["id", "value"],
+                                    through: { attributes: [] },
+                                    include: [
+                                        {
+                                            model: db.ProductOption,
+                                            as: "option",
+                                            attributes: ["id", "name"]
+                                        }
+                                    ]
+                                }
+                            ]
                         }
                     ],
                 },

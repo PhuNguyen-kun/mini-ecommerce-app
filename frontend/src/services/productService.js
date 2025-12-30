@@ -75,7 +75,7 @@ class ProductService {
       }
       
       const data = await response.json();
-      console.log('Filter response:', data); // Debug log
+     
       
       if (!data.success || !data.data || !data.data.products) {
         console.error('Invalid filter response structure:', data);
@@ -83,7 +83,7 @@ class ProductService {
       }
       
       const products = data.data.products;
-      console.log('Number of products for filters:', products.length); // Debug log
+      
       
       const colorsMap = new Map(); // { colorName: count }
       const sizesMap = new Map(); // { sizeName: count }
@@ -163,7 +163,7 @@ class ProductService {
       const categories = Array.from(categoriesMap.values())
         .sort((a, b) => b.count - a.count); // Sort by count descending
       
-      console.log('Extracted filters:', { colors: colors.length, sizes: sizes.length, categories: categories.length }); // Debug log
+     
       
       return { colors, sizes, categories };
     } catch (error) {

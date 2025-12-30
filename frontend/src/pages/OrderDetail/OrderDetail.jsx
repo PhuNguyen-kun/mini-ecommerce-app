@@ -305,12 +305,9 @@ const OrderDetail = () => {
           <h2 className="text-xl font-bold mb-4 text-gray-900">Sản phẩm</h2>
           <div className="space-y-4">
             {order.items?.map((item) => {
-              const productImage =
-                item.variant?.product?.images?.[0]?.image_url ||
-                "/placeholder.png";
-
               let size = null;
               let color = null;
+              let colorOptionValueId = null;
 
               if (item.variant?.option_values) {
                 item.variant.option_values.forEach((optVal) => {
@@ -323,8 +320,22 @@ const OrderDetail = () => {
                     optionName === "màu"
                   ) {
                     color = optVal.value;
+                    colorOptionValueId = optVal.id;
                   }
                 });
+              }
+
+              // Find image by color option value ID
+              let productImage = "/placeholder.png";
+              if (colorOptionValueId && item.variant?.product?.images) {
+                const colorImage = item.variant.product.images.find(
+                  img => img.product_option_value_id === colorOptionValueId
+                );
+                productImage = colorImage?.image_url;
+              }
+              // Fallback to first image
+              if (!productImage || productImage === "/placeholder.png") {
+                productImage = item.variant?.product?.images?.[0]?.image_url || "/placeholder.png";
               }
 
               const variantInfo = [];

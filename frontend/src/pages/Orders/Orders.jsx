@@ -116,16 +116,16 @@ const OrderCard = ({ order, onCancel, onRefresh }) => {
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
-      <div className="p-6">
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex-1">
-            <div className="flex items-center gap-3 mb-2">
-              <FiPackage className="w-5 h-5 text-gray-600" />
-              <h3 className="text-lg font-semibold text-gray-900">
+      <div className="p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row items-start justify-between mb-4 gap-3">
+          <div className="flex-1 w-full">
+            <div className="flex items-center gap-2 sm:gap-3 mb-2">
+              <FiPackage className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 font-['Maison_Neue']">
                 {order.order_code}
               </h3>
             </div>
-            <p className="text-sm text-gray-500">
+            <p className="text-xs sm:text-sm text-gray-500 font-['Maison_Neue']">
               Đặt hàng lúc: {formatDate(order.created_at)}
             </p>
           </div>
@@ -137,24 +137,24 @@ const OrderCard = ({ order, onCancel, onRefresh }) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 mb-4">
           <div>
-            <p className="text-sm text-gray-500 mb-1">Phương thức thanh toán</p>
-            <p className="text-sm font-medium text-gray-900">
+            <p className="text-xs sm:text-sm text-gray-500 mb-1 font-['Maison_Neue']">Phương thức thanh toán</p>
+            <p className="text-xs sm:text-sm font-medium text-gray-900 font-['Maison_Neue']">
               {order.payment_method === "COD"
                 ? "Thanh toán khi nhận hàng"
                 : "VNPay"}
             </p>
           </div>
           <div>
-            <p className="text-sm text-gray-500 mb-1">Số lượng sản phẩm</p>
-            <p className="text-sm font-medium text-gray-900">
+            <p className="text-xs sm:text-sm text-gray-500 mb-1 font-['Maison_Neue']">Số lượng sản phẩm</p>
+            <p className="text-xs sm:text-sm font-medium text-gray-900 font-['Maison_Neue']">
               {order.items?.length || 0} sản phẩm
             </p>
           </div>
           <div>
-            <p className="text-sm text-gray-500 mb-1">Tổng tiền</p>
-            <p className="text-lg font-bold text-red-600">
+            <p className="text-xs sm:text-sm text-gray-500 mb-1 font-['Maison_Neue']">Tổng tiền</p>
+            <p className="text-base sm:text-lg font-bold text-red-600 font-['Maison_Neue']">
               {formatPrice(order.total_amount)}₫
             </p>
           </div>
@@ -162,31 +162,28 @@ const OrderCard = ({ order, onCancel, onRefresh }) => {
 
         <div className="border-t pt-4">
           <div className="mb-4">
-            <p className="text-sm font-medium text-gray-700 mb-1">
+            <p className="text-xs sm:text-sm font-medium text-gray-700 mb-1 font-['Maison_Neue']">
               Địa chỉ giao hàng
             </p>
-            <p className="text-sm text-gray-600">
+            <p className="text-xs sm:text-sm text-gray-600 font-['Maison_Neue']">
               {order.shipping_full_name} - {order.shipping_phone}
             </p>
-            <p className="text-sm text-gray-600">
+            <p className="text-xs sm:text-sm text-gray-600 font-['Maison_Neue']">
               {order.shipping_address_line}, {order.shipping_ward},{" "}
               {order.shipping_district}, {order.shipping_province}
             </p>
           </div>
 
           <div className="mt-4 pt-4 border-t">
-            <h4 className="text-sm font-semibold text-gray-900 mb-3">
+            <h4 className="text-xs sm:text-sm font-semibold text-gray-900 mb-3 font-['Maison_Neue']">
               Chi tiết sản phẩm
             </h4>
             <div className="space-y-3">
               {order.items?.map((item) => {
-                const productImage =
-                  item.variant?.product?.images?.[0]?.image_url ||
-                  "/placeholder.png";
-
                 // Extract size and color from variant option_values
                 let size = null;
                 let color = null;
+                let colorOptionValueId = null;
 
                 if (item.variant?.option_values) {
                   item.variant.option_values.forEach((optVal) => {
@@ -199,8 +196,23 @@ const OrderCard = ({ order, onCancel, onRefresh }) => {
                       optionName === "màu"
                     ) {
                       color = optVal.value;
+                      colorOptionValueId = optVal.id;
                     }
                   });
+                }
+
+                // Find image by color option value ID
+                let productImage = "/placeholder.png";
+                
+                if (colorOptionValueId && item.variant?.product?.images) {
+                  const colorImage = item.variant.product.images.find(
+                    img => img.product_option_value_id === colorOptionValueId
+                  );
+                  productImage = colorImage?.image_url;
+                }
+                // Fallback to first image
+                if (!productImage || productImage === "/placeholder.png") {
+                  productImage = item.variant?.product?.images?.[0]?.image_url || "/placeholder.png";
                 }
 
                 const variantInfo = [];
@@ -215,7 +227,7 @@ const OrderCard = ({ order, onCancel, onRefresh }) => {
                 return (
                   <div
                     key={item.id}
-                    className="flex items-start gap-4 p-3 bg-gray-50 rounded-lg"
+                    className="flex items-start gap-3 sm:gap-4 p-3 bg-gray-50 rounded-lg"
                   >
                     <button
                       onClick={() =>
@@ -226,7 +238,7 @@ const OrderCard = ({ order, onCancel, onRefresh }) => {
                       <img
                         src={productImage}
                         alt={item.product_name_snapshot}
-                        className="w-16 h-16 object-cover rounded border border-gray-200 hover:opacity-80 transition-opacity cursor-pointer"
+                        className="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded border border-gray-200 hover:opacity-80 transition-opacity cursor-pointer"
                       />
                     </button>
                     <div className="flex-1 min-w-0">
@@ -236,21 +248,21 @@ const OrderCard = ({ order, onCancel, onRefresh }) => {
                         }
                         className="text-left w-full"
                       >
-                        <h5 className="text-sm font-medium text-gray-900 mb-1 hover:text-black transition-colors">
+                        <h5 className="text-xs sm:text-sm font-medium text-gray-900 mb-1 hover:text-black transition-colors font-['Maison_Neue']">
                           {item.product_name_snapshot}
                         </h5>
                       </button>
                       {variantText && (
-                        <p className="text-xs text-gray-500 mb-1">
+                        <p className="text-xs text-gray-500 mb-1 font-['Maison_Neue']">
                           {variantText}
                         </p>
                       )}
-                      <div className="flex items-center justify-between mt-2">
-                        <span className="text-sm text-gray-600">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-2 gap-2">
+                        <span className="text-xs sm:text-sm text-gray-600 font-['Maison_Neue']">
                           Số lượng: {item.quantity}
                         </span>
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium text-gray-900">
+                          <span className="text-xs sm:text-sm font-medium text-gray-900 font-['Maison_Neue']">
                             {formatPrice(item.subtotal)}₫
                           </span>
                           {canReview && (

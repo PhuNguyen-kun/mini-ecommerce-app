@@ -23,6 +23,7 @@ const formatCartItems = (cartItems) => {
     // Extract size and color from option values
     let selectedSize = null;
     let selectedColor = null;
+    let colorOptionValueId = null;
 
     if (variant?.option_values) {
       variant.option_values.forEach((optVal) => {
@@ -31,8 +32,17 @@ const formatCartItems = (cartItems) => {
           selectedSize = optVal.value;
         } else if (optionName === "màu sắc" || optionName === "color") {
           selectedColor = optVal.value;
+          colorOptionValueId = optVal.id; // Lưu ID để tìm ảnh tương ứng
         }
       });
+    }
+
+    // Tìm ảnh theo màu (product_option_value_id)
+    let variantImage = null;
+    if (colorOptionValueId && product?.images) {
+      variantImage = product.images.find(
+        img => img.product_option_value_id === colorOptionValueId
+      );
     }
 
     // Extract product info but exclude id to preserve cart_item.id
@@ -51,6 +61,8 @@ const formatCartItems = (cartItems) => {
       selectedVariant: variant,
       selectedSize,
       selectedColor,
+      colorOptionValueId, // Để sử dụng trong CartSidebar
+      variantImage: variantImage?.image_url, // Ảnh theo màu
     };
   });
 };

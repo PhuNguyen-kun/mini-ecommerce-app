@@ -31,7 +31,7 @@ const ProductListing = () => {
 
   return (
     <div className="bg-white w-full">
-      <div className="flex gap-4 px-20 py-7">
+      <div className="flex flex-col lg:flex-row gap-4 lg:gap-4 px-4 sm:px-6 md:px-10 lg:px-20 py-4 sm:py-5 lg:py-7">
         <FilterSidebar 
           totalProducts={totalProducts} 
           gender={gender}

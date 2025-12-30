@@ -45,8 +45,8 @@ export default function ProductCarousel() {
     return product.variants.reduce((min, variant) => Math.min(min, variant.price), Infinity);
   };
 
-  // Get primary image
-  const getPrimaryImage = (product) => {
+  // Get primary image - giống ProductCard để đảm bảo consistency
+  const getProductImage = (product) => {
     return product.images?.find(img => img.is_primary)?.image_url || 
            product.images?.[0]?.image_url || 
            '/placeholder.png';
@@ -90,48 +90,48 @@ export default function ProductCarousel() {
   }
 
   return (
-    <section className="w-full py-[90px]">
+    <section className="w-full py-12 sm:py-16 lg:py-[90px]">
       {/* Title Section */}
-      <div className="px-10 mb-[100px]">
-        <h2 className="text-[34px] font-normal mb-3 text-center">
+      <div className="px-4 sm:px-6 lg:px-10 mb-12 sm:mb-16 lg:mb-[100px]">
+        <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-normal mb-2 sm:mb-3 text-center font-['Maison_Neue']">
           Sản Phẩm Yêu Thích Của Bạn
         </h2>
-        <p className="text-lg text-gray-600 text-center">
+        <p className="text-base sm:text-lg text-gray-600 text-center font-['Maison_Neue']">
           Đẹp. Chức năng. Thiết kế hoàn hảo.
         </p>
       </div>
 
       {/* Carousel */}
-      <div className="relative flex items-center gap-3">
+      <div className="relative flex items-center gap-2 sm:gap-3">
         {/* Left Arrow */}
         <button 
           onClick={scrollLeft}
-          className="w-10 h-10 flex items-center justify-center hover:bg-gray-100 transition-colors rounded-full"
+          className="hidden sm:flex w-8 h-8 sm:w-10 sm:h-10 items-center justify-center hover:bg-gray-100 transition-colors rounded-full"
           aria-label="Scroll left"
         >
-          <HiChevronLeft className="w-6 h-6" />
+          <HiChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
 
         {/* Products */}
         <div 
           ref={scrollContainerRef}
-          className="flex gap-4 overflow-x-auto scrollbar-hide px-3"
+          className="flex gap-3 sm:gap-4 overflow-x-auto scrollbar-hide px-2 sm:px-3"
           style={{ scrollBehavior: 'smooth' }}
         >
           {products.map((product) => {
-            const primaryImage = getPrimaryImage(product);
+            const productImage = getProductImage(product);
             const minPrice = getMinPrice(product);
             const color = getFirstColor(product);
 
             return (
               <div
                 key={product.id}
-                className="flex-shrink-0 w-[282px] group cursor-pointer"
+                className="flex-shrink-0 w-[200px] sm:w-[240px] lg:w-[282px] group cursor-pointer"
               >
                 <Link to={`/product/${product.slug || product.id}`}>
-                  <div className="relative w-full h-[420px] rounded-lg overflow-hidden mb-2">
+                  <div className="relative w-full h-[300px] sm:h-[360px] lg:h-[420px] rounded-lg overflow-hidden mb-2">
                     <img
-                      src={primaryImage}
+                      src={productImage}
                       alt={product.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       onError={(e) => {
@@ -143,20 +143,20 @@ export default function ProductCarousel() {
                     />
                     
                     {/* Wishlist Button */}
-                    <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" onClick={(e) => e.preventDefault()}>
+                    <div className="absolute top-2 right-2 sm:top-3 sm:right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" onClick={(e) => e.preventDefault()}>
                       <WishlistButton productId={product.id} productData={product} size="md" />
                     </div>
                   </div>
                   <div className="space-y-1">
                     <div className="flex justify-between items-start">
-                      <p className="text-sm flex-1 group-hover:underline">
+                      <p className="text-xs sm:text-sm flex-1 group-hover:underline font-['Maison_Neue']">
                         {product.name}
                       </p>
-                      <p className="text-sm font-medium">
+                      <p className="text-xs sm:text-sm font-medium font-['Maison_Neue']">
                         {formatPrice(minPrice)}₫
                       </p>
                     </div>
-                    {color && <p className="text-sm text-gray-600">{color}</p>}
+                    {color && <p className="text-xs sm:text-sm text-gray-600 font-['Maison_Neue']">{color}</p>}
                   </div>
                 </Link>
               </div>
@@ -167,10 +167,10 @@ export default function ProductCarousel() {
         {/* Right Arrow */}
         <button 
           onClick={scrollRight}
-          className="w-10 h-10 flex items-center justify-center hover:bg-gray-100 transition-colors rounded-full"
+          className="hidden sm:flex w-8 h-8 sm:w-10 sm:h-10 items-center justify-center hover:bg-gray-100 transition-colors rounded-full"
           aria-label="Scroll right"
         >
-          <HiChevronRight className="w-6 h-6" />
+          <HiChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
       </div>
 

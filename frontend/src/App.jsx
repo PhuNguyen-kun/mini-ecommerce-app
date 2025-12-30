@@ -32,6 +32,9 @@ import AdminLayout from "./components/Admin/AdminLayout";
 import Dashboard from "./pages/Admin/Dashboard";
 import AdminOrders from "./pages/Admin/Orders";
 import Products from "./pages/Admin/Products";
+import ProductForm from "./components/Admin/ProductForm";
+import ProductMedia from "./components/Admin/ProductMedia";
+import ProductEdit from "./components/Admin/ProductEdit";
 import Categories from "./pages/Admin/Categories";
 import Users from "./pages/Admin/Users";
 import Reviews from "./pages/Admin/Reviews";
@@ -59,6 +62,9 @@ function AppContent() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="orders" element={<AdminOrders />} />
           <Route path="products" element={<Products />} />
+          <Route path="products/new" element={<ProductForm />} />
+          <Route path="products/:productId/media" element={<ProductMedia />} />
+          <Route path="products/:productId/edit" element={<ProductEdit />} />
           <Route path="categories" element={<Categories />} />
           <Route path="users" element={<Users />} />
           <Route path="reviews" element={<Reviews />} />
