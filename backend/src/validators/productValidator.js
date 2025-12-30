@@ -94,7 +94,7 @@ const addMediaSchema = Joi.object({
     }, "Require at least one media")
     .options({ stripUnknown: true }); //bỏ field lạ nếu có
 
-// ADMIN: update product (JSON-only)
+// ADMIN: update product
 const updateProductSchema = Joi.object({
     name: Joi.string().min(3).max(255).optional(),
     description: Joi.string().allow("", null).optional(),
@@ -106,17 +106,20 @@ const updateProductSchema = Joi.object({
     variants: Joi.array()
         .items(
             Joi.object({
-                id: Joi.number().required(),
+                // Cho phép ID là số (cũ) HOẶC chuỗi/null (mới)
+                id: Joi.alternatives().try(Joi.number(), Joi.string()).optional(),
                 sku: Joi.string().optional(),
                 price: Joi.number().integer().min(0).optional(),
                 stock: Joi.number().integer().min(0).optional(),
                 is_active: Joi.boolean().optional(),
+
+                // QUAN TRỌNG: Cho phép options để tạo variant mới (VD: { "Màu": "Đỏ", "Size": "M" })
+                options: Joi.object().unknown(true).optional(),
             })
         )
-        .min(1) //nếu có variants thì phải có phần tử
+        .min(1)
         .optional(),
 });
-
 const validate = (schema) => (req, res, next) => {
     const data = req.method === "GET" ? req.query : req.body;
     const { error, value } = schema.validate(data, {
