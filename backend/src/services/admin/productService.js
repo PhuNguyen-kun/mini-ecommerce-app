@@ -343,7 +343,7 @@ class ProductAdminService {
 
             // 1. Update Basic Info
             const updateData = {};
-            if (data.name) { updateData.name = data.name; updateData.slug = slugify(data.name) + "-" + Date.now(); }
+            if (data.name) { updateData.name = data.name }
             if (data.description !== undefined) updateData.description = data.description;
             if (data.short_description !== undefined) updateData.short_description = data.short_description;
             if (data.category_id !== undefined) updateData.category_id = data.category_id;

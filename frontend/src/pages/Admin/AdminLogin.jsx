@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { message } from "antd";
 import { HiEye, HiEyeSlash } from "react-icons/hi2";
 import authService from "../../services/authService";
+import { VALIDATION_MESSAGES } from "../../constants/messages";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
@@ -74,7 +75,18 @@ const AdminLogin = () => {
     } catch (error) {
       let errorMessage = "Đăng nhập thất bại";
       if (error.message) {
-        errorMessage = error.message;
+        const lowerMessage = error.message.toLowerCase();
+        if (
+          lowerMessage.includes("email") ||
+          lowerMessage.includes("password") ||
+          lowerMessage.includes("invalid")
+        ) {
+          errorMessage = VALIDATION_MESSAGES.INVALID_CREDENTIALS;
+        } else if (lowerMessage.includes("inactive")) {
+          errorMessage = VALIDATION_MESSAGES.ACCOUNT_INACTIVE;
+        } else {
+          errorMessage = error.message;
+        }
       }
       setErrors({
         submit: errorMessage,

@@ -79,6 +79,12 @@ export const API_ENDPOINTS = {
       DETAIL: (id) => `${API_BASE_URL}/admin/orders/${id}`,
       UPDATE_STATUS: (id) => `${API_BASE_URL}/admin/orders/${id}/status`,
     },
+    USERS: {
+      LIST: `${API_BASE_URL}/admin/users`,
+      STATS: `${API_BASE_URL}/admin/users/stats`,
+      DETAIL: (id) => `${API_BASE_URL}/admin/users/${id}`,
+      UPDATE: (id) => `${API_BASE_URL}/admin/users/${id}`,
+    },
   },
 };
 
