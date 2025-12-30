@@ -44,7 +44,7 @@ class ProductAdminController {
         return responseOk(res, null, "Video deleted successfully");
     });
 
-    // POST /api/admin/products/variants/image
+    // POST /api/admin/products/options/image
     setOptionImage = asyncHandler(async (req, res) => {
         // Gọi hàm mới: setOptionImage
         const result = await productAdminService.setOptionImage(req.body);

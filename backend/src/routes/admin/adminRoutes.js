@@ -3,19 +3,21 @@ const router = express.Router();
 
 const { authMiddleware, requireAdmin } = require("../../middlewares/auth");
 
-const dashboardController = require("../../controllers/admin/dashboardController");
-const orderController = require("../../controllers/admin/orderController");
-const userController = require("../../controllers/admin/userController");
-const reviewController = require("../../controllers/admin/reviewController");
-
-// mount product admin router
+// Import các module routes
 const adminProductRoutes = require("./productRoutes");
+const adminDashboardRoutes = require("./dashboardRoutes");
+const adminOrderRoutes = require("./orderRoutes");
+const adminUserRoutes = require("./userRoutes");
+const adminReviewRoutes = require("./reviewRoutes");
 
-// tất cả admin routes đều require admin:
+// Tất cả admin routes đều require admin
 router.use(authMiddleware, requireAdmin);
 
-// ---- Mount routes module ----
+// Mount routes modules
 router.use("/products", adminProductRoutes);
-
+router.use("/dashboard", adminDashboardRoutes);
+router.use("/orders", adminOrderRoutes);
+router.use("/users", adminUserRoutes);
+router.use("/reviews", adminReviewRoutes);
 
 module.exports = router;

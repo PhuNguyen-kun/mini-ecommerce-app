@@ -61,6 +61,11 @@ export const API_ENDPOINTS = {
     DELETE: (reviewId) => `${API_BASE_URL}/reviews/${reviewId}`,
     MY_REVIEWS: `${API_BASE_URL}/reviews/my-reviews`,
   },
+
+  // Admin
+  ADMIN: {
+    DASHBOARD_STATS: `${API_BASE_URL}/admin/dashboard/stats`,
+  },
 };
 
 export default API_BASE_URL;
