@@ -7,16 +7,17 @@ import {
   FiCheck,
   FiImage,
   FiBarChart2,
+  FiPlay,
 } from "react-icons/fi";
 import { message, Modal } from "antd";
 import productService from "../../services/productService";
 import adminService from "../../services/adminService";
 
 /**
- * ADMIN - QUẢN LÝ ẢNH (Giai đoạn 2)
+ * ADMIN - QUẢN LÝ ẢNH & VIDEO (Giai đoạn 2)
  * Tính năng:
- * - Upload ảnh lên Cloudinary
- * - Hiển thị danh sách ảnh
+ * - Upload ảnh & video lên Cloudinary
+ * - Hiển thị danh sách ảnh & video
  * - Gán nhãn màu cho từng ảnh
  * - Lưu mapping
  */
@@ -28,8 +29,10 @@ const ProductMedia = () => {
   const [loading, setLoading] = useState(false);
   const [product, setProduct] = useState(null);
   const [images, setImages] = useState([]);
+  const [videos, setVideos] = useState([]);
   const [colorOptions, setColorOptions] = useState([]);
   const [uploadingFiles, setUploadingFiles] = useState([]);
+  const [uploadingVideos, setUploadingVideos] = useState([]);
 
   // Mapping: imageId -> optionValueId
   const [imageMappings, setImageMappings] = useState({});
@@ -48,6 +51,7 @@ const ProductMedia = () => {
         const prod = response.data;
         setProduct(prod);
         setImages(prod.images || []);
+        setVideos(prod.videos || []);
 
         // Lấy option màu sắc
         const colorOption =
@@ -112,6 +116,53 @@ const ProductMedia = () => {
       message.error(error.message || "Upload thất bại!");
     } finally {
       setUploadingFiles([]);
+      setLoading(false);
+    }
+  };
+
+  // === UPLOAD VIDEO ===
+
+  const handleVideoSelect = async (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+
+    if (!product?.id) {
+      message.warning("Chưa tải được thông tin sản phẩm!");
+      return;
+    }
+
+    // Kiểm tra dung lượng video (tối đa 50MB mỗi video)
+    const maxSize = 50 * 1024 * 1024; // 50MB
+    const oversizedFiles = files.filter((file) => file.size > maxSize);
+    if (oversizedFiles.length > 0) {
+      message.error(
+        `Video ${oversizedFiles[0].name} vượt quá 50MB! Vui lòng chọn video nhỏ hơn.`
+      );
+      return;
+    }
+
+    const formData = new FormData();
+    files.forEach((file) => {
+      formData.append("videos", file);
+    });
+
+    try {
+      setUploadingVideos(files.map((f) => f.name));
+      setLoading(true);
+
+      const response = await adminService.uploadProductMedia(
+        product.id,
+        formData
+      );
+
+      if (response.success) {
+        setVideos(response.data.product.videos || []);
+        message.success("Upload video thành công!");
+      }
+    } catch (error) {
+      message.error(error.message || "Upload video thất bại!");
+    } finally {
+      setUploadingVideos([]);
       setLoading(false);
     }
   };
@@ -181,6 +232,28 @@ const ProductMedia = () => {
     });
   };
 
+  // === XÓA VIDEO ===
+
+  const handleDeleteVideo = async (videoId) => {
+    Modal.confirm({
+      title: "Xác nhận xóa",
+      content: "Bạn có chắc muốn xóa video này?",
+      okText: "Xóa",
+      cancelText: "Hủy",
+      okType: "danger",
+      onOk: async () => {
+        try {
+          await adminService.deleteProductVideo(videoId);
+
+          setVideos((prev) => prev.filter((vid) => vid.id !== videoId));
+          message.success("Xóa video thành công!");
+        } catch (error) {
+          message.error("Xóa video thất bại!");
+        }
+      },
+    });
+  };
+
   if (loading && !product) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -238,10 +311,76 @@ const ProductMedia = () => {
         )}
       </section>
 
+      {/* UPLOAD VIDEO */}
+      <section className="border-b pb-6 mb-6">
+        <h2 className="text-xl font-semibold mb-4 text-gray-700">
+          2. Upload Video
+        </h2>
+        <div className="flex items-center gap-4">
+          <label className="cursor-pointer px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center gap-2">
+            <FiPlay /> Chọn Video
+            <input
+              type="file"
+              multiple
+              accept="video/*"
+              onChange={handleVideoSelect}
+              className="hidden"
+            />
+          </label>
+          <span className="text-sm text-gray-600">
+            Tối đa 50MB mỗi video • MP4, MOV, AVI
+          </span>
+        </div>
+
+        {uploadingVideos.length > 0 && (
+          <div className="mt-4 p-4 bg-purple-50 rounded-lg">
+            <p className="font-medium">
+              Đang upload {uploadingVideos.length} video...
+            </p>
+            <div className="mt-2 space-y-1">
+              {uploadingVideos.map((name, idx) => (
+                <div key={idx} className="text-sm text-gray-600">
+                  • {name}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {videos.length > 0 && (
+          <div className="mt-6 grid grid-cols-2 md:grid-cols-3 gap-6">
+            {videos.map((video) => (
+              <div key={video.id} className="relative group">
+                <div className="aspect-video rounded-lg overflow-hidden border-2 border-gray-200 hover:border-purple-400 transition bg-gray-900">
+                  <video
+                    src={video.video_url}
+                    className="w-full h-full object-cover"
+                    controls
+                  />
+                </div>
+
+                <button
+                  onClick={() => handleDeleteVideo(video.id)}
+                  className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
+                  title="Xóa video"
+                >
+                  <FiTrash2 />
+                </button>
+
+                <div className="mt-2 flex items-center gap-2 text-xs text-gray-600">
+                  <FiPlay />
+                  <span>Video giới thiệu</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
       {/* GÁN NHÃN MÀU */}
       <section className="border-b pb-6 mb-6">
         <h2 className="text-xl font-semibold mb-4 text-gray-700">
-          2. Gán Nhãn Màu Cho Ảnh
+          3. Gán Nhãn Màu Cho Ảnh
         </h2>
         <p className="text-sm text-gray-600 mb-4">
           Chọn màu tương ứng cho mỗi ảnh. Để trống nếu ảnh là ảnh chung (size
@@ -349,6 +488,9 @@ const ProductMedia = () => {
               {images.length -
                 Object.values(imageMappings).filter((v) => v).length}
             </strong>
+          </li>
+          <li>
+            • Tổng số video: <strong>{videos.length}</strong>
           </li>
         </ul>
       </div>

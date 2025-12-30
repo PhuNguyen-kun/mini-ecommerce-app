@@ -157,6 +157,35 @@ class AdminService {
   }
 
   /**
+   * Delete product video
+   * @param {number} videoId - Video ID
+   * @returns {Promise} Delete result
+   */
+  async deleteProductVideo(videoId) {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) throw new Error('User not authenticated');
+
+      const response = await fetch(API_ENDPOINTS.ADMIN.PRODUCTS.DELETE_VIDEO(videoId), {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to delete video');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error deleting video:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Delete product
    * @param {number} productId - Product ID
    * @returns {Promise} Delete result

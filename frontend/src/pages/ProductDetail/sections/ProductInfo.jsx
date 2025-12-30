@@ -16,13 +16,16 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
     return new Intl.NumberFormat('vi-VN').format(price);
   };
 
-  // Extract colors, sizes, and pricing from variants
+  // Extract colors, sizes, and pricing from ACTIVE variants only
   const { colors, sizes, minPrice } = useMemo(() => {
     const colorMap = new Map();
     const sizeSet = new Set();
     let min = Infinity;
 
-    product.variants?.forEach(variant => {
+    // Filter only active variants
+    const activeVariants = product.variants?.filter(variant => variant.is_active !== false) || [];
+
+    activeVariants.forEach(variant => {
       if (variant.price < min) min = variant.price;
 
       variant.option_values?.forEach(optVal => {

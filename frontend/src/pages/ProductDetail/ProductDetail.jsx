@@ -167,8 +167,7 @@ const ProductDetail = () => {
       {/* Product Details Section */}
       <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 px-4 sm:px-6 md:px-10 lg:px-20 py-4 lg:py-8">
         <ProductGallery 
-          images={product.images || []} 
-          discount={product.discount}
+          images={product.images || []}           videos={product.videos}          discount={product.discount}
           currentImageIndex={currentImageIndex}
           setCurrentImageIndex={setCurrentImageIndex}
           selectedColorId={selectedColorId}
