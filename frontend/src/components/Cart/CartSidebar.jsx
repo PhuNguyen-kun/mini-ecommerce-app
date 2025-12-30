@@ -37,11 +37,11 @@ const CartSidebar = () => {
       />
 
       {/* Cart Sidebar */}
-      <div className="fixed right-0 top-0 h-full w-[477px] bg-white z-50 shadow-2xl flex flex-col animate-slide-in">
+      <div className="fixed right-0 top-0 h-full w-full sm:w-[400px] md:w-[477px] bg-white z-50 shadow-2xl flex flex-col animate-slide-in">
         {/* Header */}
-        <div className="flex items-start justify-between px-5 pt-2 pb-6">
+        <div className="flex items-start justify-between px-4 sm:px-5 pt-2 pb-4 sm:pb-6">
           <h2
-            className="text-2xl font-[600] leading-[33.24px]"
+            className="text-xl sm:text-2xl font-[600] leading-[33.24px]"
             style={{ fontFamily: "Maison Neue, sans-serif" }}
           >
             Your Cart
@@ -55,25 +55,39 @@ const CartSidebar = () => {
         </div>
 
         {/* Cart Items */}
-        <div className="flex-1 overflow-y-auto px-5">
+        <div className="flex-1 overflow-y-auto px-4 sm:px-5">
           {cart.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-[#737373] text-lg">Your cart is empty</p>
+              <p className="text-[#737373] text-base sm:text-lg">Your cart is empty</p>
             </div>
           ) : (
             <div className="space-y-4">
               {cart.map((item) => {
-                // Get primary image or first image
-                const itemImage =
-                  item.images?.find((img) => img.is_primary)?.image_url ||
-                  item.images?.[0]?.image_url ||
-                  item.image ||
-                  "/placeholder.png";
+                // Lấy ảnh theo màu của variant (nếu có), nếu không thì lấy ảnh đầu tiên
+                let itemImage = item.variantImage; // Ảnh theo màu đã được xử lý trong CartContext
+                
+                if (!itemImage) {
+                  // Fallback: tìm ảnh theo colorOptionValueId
+                  if (item.colorOptionValueId && item.images) {
+                    const colorImage = item.images.find(
+                      img => img.product_option_value_id === item.colorOptionValueId
+                    );
+                    itemImage = colorImage?.image_url;
+                  }
+                  
+                  // Fallback: ảnh primary hoặc ảnh đầu tiên
+                  if (!itemImage) {
+                    itemImage = item.images?.find((img) => img.is_primary)?.image_url ||
+                                item.images?.[0]?.image_url ||
+                                item.image ||
+                                "/placeholder.png";
+                  }
+                }
 
                 const itemId = item.id || item.cartId; // Use API id or fallback to cartId
 
                 return (
-                  <div key={itemId} className="flex gap-4">
+                  <div key={itemId} className="flex gap-3 sm:gap-4">
                     {/* Product Image */}
                     <Link
                       to={`/product/${item.slug || item.id}`}
@@ -82,7 +96,7 @@ const CartSidebar = () => {
                       <img
                         src={itemImage}
                         alt={item.name}
-                        className="w-[70px] h-[100px] object-cover"
+                        className="w-[60px] h-[85px] sm:w-[70px] sm:h-[100px] object-cover"
                         onError={(e) => {
                           e.target.src = "/placeholder.png";
                         }}
@@ -175,8 +189,8 @@ const CartSidebar = () => {
 
         {/* Footer */}
         {cart.length > 0 && (
-          <div className="px-5 py-[30px] bg-white shadow-[0px_-6px_18px_0px_rgba(0,0,0,0.25)]">
-            <div className="flex items-center justify-between mb-8">
+          <div className="px-4 sm:px-5 py-5 sm:py-[30px] bg-white shadow-[0px_-6px_18px_0px_rgba(0,0,0,0.25)]">
+            <div className="flex items-center justify-between mb-6 sm:mb-8">
               <div className="flex items-center gap-1">
                 <span
                   className="text-base font-[600] text-black leading-6 tracking-[0.2px]"

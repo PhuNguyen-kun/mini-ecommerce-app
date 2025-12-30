@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { HiChevronLeft, HiChevronRight } from 'react-icons/hi2';
 import { API_ENDPOINTS } from '../../../config/api';
 
 // Default category images from Unsplash
@@ -18,6 +19,26 @@ const categoryImages = {
 export default function CategorySection() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const scrollContainerRef = useRef(null);
+
+  // Scroll functions
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({
+        left: -400,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({
+        left: 400,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -37,14 +58,14 @@ export default function CategorySection() {
 
   if (loading) {
     return (
-      <section className="w-full px-10 py-[90px]">
-        <h2 className="text-[34px] font-normal mb-[55px] text-center">
+      <section className="w-full px-4 sm:px-6 lg:px-10 py-12 sm:py-16 lg:py-[90px]">
+        <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-normal mb-8 sm:mb-12 lg:mb-[55px] text-center font-['Maison_Neue']">
           Shop by Category
         </h2>
-        <div className="grid grid-cols-6 gap-5">
+        <div className="flex gap-3 sm:gap-4 lg:gap-5 overflow-x-auto">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="animate-pulse">
-              <div className="w-full h-[263px] bg-gray-200 rounded-lg mb-3"></div>
+            <div key={i} className="flex-shrink-0 w-[150px] sm:w-[180px] lg:w-[200px] animate-pulse">
+              <div className="w-full h-[180px] sm:h-[220px] lg:h-[263px] bg-gray-200 rounded-lg mb-2 sm:mb-3"></div>
               <div className="h-4 bg-gray-200 rounded w-3/4 mx-auto"></div>
             </div>
           ))}
@@ -54,30 +75,55 @@ export default function CategorySection() {
   }
 
   return (
-    <section className="w-full px-10 py-[90px]">
-      <h2 className="text-[34px] font-normal mb-[55px] text-center">
+    <section className="w-full px-4 sm:px-6 lg:px-10 py-12 sm:py-16 lg:py-[90px]">
+      <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-normal mb-8 sm:mb-12 lg:mb-[55px] text-center font-['Maison_Neue']">
         Shop by Category
       </h2>
       
-      <div className="grid grid-cols-6 gap-5">
-        {categories.slice(0, 6).map((category) => (
-          <Link 
-            key={category.id} 
-            to={`/products?category=${category.id}`}
-            className="cursor-pointer hover:opacity-80 transition-opacity"
-          >
-            <div className="w-full h-[263px] rounded-lg overflow-hidden mb-3 bg-gray-100">
-              <img 
-                src={categoryImages[category.slug] || 'https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=400'} 
-                alt={category.name} 
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <p className="text-sm text-center font-medium tracking-wide">
-              {category.name.toUpperCase()}
-            </p>
-          </Link>
-        ))}
+      {/* Carousel Container */}
+      <div className="relative flex items-center gap-2 sm:gap-3">
+        {/* Left Arrow */}
+        <button 
+          onClick={scrollLeft}
+          className="hidden sm:flex w-8 h-8 sm:w-10 sm:h-10 items-center justify-center hover:bg-gray-100 transition-colors rounded-full flex-shrink-0 z-10"
+          aria-label="Scroll left"
+        >
+          <HiChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+        </button>
+
+        {/* Categories Carousel */}
+        <div 
+          ref={scrollContainerRef}
+          className="flex gap-3 sm:gap-4 lg:gap-5 overflow-x-auto scrollbar-hide scroll-smooth"
+        >
+          {categories.map((category) => (
+            <Link 
+              key={category.id} 
+              to={`/products?category=${category.id}`}
+              className="flex-shrink-0 w-[150px] sm:w-[180px] lg:w-[200px] cursor-pointer hover:opacity-80 transition-opacity"
+            >
+              <div className="w-full h-[180px] sm:h-[220px] lg:h-[263px] rounded-lg overflow-hidden mb-2 sm:mb-3 bg-gray-100">
+                <img 
+                  src={categoryImages[category.slug] || 'https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=400'} 
+                  alt={category.name} 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <p className="text-xs sm:text-sm text-center font-medium tracking-wide font-['Maison_Neue']">
+                {category.name.toUpperCase()}
+              </p>
+            </Link>
+          ))}
+        </div>
+
+        {/* Right Arrow */}
+        <button 
+          onClick={scrollRight}
+          className="hidden sm:flex w-8 h-8 sm:w-10 sm:h-10 items-center justify-center hover:bg-gray-100 transition-colors rounded-full flex-shrink-0 z-10"
+          aria-label="Scroll right"
+        >
+          <HiChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+        </button>
       </div>
     </section>
   );

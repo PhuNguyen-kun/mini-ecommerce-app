@@ -65,6 +65,15 @@ export const API_ENDPOINTS = {
   // Admin
   ADMIN: {
     DASHBOARD_STATS: `${API_BASE_URL}/admin/dashboard/stats`,
+    PRODUCTS: {
+      CREATE: `${API_BASE_URL}/admin/products`,
+      UPDATE: (id) => `${API_BASE_URL}/admin/products/${id}`,
+      DELETE: (id) => `${API_BASE_URL}/admin/products/${id}`,
+      UPLOAD_MEDIA: (id) => `${API_BASE_URL}/admin/products/${id}/media`,
+      DELETE_IMAGE: (id) => `${API_BASE_URL}/admin/products/images/${id}`,
+      DELETE_VIDEO: (id) => `${API_BASE_URL}/admin/products/videos/${id}`,
+      ASSIGN_IMAGES: `${API_BASE_URL}/admin/products/options/image`,
+    },
   },
 };
 

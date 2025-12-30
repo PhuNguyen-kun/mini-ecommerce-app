@@ -267,31 +267,31 @@ const Checkout = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4">
-        <h1 className="text-3xl font-bold mb-8">Thanh toán</h1>
+    <div className="min-h-screen bg-gray-50 py-4 sm:py-6 lg:py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 font-['Maison_Neue']">Thanh toán</h1>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Left: Form */}
           <div className="lg:col-span-2">
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
               {/* Shipping Information */}
-              <div className="bg-white p-6 rounded-lg shadow-sm">
-                <h2 className="text-xl font-bold mb-4">Thông tin giao hàng</h2>
+              <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm">
+                <h2 className="text-lg sm:text-xl font-bold mb-4 font-['Maison_Neue']">Thông tin giao hàng</h2>
 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium mb-1">
-                      Họ và tên <span className="text-red-500">*</span>
+                    <label className="block text-sm font-medium mb-1 font-['Maison_Neue']">
+                      Họ tên <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       name="fullName"
                       value={formData.fullName}
                       onChange={handleInputChange}
-                      className={`w-full px-4 py-2 border ${
+                      className={`w-full px-3 sm:px-4 py-2 border ${
                         errors.fullName ? "border-red-500" : "border-gray-300"
-                      } rounded-lg focus:outline-none focus:ring-2 focus:ring-black`}
+                      } rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm sm:text-base font-['Maison_Neue']`}
                       placeholder="Nguyễn Văn A"
                     />
                     {errors.fullName && (
@@ -303,7 +303,7 @@ const Checkout = () => {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium mb-1">
+                      <label className="block text-sm font-medium mb-1 font-['Maison_Neue']">
                         Số điện thoại <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -311,9 +311,9 @@ const Checkout = () => {
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
-                        className={`w-full px-4 py-2 border ${
+                        className={`w-full px-3 sm:px-4 py-2 border ${
                           errors.phone ? "border-red-500" : "border-gray-300"
-                        } rounded-lg focus:outline-none focus:ring-2 focus:ring-black`}
+                        } rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm sm:text-base font-['Maison_Neue']`}
                         placeholder="0912345678"
                       />
                       {errors.phone && (
@@ -324,7 +324,7 @@ const Checkout = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium mb-1">
+                      <label className="block text-sm font-medium mb-1 font-['Maison_Neue']">
                         Email <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -332,9 +332,9 @@ const Checkout = () => {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className={`w-full px-4 py-2 border ${
+                        className={`w-full px-3 sm:px-4 py-2 border ${
                           errors.email ? "border-red-500" : "border-gray-300"
-                        } rounded-lg focus:outline-none focus:ring-2 focus:ring-black`}
+                        } rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm sm:text-base font-['Maison_Neue']`}
                         placeholder="email@example.com"
                       />
                       {errors.email && (
@@ -549,40 +549,56 @@ const Checkout = () => {
 
           {/* Right: Order Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-white p-6 rounded-lg shadow-sm sticky top-4">
-              <h2 className="text-xl font-bold mb-4">
+            <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm sticky top-4">
+              <h2 className="text-lg sm:text-xl font-bold mb-4 font-['Maison_Neue']">
                 Đơn hàng ({cart.length} sản phẩm)
               </h2>
 
               {/* Cart Items */}
-              <div className="space-y-4 mb-6 max-h-64 overflow-y-auto">
+              <div className="space-y-3 sm:space-y-4 mb-6 max-h-64 overflow-y-auto">
                 {cart.map((item) => {
-                  const itemImage =
-                    item.images?.find((img) => img.is_primary)?.image_url ||
-                    item.images?.[0]?.image_url ||
-                    "/placeholder.png";
+                  // Lấy ảnh theo màu của variant (giống CartSidebar)
+                  let itemImage = item.variantImage; // Ảnh theo màu đã được xử lý trong CartContext
+                  
+                  if (!itemImage) {
+                    // Fallback: tìm ảnh theo colorOptionValueId
+                    if (item.colorOptionValueId && item.images) {
+                      const colorImage = item.images.find(
+                        img => img.product_option_value_id === item.colorOptionValueId
+                      );
+                      itemImage = colorImage?.image_url;
+                    }
+                    
+                    // Fallback: ảnh primary hoặc ảnh đầu tiên
+                    if (!itemImage) {
+                      itemImage = item.images?.find((img) => img.is_primary)?.image_url ||
+                                  item.images?.[0]?.image_url ||
+                                  "/placeholder.png";
+                    }
+                  }
+                  
                   const itemPrice = item.selectedVariant?.price || item.price;
 
                   return (
-                    <div key={item.cartId} className="flex gap-3">
+                    <div key={item.cartId} className="flex gap-2 sm:gap-3">
                       <div className="relative">
                         <img
                           src={itemImage}
                           alt={item.name}
-                          className="w-16 h-16 object-cover rounded"
+                          className="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded"
                         />
-                        <span className="absolute -top-2 -right-2 bg-gray-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                        <span className="absolute -top-2 -right-2 bg-gray-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-['Maison_Neue']">
                           {item.quantity}
                         </span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="text-sm font-medium truncate">
+                        <h4 className="text-xs sm:text-sm font-medium truncate font-['Maison_Neue']">
                           {item.name}
                         </h4>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-gray-500 font-['Maison_Neue']">
                           {item.selectedColor} / {item.selectedSize}
                         </p>
-                        <p className="text-sm font-medium mt-1">
+                        <p className="text-xs sm:text-sm font-medium mt-1 font-['Maison_Neue']">
                           {formatPrice(itemPrice * item.quantity)}₫
                         </p>
                       </div>
@@ -593,19 +609,19 @@ const Checkout = () => {
 
               {/* Pricing */}
               <div className="border-t pt-4 space-y-3">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Tạm tính</span>
-                  <span className="font-medium">{formatPrice(subtotal)}₫</span>
+                <div className="flex justify-between text-xs sm:text-sm">
+                  <span className="text-gray-600 font-['Maison_Neue']">Tạm tính</span>
+                  <span className="font-medium font-['Maison_Neue']">{formatPrice(subtotal)}₫</span>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Phí vận chuyển</span>
-                  <span className="font-medium">
+                <div className="flex justify-between text-xs sm:text-sm">
+                  <span className="text-gray-600 font-['Maison_Neue']">Phí vận chuyển</span>
+                  <span className="font-medium font-['Maison_Neue']">
                     {formatPrice(shippingFee)}₫
                   </span>
                 </div>
-                <div className="border-t pt-3 flex justify-between font-bold text-lg">
-                  <span>Tổng cộng</span>
-                  <span className="text-red-600">{formatPrice(total)}₫</span>
+                <div className="border-t pt-3 flex justify-between font-bold text-base sm:text-lg">
+                  <span className="font-['Maison_Neue']">Tổng cộng</span>
+                  <span className="text-red-600 font-['Maison_Neue']">{formatPrice(total)}₫</span>
                 </div>
               </div>
 
@@ -613,7 +629,7 @@ const Checkout = () => {
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className="w-full bg-black text-white py-3 mt-6 font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-black text-white py-3 mt-6 font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-['Maison_Neue'] text-sm sm:text-base"
               >
                 {isSubmitting
                   ? "Đang xử lý..."

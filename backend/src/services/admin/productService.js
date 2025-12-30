@@ -10,85 +10,97 @@ class ProductAdminService {
     // ============================================================
     async createProduct(data) {
         return db.sequelize.transaction(async (t) => {
-            data.options = (data.options || []).map((opt) => ({
-                name: opt.name.trim(),
-                values: (opt.values || []).map((v) => v.trim()),
-            }));
+            try {
+                data.options = (data.options || []).map((opt) => ({
+                    name: opt.name.trim(),
+                    values: (opt.values || []).map((v) => v.trim()),
+                }));
 
-            const slug = slugify(data.name, { lower: true, strict: true }) + "-" + Date.now();
+                const slug = slugify(data.name, { lower: true, strict: true }) + "-" + Date.now();
 
-            const product = await db.Product.create(
-                {
-                    name: data.name,
-                    slug,
-                    category_id: data.category_id,
-                    gender: data.gender,
-                    description: data.description,
-                    short_description: data.short_description,
-                    is_active: true,
-                },
-                { transaction: t }
-            );
-
-            const optionMap = {};
-
-            for (const opt of data.options) {
-                const newOption = await db.ProductOption.create(
-                    { product_id: product.id, name: opt.name },
-                    { transaction: t }
-                );
-
-                for (const val of opt.values) {
-                    const newValue = await db.ProductOptionValue.create(
-                        { product_option_id: newOption.id, value: val },
-                        { transaction: t }
-                    );
-                    optionMap[`${opt.name}-${val}`] = newValue.id;
-                }
-            }
-
-            for (const variantData of data.variants || []) {
-                const newVariant = await db.ProductVariant.create(
+                const product = await db.Product.create(
                     {
-                        product_id: product.id,
-                        sku: variantData.sku,
-                        price: variantData.price,
-                        stock: variantData.stock,
+                        name: data.name,
+                        slug,
+                        category_id: data.category_id,
+                        gender: data.gender,
+                        description: data.description,
+                        short_description: data.short_description,
                         is_active: true,
                     },
                     { transaction: t }
                 );
 
-                for (const [optNameRaw, optValRaw] of Object.entries(variantData.options || {})) {
-                    const optName = String(optNameRaw).trim();
-                    const optVal = String(optValRaw).trim();
-                    const valueId = optionMap[`${optName}-${optVal}`];
-                    if (!valueId) throw new BadRequestError(`Option value not found for ${optName} - ${optVal}`);
+                const optionMap = {};
 
-                    await db.ProductVariantOption.create(
-                        { product_variant_id: newVariant.id, product_option_value_id: valueId },
+                for (const opt of data.options) {
+                    const newOption = await db.ProductOption.create(
+                        { product_id: product.id, name: opt.name },
                         { transaction: t }
                     );
+
+                    for (const val of opt.values) {
+                        const newValue = await db.ProductOptionValue.create(
+                            { product_option_id: newOption.id, value: val },
+                            { transaction: t }
+                        );
+                        optionMap[`${opt.name}-${val}`] = newValue.id;
+                    }
                 }
+
+                for (const variantData of data.variants || []) {
+
+                    
+                    const newVariant = await db.ProductVariant.create(
+                        {
+                            product_id: product.id,
+                            sku: variantData.sku,
+                            price: variantData.price,
+                            stock: variantData.stock,
+                            is_active: true,
+                        },
+                        { transaction: t }
+                    );
+
+                    for (const [optNameRaw, optValRaw] of Object.entries(variantData.options || {})) {
+                        const optName = String(optNameRaw).trim();
+                        const optVal = String(optValRaw).trim();
+                        const valueId = optionMap[`${optName}-${optVal}`];
+                        if (!valueId) throw new BadRequestError(`Option value not found for ${optName} - ${optVal}`);
+
+                        await db.ProductVariantOption.create(
+                            { product_variant_id: newVariant.id, product_option_value_id: valueId },
+                            { transaction: t }
+                        );
+                    }
+                }
+
+                const fullProduct = await db.Product.findOne({
+                    where: { id: product.id },
+                    include: [
+                        { model: db.Category, as: "category", attributes: ["id", "name", "slug"] },
+                        { model: db.ProductOption, as: "options", include: [{ model: db.ProductOptionValue, as: "values" }] },
+                        {
+                            model: db.ProductVariant,
+                            as: "variants",
+                            where: { deleted_at: null },
+                            required: false,
+                            include: [{ model: db.ProductOptionValue, as: "option_values", through: { attributes: [] } }],
+                        },
+                    ],
+                    transaction: t,
+                });
+
+                return fullProduct;
+            } catch (error) {
+                console.error('Error in createProduct:', error);
+                console.error('Error name:', error.name);
+                console.error('Error message:', error.message);
+                if (error.errors) {
+                    console.error('Validation errors:', JSON.stringify(error.errors, null, 2));
+                }
+                throw error;
             }
-
-            const fullProduct = await db.Product.findOne({
-                where: { id: product.id },
-                include: [
-                    { model: db.Category, as: "category", attributes: ["id", "name", "slug"] },
-                    { model: db.ProductOption, as: "options", include: [{ model: db.ProductOptionValue, as: "values" }] },
-                    {
-                        model: db.ProductVariant,
-                        as: "variants",
-                        where: { deleted_at: null },
-                        required: false,
-                        include: [{ model: db.ProductOptionValue, as: "option_values", through: { attributes: [] } }],
-                    },
-                ],
-                transaction: t,
-            });
-
-            return fullProduct;
         });
     }
 
@@ -172,26 +184,75 @@ class ProductAdminService {
     // 5. ADMIN - XÓA SẢN PHẨM
     // ============================================================
     async deleteProduct(productId) {
+        
+        
+        // First check if product exists
+        const productCheck = await db.Product.findOne({ 
+            where: { id: productId, deleted_at: null } 
+        });
+        
+        if (!productCheck) {
+           
+            throw new NotFoundError("Product not found");
+        }
+        
+        
+        
         const [images, videos] = await Promise.all([
             db.ProductImage.findAll({ where: { product_id: productId, deleted_at: null }, attributes: ["public_id"] }),
             db.ProductVideo.findAll({ where: { product_id: productId, deleted_at: null }, attributes: ["public_id"] }),
         ]);
+
+
 
         const imagePublicIds = images.map((x) => x.public_id).filter(Boolean);
         const videoPublicIds = videos.map((x) => x.public_id).filter(Boolean);
         const uniqueImageIds = [...new Set(imagePublicIds)];
         const uniqueVideoIds = [...new Set(videoPublicIds)];
 
+        // Perform soft delete in transaction
+        const deletedAt = new Date();
         await db.sequelize.transaction(async (t) => {
-            const product = await db.Product.findOne({ where: { id: productId, deleted_at: null }, transaction: t });
-            if (!product) throw new NotFoundError("Product not found");
-            await db.ProductImage.update({ deleted_at: new Date() }, { where: { product_id: productId, deleted_at: null }, transaction: t });
-            await db.ProductVideo.update({ deleted_at: new Date() }, { where: { product_id: productId, deleted_at: null }, transaction: t });
-            await product.update({ deleted_at: new Date() }, { transaction: t });
+            // Soft delete images
+            const imageUpdateResult = await db.ProductImage.update(
+                { deleted_at: deletedAt }, 
+                { where: { product_id: productId, deleted_at: null }, transaction: t }
+            );
+           
+            
+            // Soft delete videos
+            const videoUpdateResult = await db.ProductVideo.update(
+                { deleted_at: deletedAt }, 
+                { where: { product_id: productId, deleted_at: null }, transaction: t }
+            );
+            
+            
+            // Soft delete product
+            const productUpdateResult = await db.Product.update(
+                { deleted_at: deletedAt },
+                { where: { id: productId, deleted_at: null }, transaction: t }
+            );
+           
+            if (productUpdateResult[0] === 0) {
+                throw new Error('Failed to update product - no rows affected');
+            }
+            
+           
         });
+        
+        // Verify deletion (use paranoid: false to include soft-deleted records)
+        const verifyProduct = await db.Product.findByPk(productId, { paranoid: false });
 
-        if (uniqueImageIds.length) await deleteMultipleFiles(uniqueImageIds, "image");
-        if (uniqueVideoIds.length) await deleteMultipleFiles(uniqueVideoIds, "video");
+        // Delete files from cloudinary
+        if (uniqueImageIds.length) {
+            await deleteMultipleFiles(uniqueImageIds, "image");
+        }
+        if (uniqueVideoIds.length) {
+           
+            await deleteMultipleFiles(uniqueVideoIds, "video");
+        }
+        
+        
         return true;
     }
 

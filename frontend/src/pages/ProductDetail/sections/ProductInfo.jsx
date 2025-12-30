@@ -4,7 +4,7 @@ import WishlistButton from '../../../components/WishlistButton';
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, setSelectedColor }) => {
+const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, setSelectedColor, selectedVariant }) => {
   const { addToCart } = useCart();
   const navigate = useNavigate();
   const [addedToCart, setAddedToCart] = useState(false);
@@ -29,25 +29,88 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
         const optionName = optVal.option?.name?.toLowerCase();
         if (optionName === 'màu sắc' || optionName === 'color') {
           if (!colorMap.has(optVal.value)) {
-            // Color mapping for display
+            // Comprehensive color mapping for accurate display
             const colorHexMap = {
-              'Đen': '#1A1A1A',
+              // Tiếng Việt
+              'Đen': '#000000',
               'Trắng': '#FFFFFF',
-              'Đỏ': '#DC2626',
-              'Xanh Navy': '#1E3A8A',
-              'Xanh Dương': '#3B82F6',
-              'Xám': '#6B7280',
-              'Be': '#D4C5B9',
+              'Xám': '#9CA3AF',
+              'Xám Đậm': '#4B5563',
+              'Xám Nhạt': '#E5E7EB',
+              'Be': '#D2B48C',
+              'Nâu': '#8B4513',
+              'Nâu Đậm': '#654321',
+              'Nâu Nhạt': '#D2691E',
+              'Đỏ': '#EF4444',
+              'Đỏ Đô': '#DC143C',
+              'Đỏ Tươi': '#FF0000',
               'Hồng': '#EC4899',
-              'Black': '#1A1A1A',
+              'Hồng Nhạt': '#FFC0CB',
+              'Hồng Đậm': '#FF1493',
+              'Cam': '#F97316',
+              'Cam Đậm': '#FF8C00',
+              'Vàng': '#FCD34D',
+              'Vàng Nhạt': '#FFFFE0',
+              'Vàng Gold': '#FFD700',
+              'Xanh Lá': '#22C55E',
+              'Xanh lá': '#22C55E',  // lowercase variant
+              'Xanh Lá Đậm': '#15803D',
+              'Xanh Lá Nhạt': '#86EFAC',
+              'Xanh Dương': '#3B82F6',
+              'Xanh dương': '#3B82F6',  // lowercase variant
+              'Xanh Navy': '#1E3A8A',
+              'Xanh navy': '#1E3A8A',  // lowercase variant
+              'Xanh Da Trời': '#60A5FA',
+              'Xanh Ngọc': '#14B8A6',
+              'Xanh Mint': '#6EE7B7',
+              'Tím': '#A855F7',
+              'Tím Đậm': '#7C3AED',
+              'Tím Nhạt': '#C4B5FD',
+              
+              // English
+              'Black': '#000000',
               'White': '#FFFFFF',
-              'Red': '#DC2626',
-              'Navy': '#1E3A8A',
+              'Grey': '#9CA3AF',
+              'Gray': '#9CA3AF',
+              'Dark Grey': '#4B5563',
+              'Dark Gray': '#4B5563',
+              'Light Grey': '#E5E7EB',
+              'Light Gray': '#E5E7EB',
+              'Beige': '#D2B48C',
+              'Brown': '#8B4513',
+              'Dark Brown': '#654321',
+              'Light Brown': '#D2691E',
+              'Red': '#EF4444',
+              'Crimson': '#DC143C',
+              'Bright Red': '#FF0000',
+              'Pink': '#EC4899',
+              'Light Pink': '#FFC0CB',
+              'Hot Pink': '#FF1493',
+              'Orange': '#F97316',
+              'Dark Orange': '#FF8C00',
+              'Yellow': '#FCD34D',
+              'Light Yellow': '#FFFFE0',
+              'Gold': '#FFD700',
+              'Green': '#22C55E',
+              'Dark Green': '#15803D',
+              'Light Green': '#86EFAC',
               'Blue': '#3B82F6',
-              'Grey': '#6B7280',
-              'Gray': '#6B7280',
-              'Beige': '#D4C5B9',
-              'Pink': '#EC4899'
+              'Navy': '#1E3A8A',
+              'Sky Blue': '#60A5FA',
+              'Teal': '#14B8A6',
+              'Mint': '#6EE7B7',
+              'Purple': '#A855F7',
+              'Dark Purple': '#7C3AED',
+              'Light Purple': '#C4B5FD',
+              'Olive': '#808000',
+              'Khaki': '#C3B091',
+              'Maroon': '#800000',
+              'Burgundy': '#800020',
+              'Coral': '#FF7F50',
+              'Salmon': '#FA8072',
+              'Peach': '#FFDAB9',
+              'Ivory': '#FFFFF0',
+              'Cream': '#FFFDD0'
             };
             colorMap.set(optVal.value, colorHexMap[optVal.value] || '#000000');
           }
@@ -80,20 +143,7 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
       return;
     }
 
-    // Find the matching variant
-    const variant = product.variants?.find(v => {
-      const hasColor = v.option_values?.some(opt => 
-        (opt.option?.name?.toLowerCase() === 'màu sắc' || opt.option?.name?.toLowerCase() === 'color') 
-        && opt.value === selectedColor
-      );
-      const hasSize = v.option_values?.some(opt => 
-        (opt.option?.name?.toLowerCase() === 'kích cỡ' || opt.option?.name?.toLowerCase() === 'size') 
-        && opt.value === selectedSize
-      );
-      return hasColor && hasSize;
-    });
-
-    if (!variant) {
+    if (!selectedVariant) {
       alert('Selected combination not available');
       return;
     }
@@ -101,7 +151,7 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
     setIsAdding(true);
     try {
       // Add to cart using variant ID
-      await addToCart(variant.id, 1);
+      await addToCart(selectedVariant.id, 1);
       
       setAddedToCart(true);
       
@@ -129,24 +179,36 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
     );
   };
 
+  // Hiển thị giá và stock từ selectedVariant nếu có
+  const displayPrice = selectedVariant ? formatPrice(selectedVariant.price) : minPrice;
+  const displayStock = selectedVariant ? selectedVariant.stock : null;
+
   return (
-    <div className="w-[384px] flex flex-col gap-px">
+    <div className="w-full lg:w-[384px] flex flex-col gap-px">
       {/* Header Section */}
-      <div className="border-b border-[#F5F4F4] pb-4 flex flex-col gap-1">
+      <div className="border-b border-[#F5F4F4] pb-3 sm:pb-4 flex flex-col gap-1">
         <p className="text-xs text-neutral-500 tracking-[0.2px] font-['Maison_Neue']">
           {product.category?.name || 'Product'}
         </p>
-        <div className="flex gap-2.5 items-start">
-          <p className="flex-1 text-2xl text-black leading-[33.24px] font-['Maison_Neue']">
+        <div className="flex gap-2 sm:gap-2.5 items-start">
+          <p className="flex-1 text-xl sm:text-2xl text-black leading-tight sm:leading-[33.24px] font-['Maison_Neue']">
             {product.name}
           </p>
-          <div className="flex gap-2 items-center">
-            <div className="flex gap-1 items-center text-2xl leading-[33.24px] font-['Maison_Neue']">
-              <p className="text-black">{minPrice}₫</p>
+          <div className="flex gap-1.5 sm:gap-2 items-center">
+            <div className="flex gap-1 items-center text-xl sm:text-2xl leading-tight sm:leading-[33.24px] font-['Maison_Neue']">
+              <p className="text-black">{displayPrice}₫</p>
             </div>
             <WishlistButton productId={product.id} productData={product} size="md" />
           </div>
         </div>
+        
+        {/* Hiển thị stock nếu có selectedVariant */}
+        {displayStock !== null && (
+          <div className="text-xs sm:text-sm text-gray-600 mt-1 font-['Maison_Neue']">
+            Tồn kho: <span className="font-semibold">{displayStock}</span>
+          </div>
+        )}
+        
         <div className="flex gap-2.5 items-center">
           {renderStars(product.rating)}
           <p className="text-xs text-neutral-500 tracking-[0.2px] font-['Maison_Neue']">
@@ -157,17 +219,17 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
 
       {/* Color Selection */}
       {colors.length > 0 && (
-        <div className="py-[18px] flex flex-col gap-2.5">
-          <div className="flex gap-3 items-start text-xs text-black tracking-[0.2px]">
+        <div className="py-4 sm:py-[18px] flex flex-col gap-2.5">
+          <div className="flex gap-2 sm:gap-3 items-start text-xs text-black tracking-[0.2px]">
             <p className="font-semibold font-['Maison_Neue']">Color</p>
             <p className="font-['Maison_Neue']">{selectedColor}</p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-2 sm:gap-3 flex-wrap">
             {colors.map((color, index) => (
               <button
                 key={index}
                 onClick={() => setSelectedColor(color.name)}
-                className={`w-8 h-8 rounded-full border-2 ${
+                className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 ${
                   selectedColor === color.name ? 'border-black' : 'border-gray-300'
                 }`}
                 style={{ backgroundColor: color.value }}
@@ -180,17 +242,17 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
 
       {/* Size Selection */}
       {sizes.length > 0 && (
-        <div className="py-[18px] flex flex-col gap-2.5">
+        <div className="py-4 sm:py-[18px] flex flex-col gap-2.5">
           <div className="flex items-start justify-between text-xs tracking-[0.2px]">
             <p className="font-semibold text-black font-['Maison_Neue']">Size</p>
             <p className="underline text-neutral-800 font-['Maison_Neue']">Size Guide</p>
           </div>
-          <div className="flex gap-3 flex-wrap">
+          <div className="flex gap-2 sm:gap-3 flex-wrap">
             {sizes.map((size) => (
               <button
                 key={size}
                 onClick={() => setSelectedSize(size)}
-                className={`min-w-[45px] px-3 py-3 text-xs text-neutral-800 tracking-[0.2px] font-['Maison_Neue'] ${
+                className={`min-w-[40px] sm:min-w-[45px] px-2.5 sm:px-3 py-2.5 sm:py-3 text-xs text-neutral-800 tracking-[0.2px] font-['Maison_Neue'] ${
                   selectedSize === size ? 'bg-neutral-800 text-white' : 'bg-[#F5F4F4]'
                 }`}
               >
@@ -202,29 +264,29 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
       )}
 
       {/* Add to Bag Button */}
-      <div className="py-8 flex flex-col gap-2.5 items-center justify-center">
+      <div className="py-6 sm:py-8 flex flex-col gap-2.5 items-center justify-center">
         <button 
           onClick={handleAddToCart}
           disabled={isAdding}
-          className={`w-full py-3 flex items-center justify-center transition-colors ${
+          className={`w-full py-2.5 sm:py-3 flex items-center justify-center transition-colors ${
             addedToCart ? 'bg-green-600' : 'bg-neutral-800 hover:bg-black'
           } ${isAdding ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
-          <p className="text-sm text-white text-center tracking-[1.4px] font-['Maison_Neue']">
+          <p className="text-xs sm:text-sm text-white text-center tracking-[1.4px] font-['Maison_Neue']">
             {addedToCart ? 'ADDED TO CART!' : isAdding ? 'ADDING...' : 'ADD TO BAG'}
           </p>
         </button>
       </div>
 
       {/* Features */}
-      <div className="border-t border-[#DDDBDC] py-6 flex flex-col gap-6">
+      <div className="border-t border-[#DDDBDC] py-5 sm:py-6 flex flex-col gap-5 sm:gap-6">
         {/* Free Shipping */}
-        <div className="flex gap-4 items-center">
-          <div className="w-[34px] h-[34px] flex items-center justify-center">
-            <TbTruckDelivery className="w-[34px] h-[34px]" strokeWidth={1.5} />
+        <div className="flex gap-3 sm:gap-4 items-center">
+          <div className="w-[30px] h-[30px] sm:w-[34px] sm:h-[34px] flex items-center justify-center flex-shrink-0">
+            <TbTruckDelivery className="w-full h-full" strokeWidth={1.5} />
           </div>
           <div className="flex-1 flex flex-col">
-            <p className="text-sm font-semibold text-black tracking-[0.42px] font-['Maison_Neue']">
+            <p className="text-xs sm:text-sm font-semibold text-black tracking-[0.42px] font-['Maison_Neue']">
               Free Shipping
             </p>
             <p className="text-xs text-black tracking-[0.2px] font-['Maison_Neue']">
@@ -234,12 +296,12 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
         </div>
 
         {/* Easy Returns */}
-        <div className="flex gap-4 items-center">
-          <div className="w-[34px] h-[34px] flex items-center justify-center">
-            <TbPackage className="w-[34px] h-[34px]" strokeWidth={1.5} />
+        <div className="flex gap-3 sm:gap-4 items-center">
+          <div className="w-[30px] h-[30px] sm:w-[34px] sm:h-[34px] flex items-center justify-center flex-shrink-0">
+            <TbPackage className="w-full h-full" strokeWidth={1.5} />
           </div>
           <div className="flex-1 flex flex-col">
-            <p className="text-sm font-semibold text-black tracking-[0.42px] font-['Maison_Neue']">
+            <p className="text-xs sm:text-sm font-semibold text-black tracking-[0.42px] font-['Maison_Neue']">
               Easy Returns
             </p>
             <p className="text-xs text-black tracking-[0.2px] font-['Maison_Neue']">

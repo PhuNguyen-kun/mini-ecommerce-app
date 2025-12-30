@@ -38,9 +38,9 @@ class CartService {
                 {
                   model: db.ProductImage,
                   as: "images",
-                  where: { is_primary: true },
+                  where: { deleted_at: null },
                   required: false,
-                  attributes: ["image_url"],
+                  attributes: ["id", "image_url", "product_option_value_id", "is_primary"],
                 },
                 {
                   model: db.ProductVariant,
