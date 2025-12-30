@@ -74,6 +74,11 @@ export const API_ENDPOINTS = {
       DELETE_VIDEO: (id) => `${API_BASE_URL}/admin/products/videos/${id}`,
       ASSIGN_IMAGES: `${API_BASE_URL}/admin/products/options/image`,
     },
+    ORDERS: {
+      LIST: `${API_BASE_URL}/admin/orders`,
+      DETAIL: (id) => `${API_BASE_URL}/admin/orders/${id}`,
+      UPDATE_STATUS: (id) => `${API_BASE_URL}/admin/orders/${id}/status`,
+    },
   },
 };
 
