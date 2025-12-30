@@ -23,8 +23,7 @@ app.use("/api/locations", require("./routes/locationRoutes"));
 app.use("/api/addresses", require("./routes/addressRoutes"));
 app.use("/api/reviews", require("./routes/reviewRoutes"));
 app.use("/api/payment", require("./routes/paymentRoutes"));
-app.use("/api/admin", require("./routes/adminRoutes"));
-
+app.use("/api/admin", require("./routes/admin/adminRoutes"));
 app.use(errorHandler);
 
 module.exports = app;

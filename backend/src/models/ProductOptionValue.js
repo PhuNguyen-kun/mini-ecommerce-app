@@ -14,6 +14,11 @@ module.exports = (sequelize) => {
                 otherKey: "product_variant_id",
                 as: "variants",
             });
+            // Quan hệ 1 - N với Ảnh
+            ProductOptionValue.hasMany(models.ProductImage, {
+                foreignKey: "product_option_value_id",
+                as: "images"
+            });
         }
     }
 

@@ -4,14 +4,17 @@ module.exports = (sequelize) => {
     class ProductImage extends Model {
         static associate(models) {
             ProductImage.belongsTo(models.Product, { foreignKey: "product_id", as: "product" });
-            ProductImage.belongsTo(models.ProductVariant, { foreignKey: "product_variant_id", as: "variant" });
+            ProductImage.belongsTo(models.ProductOptionValue, {
+                foreignKey: "product_option_value_id",
+                as: "option_value"
+            });
         }
     }
 
     ProductImage.init({
         id: { type: DataTypes.BIGINT, primaryKey: true, autoIncrement: true },
         product_id: { type: DataTypes.BIGINT, allowNull: false },
-        product_variant_id: { type: DataTypes.BIGINT, allowNull: true },
+        product_option_value_id: { type: DataTypes.INTEGER, allowNull: true },
         image_url: { type: DataTypes.STRING(500), allowNull: false },
         public_id: { type: DataTypes.STRING(255), allowNull: true }, // Lưu ID của Cloudinary 
         is_primary: { type: DataTypes.BOOLEAN, defaultValue: false },

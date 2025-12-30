@@ -32,8 +32,6 @@ module.exports = (sequelize) => {
                 as: "size_values",
             });
 
-            // Link tới ảnh (nếu biến thể có ảnh riêng)
-            ProductVariant.hasMany(models.ProductImage, { foreignKey: "product_variant_id", as: "images" });
         }
     }
 
