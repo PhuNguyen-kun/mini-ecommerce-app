@@ -127,8 +127,8 @@ class OrderService {
       paymentMethod === "cod"
         ? "COD"
         : paymentMethod === "vnpay"
-        ? "VNPAY_FAKE"
-        : "COD";
+          ? "VNPAY_FAKE"
+          : "COD";
 
     const orderStatus =
       paymentMethod === "cod" ? "CONFIRMED" : "PENDING_PAYMENT";
@@ -166,6 +166,18 @@ class OrderService {
       );
 
       if (paymentMethod === "cod") {
+        // Trừ stock cho các variant khi đơn COD được tạo
+        for (const orderItem of orderItemsData) {
+          await db.ProductVariant.decrement(
+            'stock',
+            {
+              by: orderItem.quantity,
+              where: { id: orderItem.product_variant_id },
+              transaction
+            }
+          );
+        }
+
         let cart = await db.Cart.findOne({
           where: { user_id: userId },
           transaction,
@@ -273,7 +285,7 @@ class OrderService {
               model: db.ProductVariant,
               as: "variant",
               include: [
-                
+
                 {
                   model: db.Product,
                   as: "product",
@@ -411,12 +423,39 @@ class OrderService {
       throw new BadRequestError("Order is already cancelled");
     }
 
-    await order.update({
-      status: "CANCELLED",
-      cancelled_at: new Date(),
-    });
+    const transaction = await db.sequelize.transaction();
 
-    return order;
+    try {
+      await order.update({
+        status: "CANCELLED",
+        cancelled_at: new Date(),
+      }, { transaction });
+
+      // Hoàn trả stock nếu đơn hàng đã trừ stock (CONFIRMED hoặc đã thanh toán)
+      if (order.status === "CONFIRMED" || order.payment_status === "SUCCESS") {
+        const orderItems = await db.OrderItem.findAll({
+          where: { order_id: order.id },
+          transaction,
+        });
+
+        for (const orderItem of orderItems) {
+          await db.ProductVariant.increment(
+            'stock',
+            {
+              by: orderItem.quantity,
+              where: { id: orderItem.product_variant_id },
+              transaction
+            }
+          );
+        }
+      }
+
+      await transaction.commit();
+      return order;
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
   }
 
   async confirmOrderReceived(userId, orderId) {

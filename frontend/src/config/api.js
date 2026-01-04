@@ -73,7 +73,6 @@ export const API_ENDPOINTS = {
       DELETE_IMAGE: (id) => `${API_BASE_URL}/admin/products/images/${id}`,
       DELETE_VIDEO: (id) => `${API_BASE_URL}/admin/products/videos/${id}`,
       ASSIGN_IMAGES: `${API_BASE_URL}/admin/products/options/image`,
-      TOGGLE_ACTIVE: (id) => `${API_BASE_URL}/admin/products/${id}/toggle-active`,
     },
     CATEGORIES: {
       LIST: `${API_BASE_URL}/admin/categories`,
@@ -95,6 +94,14 @@ export const API_ENDPOINTS = {
       STATS: `${API_BASE_URL}/admin/users/stats`,
       DETAIL: (id) => `${API_BASE_URL}/admin/users/${id}`,
       UPDATE: (id) => `${API_BASE_URL}/admin/users/${id}`,
+    },
+    REVIEWS: {
+      LIST: `${API_BASE_URL}/admin/reviews`,
+      STATS: `${API_BASE_URL}/admin/reviews/stats`,
+      DETAIL: (id) => `${API_BASE_URL}/admin/reviews/${id}`,
+      APPROVE: (id) => `${API_BASE_URL}/admin/reviews/${id}/approve`,
+      REJECT: (id) => `${API_BASE_URL}/admin/reviews/${id}/reject`,
+      DELETE: (id) => `${API_BASE_URL}/admin/reviews/${id}`,
     },
   },
 };

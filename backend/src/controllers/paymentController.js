@@ -60,6 +60,23 @@ class PaymentController {
           { transaction }
         );
 
+        // Trừ stock cho các variant khi thanh toán thành công
+        const orderItems = await db.OrderItem.findAll({
+          where: { order_id: order.id },
+          transaction,
+        });
+
+        for (const orderItem of orderItems) {
+          await db.ProductVariant.decrement(
+            'stock',
+            {
+              by: orderItem.quantity,
+              where: { id: orderItem.product_variant_id },
+              transaction
+            }
+          );
+        }
+
         const cart = await db.Cart.findOne({
           where: { user_id: order.user_id },
           transaction,
@@ -89,8 +106,7 @@ class PaymentController {
         );
       } else {
         return res.redirect(
-          `${
-            process.env.FRONTEND_URL
+          `${process.env.FRONTEND_URL
           }/payment/result?success=false&message=${encodeURIComponent(
             this.getVNPayMessage(rspCode)
           )}`

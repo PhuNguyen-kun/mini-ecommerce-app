@@ -28,7 +28,7 @@ class ReviewService {
       });
 
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.message || 'Failed to check eligibility');
       }
@@ -61,7 +61,7 @@ class ReviewService {
       });
 
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.message || 'Failed to create review');
       }
@@ -82,7 +82,7 @@ class ReviewService {
   async getProductReviews(productId, params = {}) {
     try {
       const queryParams = new URLSearchParams();
-      
+
       if (params.page) queryParams.append('page', params.page);
       if (params.limit) queryParams.append('limit', params.limit);
       if (params.sort) queryParams.append('sort', params.sort);
@@ -99,7 +99,7 @@ class ReviewService {
       });
 
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.message || 'Failed to fetch reviews');
       }
@@ -126,7 +126,7 @@ class ReviewService {
       });
 
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.message || 'Failed to fetch review stats');
       }
@@ -161,7 +161,7 @@ class ReviewService {
       });
 
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.message || 'Failed to update review');
       }
@@ -194,7 +194,7 @@ class ReviewService {
       });
 
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.message || 'Failed to delete review');
       }
@@ -233,7 +233,7 @@ class ReviewService {
       });
 
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.message || 'Failed to fetch my reviews');
       }
@@ -241,6 +241,203 @@ class ReviewService {
       return data;
     } catch (error) {
       console.error('Error fetching my reviews:', error);
+      throw error;
+    }
+  }
+
+  // ==================== ADMIN METHODS ====================
+
+  /**
+   * [ADMIN] Get all reviews with filters
+   * @param {Object} params - Query params { page, limit, search, is_approved, rating, productId, userId, startDate, endDate, sort }
+   * @returns {Promise} Reviews data with pagination
+   */
+  async getAdminReviews(params = {}) {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) throw new Error('User not authenticated');
+
+      const queryParams = new URLSearchParams();
+      if (params.page) queryParams.append('page', params.page);
+      if (params.limit) queryParams.append('limit', params.limit);
+      if (params.search) queryParams.append('search', params.search);
+      if (params.is_approved !== undefined && params.is_approved !== '') {
+        queryParams.append('is_approved', params.is_approved);
+      }
+      if (params.rating) queryParams.append('rating', params.rating);
+      if (params.productId) queryParams.append('productId', params.productId);
+      if (params.userId) queryParams.append('userId', params.userId);
+      if (params.startDate) queryParams.append('startDate', params.startDate);
+      if (params.endDate) queryParams.append('endDate', params.endDate);
+      if (params.sort) queryParams.append('sort', params.sort);
+
+      const url = `${API_ENDPOINTS.ADMIN.REVIEWS.LIST}?${queryParams.toString()}`;
+
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to fetch reviews');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching admin reviews:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * [ADMIN] Get review statistics
+   * @returns {Promise} Review stats data
+   */
+  async getAdminStats() {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) throw new Error('User not authenticated');
+
+      const response = await fetch(API_ENDPOINTS.ADMIN.REVIEWS.STATS, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to fetch stats');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching review stats:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * [ADMIN] Get review detail by ID
+   * @param {number} reviewId - Review ID
+   * @returns {Promise} Review detail data
+   */
+  async getAdminReviewById(reviewId) {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) throw new Error('User not authenticated');
+
+      const response = await fetch(API_ENDPOINTS.ADMIN.REVIEWS.DETAIL(reviewId), {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to fetch review detail');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching review detail:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * [ADMIN] Approve review
+   * @param {number} reviewId - Review ID
+   * @returns {Promise} Response data
+   */
+  async approveReview(reviewId) {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) throw new Error('User not authenticated');
+
+      const response = await fetch(API_ENDPOINTS.ADMIN.REVIEWS.APPROVE(reviewId), {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to approve review');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error approving review:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * [ADMIN] Reject review
+   * @param {number} reviewId - Review ID
+   * @returns {Promise} Response data
+   */
+  async rejectReview(reviewId) {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) throw new Error('User not authenticated');
+
+      const response = await fetch(API_ENDPOINTS.ADMIN.REVIEWS.REJECT(reviewId), {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to reject review');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error rejecting review:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * [ADMIN] Delete review
+   * @param {number} reviewId - Review ID
+   * @returns {Promise} Response data
+   */
+  async deleteAdminReview(reviewId) {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) throw new Error('User not authenticated');
+
+      const response = await fetch(API_ENDPOINTS.ADMIN.REVIEWS.DELETE(reviewId), {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to delete review');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error deleting review:', error);
       throw error;
     }
   }
