@@ -61,7 +61,10 @@ class ProductService {
             is_active: true,
             deleted_at: null,
         };
-        if (gender) whereCondition.gender = gender;
+        // Nếu filter theo gender men/women, bao gồm cả unisex
+        if (gender) {
+            whereCondition.gender = { [Op.in]: [gender, 'unisex'] };
+        }
         if (categoryIdArray.length > 0) whereCondition.category_id = { [Op.in]: categoryIdArray };
         if (search) whereCondition.name = { [Op.like]: `%${search}%` };
 

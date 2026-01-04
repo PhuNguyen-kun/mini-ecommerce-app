@@ -8,7 +8,7 @@ const createReviewSchema = Joi.object({
         "number.base": "Product ID must be a number",
         "number.positive": "Product ID must be positive",
     }),
-    
+
     rating: Joi.number()
         .integer()
         .min(REVIEW_CONSTANTS.MIN_RATING)
@@ -19,7 +19,7 @@ const createReviewSchema = Joi.object({
             "number.min": `Rating must be at least ${REVIEW_CONSTANTS.MIN_RATING}`,
             "number.max": `Rating must not exceed ${REVIEW_CONSTANTS.MAX_RATING}`,
         }),
-    
+
     comment: Joi.string()
         .min(REVIEW_CONSTANTS.MIN_COMMENT_LENGTH)
         .max(REVIEW_CONSTANTS.MAX_COMMENT_LENGTH)
@@ -29,7 +29,7 @@ const createReviewSchema = Joi.object({
             "string.min": `Comment must be at least ${REVIEW_CONSTANTS.MIN_COMMENT_LENGTH} characters`,
             "string.max": `Comment must not exceed ${REVIEW_CONSTANTS.MAX_COMMENT_LENGTH} characters`,
         }),
-    
+
     images: Joi.array()
         .items(
             Joi.object({
@@ -42,7 +42,7 @@ const createReviewSchema = Joi.object({
         .messages({
             "array.max": `Maximum ${REVIEW_CONSTANTS.MAX_IMAGES} images allowed`,
         }),
-    
+
     videos: Joi.array()
         .items(
             Joi.object({
@@ -69,7 +69,7 @@ const updateReviewSchema = Joi.object({
             "number.min": `Rating must be at least ${REVIEW_CONSTANTS.MIN_RATING}`,
             "number.max": `Rating must not exceed ${REVIEW_CONSTANTS.MAX_RATING}`,
         }),
-    
+
     comment: Joi.string()
         .min(REVIEW_CONSTANTS.MIN_COMMENT_LENGTH)
         .max(REVIEW_CONSTANTS.MAX_COMMENT_LENGTH)
@@ -78,7 +78,7 @@ const updateReviewSchema = Joi.object({
             "string.min": `Comment must be at least ${REVIEW_CONSTANTS.MIN_COMMENT_LENGTH} characters`,
             "string.max": `Comment must not exceed ${REVIEW_CONSTANTS.MAX_COMMENT_LENGTH} characters`,
         }),
-    
+
     images: Joi.array()
         .items(
             Joi.object({
@@ -91,7 +91,7 @@ const updateReviewSchema = Joi.object({
         .messages({
             "array.max": `Maximum ${REVIEW_CONSTANTS.MAX_IMAGES} images allowed`,
         }),
-    
+
     videos: Joi.array()
         .items(
             Joi.object({
@@ -105,7 +105,7 @@ const updateReviewSchema = Joi.object({
         .messages({
             "array.max": `Maximum ${REVIEW_CONSTANTS.MAX_VIDEOS || 1} video allowed`,
         }),
-    
+
     removeVideo: Joi.boolean().optional(),
     existingImages: Joi.string().optional(), // JSON string from formData
 });
@@ -124,9 +124,22 @@ const getReviewsSchema = Joi.object({
     rating: Joi.number().integer().min(1).max(5).optional(),
 });
 
-// Review ID validation
+// Review ID validation (for user routes with :reviewId param)
 const reviewIdSchema = Joi.object({
-    reviewId: Joi.number().integer().positive().required(),
+    reviewId: Joi.number().integer().positive().required().messages({
+        "any.required": "Review ID is required",
+        "number.base": "Review ID must be a number",
+        "number.positive": "Review ID must be positive",
+    }),
+});
+
+// Admin Review ID validation (for admin routes with :id param)
+const adminReviewIdSchema = Joi.object({
+    id: Joi.number().integer().positive().required().messages({
+        "any.required": "Review ID is required",
+        "number.base": "Review ID must be a number",
+        "number.positive": "Review ID must be positive",
+    }),
 });
 
 // Product ID validation  
@@ -138,7 +151,7 @@ const productIdSchema = Joi.object({
 const validate = (schema, source = "body") => {
     return (req, res, next) => {
         let dataToValidate = {};
-        
+
         // Merge data from different sources based on validation needs
         if (source === "body") {
             dataToValidate = { ...req.body, ...req.params };
@@ -175,10 +188,28 @@ const validate = (schema, source = "body") => {
     };
 };
 
+// Admin get reviews schema
+const adminGetReviewsSchema = Joi.object({
+    page: Joi.number().integer().min(1).default(1),
+    limit: Joi.number().integer().min(1).max(100).default(20),
+    search: Joi.string().allow("").optional(),
+    is_approved: Joi.string().valid("", "true", "false").optional(),
+    rating: Joi.number().integer().min(1).max(5).optional(),
+    productId: Joi.number().integer().positive().optional(),
+    userId: Joi.number().integer().positive().optional(),
+    startDate: Joi.date().iso().optional(),
+    endDate: Joi.date().iso().optional(),
+    sort: Joi.string()
+        .valid("newest", "oldest", "rating_high", "rating_low")
+        .default("newest"),
+});
+
 module.exports = {
     validateCreateReview: validate(createReviewSchema, "body"),
     validateUpdateReview: validate(updateReviewSchema, "body"),
     validateGetReviews: validate(getReviewsSchema, "query"),
-    validateReviewId: validate(reviewIdSchema, "params"),
+    validateReviewId: validate(reviewIdSchema, "params"), // For user routes /:reviewId
+    validateAdminReviewId: validate(adminReviewIdSchema, "params"), // For admin routes /:id
     validateProductId: validate(productIdSchema, "params"),
+    validateAdminGetReviews: validate(adminGetReviewsSchema, "query"),
 };

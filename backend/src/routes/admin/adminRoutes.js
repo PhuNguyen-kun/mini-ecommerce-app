@@ -9,6 +9,7 @@ const adminDashboardRoutes = require("./dashboardRoutes");
 const adminOrderRoutes = require("./orderRoutes");
 const adminUserRoutes = require("./userRoutes");
 const adminReviewRoutes = require("./reviewRoutes");
+const adminCategoryRoutes = require("./categoryRoutes");
 
 // Tất cả admin routes đều require admin
 router.use(authMiddleware, requireAdmin);
@@ -19,5 +20,6 @@ router.use("/dashboard", adminDashboardRoutes);
 router.use("/orders", adminOrderRoutes);
 router.use("/users", adminUserRoutes);
 router.use("/reviews", adminReviewRoutes);
+router.use("/categories", adminCategoryRoutes);
 
 module.exports = router;

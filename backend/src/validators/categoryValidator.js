@@ -69,8 +69,27 @@ const validateUpdateCategory = (req, res, next) => {
   next();
 };
 
+const validateToggleActive = (req, res, next) => {
+  const schema = Joi.object({
+    is_active: Joi.boolean().required().messages({
+      "boolean.base": "is_active must be a boolean value",
+      "any.required": "is_active is required",
+    }),
+  });
+
+  const { error } = schema.validate(req.body, { abortEarly: false });
+
+  if (error) {
+    const errors = error.details.map((detail) => detail.message);
+    return responseError(res, "Validation failed", 400, errors);
+  }
+
+  next();
+};
+
 module.exports = {
   validateGetAllCategories,
   validateCreateCategory,
   validateUpdateCategory,
+  validateToggleActive,
 };

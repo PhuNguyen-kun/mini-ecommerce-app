@@ -1,34 +1,17 @@
 const express = require("express");
 const router = express.Router();
 const categoryController = require("../controllers/categoryController");
-const { authMiddleware, requireAdmin } = require("../middlewares/auth");
-const {
-  validateGetAllCategories,
-  validateCreateCategory,
-  validateUpdateCategory,
-} = require("../validators/categoryValidator");
+const { validateGetAllCategories } = require("../validators/categoryValidator");
 
+/**
+ * Public routes - Chỉ READ-ONLY
+ * Admin CRUD operations đã được chuyển sang /api/admin/categories
+ */
+
+// GET /api/categories - Lấy danh sách categories
 router.get("/", validateGetAllCategories, categoryController.getAll);
+
+// GET /api/categories/:slug - Lấy chi tiết category
 router.get("/:slug", categoryController.getBySlug);
-router.post(
-  "/",
-  authMiddleware,
-  requireAdmin,
-  validateCreateCategory,
-  categoryController.create
-);
-router.put(
-  "/:slug",
-  authMiddleware,
-  requireAdmin,
-  validateUpdateCategory,
-  categoryController.update
-);
-router.delete(
-  "/:slug",
-  authMiddleware,
-  requireAdmin,
-  categoryController.delete
-);
 
 module.exports = router;

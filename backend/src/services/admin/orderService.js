@@ -210,22 +210,69 @@ class OrderService {
       );
     }
 
-    const updateData = {
-      status: newStatus,
-    };
+    const transaction = await db.sequelize.transaction();
 
-    if (newStatus === "PAID" && order.payment_status === "PENDING") {
-      updateData.payment_status = "SUCCESS";
-      updateData.paid_at = new Date();
+    try {
+      const updateData = {
+        status: newStatus,
+      };
+
+      if (newStatus === "PAID" && order.payment_status === "PENDING") {
+        updateData.payment_status = "SUCCESS";
+        updateData.paid_at = new Date();
+      }
+
+      if (newStatus === "CANCELLED") {
+        updateData.cancelled_at = new Date();
+      }
+
+      await order.update(updateData, { transaction });
+
+      // Lấy danh sách order items
+      const orderItems = await db.OrderItem.findAll({
+        where: { order_id: order.id },
+        transaction,
+      });
+
+      // Xử lý stock dựa trên thay đổi trạng thái
+      const shouldDeductStock = (currentStatus === "PENDING_PAYMENT" && (newStatus === "CONFIRMED" || newStatus === "PAID")) ||
+        (currentStatus === "PAYMENT_FAILED" && newStatus === "CONFIRMED");
+
+      const shouldRestoreStock = newStatus === "CANCELLED" &&
+        (currentStatus === "CONFIRMED" || currentStatus === "PAID" || order.payment_status === "SUCCESS");
+
+      if (shouldDeductStock) {
+        // Trừ stock khi admin xác nhận đơn hoặc chuyển sang PAID
+        for (const orderItem of orderItems) {
+          await db.ProductVariant.decrement(
+            'stock',
+            {
+              by: orderItem.quantity,
+              where: { id: orderItem.product_variant_id },
+              transaction
+            }
+          );
+        }
+      } else if (shouldRestoreStock) {
+        // Hoàn trả stock khi hủy đơn đã xác nhận/đã thanh toán
+        for (const orderItem of orderItems) {
+          await db.ProductVariant.increment(
+            'stock',
+            {
+              by: orderItem.quantity,
+              where: { id: orderItem.product_variant_id },
+              transaction
+            }
+          );
+        }
+      }
+
+      await transaction.commit();
+      return order;
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
     }
-
-    if (newStatus === "CANCELLED") {
-      updateData.cancelled_at = new Date();
-    }
-
-    await order.update(updateData);
-
-    return order;
   }
 }
 

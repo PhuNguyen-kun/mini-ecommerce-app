@@ -1,6 +1,5 @@
 const db = require("../models");
 const { NotFoundError, ForbiddenError, BadRequestError } = require("../utils/ApiError");
-const { HTTP_STATUS } = require("../constants");
 const { REVIEWABLE_ORDER_STATUS, REVIEW_SORT, REVIEW_FILTER } = require("../constants/orderConstants");
 const { Op } = require("sequelize");
 
@@ -85,7 +84,7 @@ class ReviewService {
             throw new NotFoundError("Sản phẩm không tồn tại");
         }
 
-        // Tạo review
+        // Tạo review (auto-approve, admin xóa sau nếu cần)
         const review = await db.ProductReview.create({
             user_id: userId,
             product_id: productId,
@@ -227,7 +226,7 @@ class ReviewService {
         });
 
         const totalReviews = reviews.length;
-        
+
         if (totalReviews === 0) {
             return {
                 totalReviews: 0,

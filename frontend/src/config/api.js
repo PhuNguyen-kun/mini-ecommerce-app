@@ -16,7 +16,7 @@ export const API_ENDPOINTS = {
     UPLOAD_AVATAR: `${API_BASE_URL}/users/me/avatar`,
     DELETE_AVATAR: `${API_BASE_URL}/users/me/avatar`,
   },
-  
+
   // Products
   PRODUCTS: {
     LIST: `${API_BASE_URL}/products`,
@@ -74,6 +74,16 @@ export const API_ENDPOINTS = {
       DELETE_VIDEO: (id) => `${API_BASE_URL}/admin/products/videos/${id}`,
       ASSIGN_IMAGES: `${API_BASE_URL}/admin/products/options/image`,
     },
+    CATEGORIES: {
+      LIST: `${API_BASE_URL}/admin/categories`,
+      TREE: `${API_BASE_URL}/admin/categories/tree`,
+      STATS: `${API_BASE_URL}/admin/categories/stats`,
+      DETAIL: (id) => `${API_BASE_URL}/admin/categories/${id}`,
+      CREATE: `${API_BASE_URL}/admin/categories`,
+      UPDATE: (id) => `${API_BASE_URL}/admin/categories/${id}`,
+      DELETE: (id) => `${API_BASE_URL}/admin/categories/${id}`,
+      TOGGLE_ACTIVE: (id) => `${API_BASE_URL}/admin/categories/${id}/toggle-active`,
+    },
     ORDERS: {
       LIST: `${API_BASE_URL}/admin/orders`,
       DETAIL: (id) => `${API_BASE_URL}/admin/orders/${id}`,
@@ -84,6 +94,14 @@ export const API_ENDPOINTS = {
       STATS: `${API_BASE_URL}/admin/users/stats`,
       DETAIL: (id) => `${API_BASE_URL}/admin/users/${id}`,
       UPDATE: (id) => `${API_BASE_URL}/admin/users/${id}`,
+    },
+    REVIEWS: {
+      LIST: `${API_BASE_URL}/admin/reviews`,
+      STATS: `${API_BASE_URL}/admin/reviews/stats`,
+      DETAIL: (id) => `${API_BASE_URL}/admin/reviews/${id}`,
+      APPROVE: (id) => `${API_BASE_URL}/admin/reviews/${id}/approve`,
+      REJECT: (id) => `${API_BASE_URL}/admin/reviews/${id}/reject`,
+      DELETE: (id) => `${API_BASE_URL}/admin/reviews/${id}`,
     },
   },
 };
