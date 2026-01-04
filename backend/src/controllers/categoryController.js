@@ -1,12 +1,9 @@
 const categoryService = require("../services/categoryService");
-const {
-  responseOk,
-  responseOkWithPagination,
-} = require("../utils/apiResponse");
+const { responseOkWithPagination, responseOk } = require("../utils/apiResponse");
 const asyncHandler = require("../middlewares/asyncHandler");
-const { HTTP_STATUS } = require("../constants");
 
 class CategoryController {
+  // GET /api/categories - Lấy danh sách categories (public)
   getAll = asyncHandler(async (req, res) => {
     const { categories, pagination } = await categoryService.getAll(req.query);
     return responseOkWithPagination(
@@ -17,29 +14,10 @@ class CategoryController {
     );
   });
 
+  // GET /api/categories/:slug - Lấy chi tiết category (public)
   getBySlug = asyncHandler(async (req, res) => {
     const category = await categoryService.getBySlug(req.params.slug);
     return responseOk(res, category, "Category retrieved successfully");
-  });
-
-  create = asyncHandler(async (req, res) => {
-    const category = await categoryService.create(req.body);
-    return responseOk(
-      res,
-      category,
-      "Category created successfully",
-      HTTP_STATUS.CREATED
-    );
-  });
-
-  update = asyncHandler(async (req, res) => {
-    const category = await categoryService.update(req.params.slug, req.body);
-    return responseOk(res, category, "Category updated successfully");
-  });
-
-  delete = asyncHandler(async (req, res) => {
-    const result = await categoryService.delete(req.params.slug);
-    return responseOk(res, result, "Category deleted successfully");
   });
 }
 

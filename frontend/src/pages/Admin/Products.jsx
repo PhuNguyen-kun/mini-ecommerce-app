@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Modal, message } from 'antd';
-import { FiPlus, FiEdit2, FiTrash2, FiImage } from 'react-icons/fi';
+import { FiPlus, FiEdit2, FiTrash2, FiImage, FiSearch, FiFilter } from 'react-icons/fi';
 import productService from '../../services/productService';
 import adminService from '../../services/adminService';
+import categoryService from '../../services/categoryService';
 
 const Products = () => {
   const navigate = useNavigate();
@@ -12,7 +13,11 @@ const Products = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalProducts, setTotalProducts] = useState(0);
-  
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStock, setFilterStock] = useState('all'); // 'all', 'in-stock', 'out-of-stock'
+  const [filterCategory, setFilterCategory] = useState('all');
+  const [categories, setCategories] = useState([]);
+
   // Stats tổng thể (không phụ thuộc vào trang hiện tại)
   const [stats, setStats] = useState({
     totalActive: 0,
@@ -22,16 +27,28 @@ const Products = () => {
 
   useEffect(() => {
     fetchProducts();
-  }, [currentPage]);
+  }, [currentPage, searchTerm, filterStock, filterCategory]);
 
   useEffect(() => {
     fetchStats();
+    fetchCategories();
   }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await categoryService.getAdminCategories({ limit: 100 });
+      if (response.success) {
+        setCategories(response.data || []);
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
 
   const fetchStats = async () => {
     try {
       const timestamp = Date.now();
-      
+
       // Gọi API lần đầu để lấy tổng số sản phẩm với cache buster
       const firstResponse = await productService.getProducts({
         page: 1,
@@ -58,7 +75,7 @@ const Products = () => {
             })
           );
         }
-        
+
         const responses = await Promise.all(promises);
         responses.forEach(res => {
           if (res.success) {
@@ -67,17 +84,17 @@ const Products = () => {
         });
       }
 
-     
+
       // Tính số sản phẩm đang hoạt động
       const totalActive = allProducts.filter(p => p.is_active === true).length;
-      
+
       // Tính số sản phẩm hết hàng
       const totalOutOfStock = allProducts.filter(p => {
         if (!p.variants || p.variants.length === 0) return false;
         const totalStock = p.variants.reduce((sum, v) => sum + (parseInt(v.stock) || 0), 0);
         return totalStock === 0;
       }).length;
-      
+
       // Tính giá trị trung bình
       const productsWithVariants = allProducts.filter(p => p.variants && p.variants.length > 0);
       let averagePrice = 0;
@@ -88,9 +105,9 @@ const Products = () => {
         }, 0);
         averagePrice = totalPrice / productsWithVariants.length;
       }
-      
 
-      
+
+
       setStats({
         totalActive,
         totalOutOfStock,
@@ -104,18 +121,46 @@ const Products = () => {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      // Add timestamp to prevent caching
-      const response = await productService.getProducts({
+      const params = {
         page: currentPage,
         limit: 20,
-        view: 'full', // Lấy đầy đủ thông tin variants
-        _t: Date.now() // Cache buster
-      });
+        view: 'full',
+        _t: Date.now()
+      };
+
+      if (searchTerm) params.search = searchTerm;
+      if (filterCategory !== 'all') params.category_id = filterCategory;
+
+      const response = await productService.getProducts(params);
 
       if (response.success) {
-        setProducts(response.data.products || []);
-        setTotalProducts(response.data.pagination?.total || 0);
-        setTotalPages(response.data.pagination?.total_pages || 1);
+        let filteredProducts = response.data.products || [];
+        let originalTotal = response.data.pagination?.total || 0;
+        let originalPages = response.data.pagination?.total_pages || 1;
+
+        // Filter stock status client-side
+        if (filterStock === 'in-stock') {
+          filteredProducts = filteredProducts.filter(p => {
+            const totalStock = p.variants?.reduce((sum, v) => sum + (v.stock || 0), 0) || 0;
+            return totalStock > 0;
+          });
+        } else if (filterStock === 'out-of-stock') {
+          filteredProducts = filteredProducts.filter(p => {
+            const totalStock = p.variants?.reduce((sum, v) => sum + (v.stock || 0), 0) || 0;
+            return totalStock === 0;
+          });
+        }
+
+        setProducts(filteredProducts);
+
+        // Nếu có filter stock, cập nhật lại pagination dựa trên kết quả filter
+        if (filterStock !== 'all') {
+          setTotalProducts(filteredProducts.length);
+          setTotalPages(filteredProducts.length > 0 ? 1 : 0);
+        } else {
+          setTotalProducts(originalTotal);
+          setTotalPages(originalPages);
+        }
       }
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -135,18 +180,18 @@ const Products = () => {
       onOk: async () => {
         try {
           const deletedId = product.id;
-          
+
           await adminService.deleteProduct(deletedId);
-          
+
           // Remove from local state immediately
           setProducts(prev => prev.filter(p => p.id !== deletedId));
           setTotalProducts(prev => prev - 1);
-          
+
           message.success('Xóa sản phẩm thành công');
-          
+
           // Wait for DB transaction to commit
           await new Promise(resolve => setTimeout(resolve, 300));
-          
+
           // Force full refresh with new timestamp
           const timestamp = Date.now();
           await Promise.all([
@@ -177,6 +222,21 @@ const Products = () => {
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('vi-VN').format(price);
+  };
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1);
+  };
+
+  const handleFilterStock = (e) => {
+    setFilterStock(e.target.value);
+    setCurrentPage(1);
+  };
+
+  const handleFilterCategory = (e) => {
+    setFilterCategory(e.target.value);
+    setCurrentPage(1);
   };
 
   return (
@@ -221,6 +281,51 @@ const Products = () => {
         </div>
       </div>
 
+      {/* Toolbar */}
+      <div className="bg-white rounded-lg shadow p-4 mb-6">
+        <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+          {/* Search */}
+          <div className="flex-1 max-w-md">
+            <div className="relative">
+              <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Tìm kiếm sản phẩm..."
+                value={searchTerm}
+                onChange={handleSearch}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+
+          {/* Filters */}
+          <div className="flex gap-3 flex-wrap">
+            {/* Filter by Stock */}
+            <select
+              value={filterStock}
+              onChange={handleFilterStock}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+            >
+              <option value="all">Tất cả tồn kho</option>
+              <option value="in-stock">Còn hàng</option>
+              <option value="out-of-stock">Hết hàng</option>
+            </select>
+
+            {/* Filter by Category */}
+            <select
+              value={filterCategory}
+              onChange={handleFilterCategory}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+            >
+              <option value="all">Tất cả danh mục</option>
+              {categories.map(cat => (
+                <option key={cat.id} value={cat.id}>{cat.name}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
+
       {/* Products Table */}
       <div className="bg-white rounded-lg shadow">
         {loading ? (
@@ -243,25 +348,25 @@ const Products = () => {
             <table className="w-full">
               <thead className="bg-gray-50 border-b">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Sản phẩm
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Danh mục
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Giá
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Biến thể
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Tồn kho
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Trạng thái
                   </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Thao tác
                   </th>
                 </tr>
@@ -276,28 +381,23 @@ const Products = () => {
 
                   return (
                     <tr key={product.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <div className="flex-shrink-0 h-16 w-16">
+                      <td className="px-3 py-3">
+                        <div className="flex items-center gap-2">
+                          <div className="flex-shrink-0 h-12 w-12">
                             {imageUrl ? (
                               <img
-                                className="h-16 w-16 rounded object-cover"
+                                className="h-12 w-12 rounded object-cover"
                                 src={imageUrl}
                                 alt={product.name}
                               />
                             ) : (
-                              <div className="h-16 w-16 rounded bg-gray-200 flex items-center justify-center">
-                                <FiImage className="text-gray-400 text-2xl" />
+                              <div className="h-12 w-12 rounded bg-gray-200 flex items-center justify-center">
+                                <FiImage className="text-gray-400" />
                               </div>
                             )}
                           </div>
-                          <div className="ml-4">
-                            <div className="text-sm font-medium text-gray-900">
-                              {product.name}
-                            </div>
-                            <div className="text-sm text-gray-500">
-                              {product.slug}
-                            </div>
+                          <div className="text-sm font-medium text-gray-900 max-w-xs truncate" title={product.name}>
+                            {product.name}
                           </div>
                         </div>
                       </td>
@@ -325,16 +425,15 @@ const Products = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
-                          className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            product.is_active
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-red-100 text-red-800'
-                          }`}
+                          className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${product.is_active
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-red-100 text-red-800'
+                            }`}
                         >
                           {product.is_active ? 'Hoạt động' : 'Ẩn'}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium sticky right-0 bg-white">
                         <div className="flex items-center justify-end gap-2">
                           <button
                             onClick={() => navigate(`/admin/products/${product.slug}/media`)}

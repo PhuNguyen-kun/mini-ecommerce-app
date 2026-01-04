@@ -1,16 +1,23 @@
 const db = require("../models");
-const { BadRequestError, NotFoundError } = require("../utils/ApiError");
+const { NotFoundError } = require("../utils/ApiError");
 const {
   getPaginationParams,
   getPaginationMeta,
 } = require("../utils/pagination");
-const slugify = require("../utils/slugify");
 
+/**
+ * User Category Service - READ-ONLY
+ * Admin CRUD operations được xử lý tại services/admin/categoryService.js
+ */
 class CategoryService {
+  /**
+   * Lấy danh sách categories với phân trang (public)
+   */
   async getAll(query = {}) {
     const { page, per_page, offset } = getPaginationParams(query);
 
     const { count, rows } = await db.Category.findAndCountAll({
+      where: { is_active: true }, // Chỉ lấy categories active cho user
       include: [
         {
           model: db.Category,
@@ -20,7 +27,9 @@ class CategoryService {
         {
           model: db.Category,
           as: "children",
-          attributes: ["id", "name", "slug", "is_active"],
+          attributes: ["id", "name", "slug"],
+          where: { is_active: true },
+          required: false,
         },
       ],
       order: [["created_at", "DESC"]],
@@ -33,9 +42,12 @@ class CategoryService {
     return { categories: rows, pagination };
   }
 
+  /**
+   * Lấy chi tiết category theo slug (public)
+   */
   async getBySlug(slug) {
     const category = await db.Category.findOne({
-      where: { slug },
+      where: { slug, is_active: true }, // Chỉ lấy category active
       include: [
         {
           model: db.Category,
@@ -45,7 +57,9 @@ class CategoryService {
         {
           model: db.Category,
           as: "children",
-          attributes: ["id", "name", "slug", "is_active"],
+          attributes: ["id", "name", "slug"],
+          where: { is_active: true },
+          required: false,
         },
       ],
     });
@@ -55,97 +69,6 @@ class CategoryService {
     }
 
     return category;
-  }
-
-  async create(categoryData) {
-    const slug = slugify(categoryData.name);
-
-    const existingSlug = await db.Category.findOne({
-      where: { slug },
-    });
-
-    if (existingSlug) {
-      throw new BadRequestError("Category with similar name already exists");
-    }
-
-    if (categoryData.parent_id) {
-      const parentCategory = await db.Category.findByPk(categoryData.parent_id);
-      if (!parentCategory) {
-        throw new NotFoundError("Parent category not found");
-      }
-    }
-
-    const category = await db.Category.create({
-      ...categoryData,
-      slug,
-    });
-
-    return category;
-  }
-
-  async update(slug, categoryData) {
-    const category = await db.Category.findOne({ where: { slug } });
-
-    if (!category) {
-      throw new NotFoundError("Category not found");
-    }
-
-    if (categoryData.name && categoryData.name !== category.name) {
-      const newSlug = slugify(categoryData.name);
-
-      const existingSlug = await db.Category.findOne({
-        where: { slug: newSlug },
-      });
-
-      if (existingSlug && existingSlug.id !== category.id) {
-        throw new BadRequestError("Category with similar name already exists");
-      }
-
-      categoryData.slug = newSlug;
-    }
-
-    if (categoryData.parent_id) {
-      if (categoryData.parent_id === category.id) {
-        throw new BadRequestError("Category cannot be its own parent");
-      }
-
-      const parentCategory = await db.Category.findByPk(categoryData.parent_id);
-      if (!parentCategory) {
-        throw new NotFoundError("Parent category not found");
-      }
-    }
-
-    await category.update(categoryData);
-
-    return category;
-  }
-
-  async delete(slug) {
-    const category = await db.Category.findOne({ where: { slug } });
-
-    if (!category) {
-      throw new NotFoundError("Category not found");
-    }
-
-    const hasChildren = await db.Category.count({
-      where: { parent_id: category.id },
-    });
-
-    if (hasChildren > 0) {
-      throw new BadRequestError("Cannot delete category with subcategories");
-    }
-
-    const hasProducts = await db.Product.count({
-      where: { category_id: category.id },
-    });
-
-    if (hasProducts > 0) {
-      throw new BadRequestError("Cannot delete category with products");
-    }
-
-    await category.destroy();
-
-    return { message: "Category deleted successfully" };
   }
 }
 
