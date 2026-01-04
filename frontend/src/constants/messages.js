@@ -21,6 +21,7 @@ export const VALIDATION_MESSAGES = {
   EMAIL_ALREADY_EXISTS:
     "Email này đã được sử dụng. Vui lòng sử dụng email khác.",
   INVALID_CREDENTIALS: "Email hoặc mật khẩu không đúng.",
+  ACCOUNT_INACTIVE: "Tài khoản đã bị vô hiệu hóa.",
   NETWORK_ERROR: "Lỗi kết nối. Vui lòng kiểm tra kết nối mạng và thử lại.",
 };
 

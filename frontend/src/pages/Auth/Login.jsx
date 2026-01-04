@@ -87,6 +87,8 @@ const Login = () => {
           lowerMessage.includes("invalid")
         ) {
           errorMessage = VALIDATION_MESSAGES.INVALID_CREDENTIALS;
+        } else if (lowerMessage.includes("inactive")) {
+          errorMessage = VALIDATION_MESSAGES.ACCOUNT_INACTIVE;
         } else if (
           lowerMessage.includes("network") ||
           lowerMessage.includes("connection")
