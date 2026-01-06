@@ -1,4 +1,4 @@
-const wishlistService = require("../services/wishListService");
+const wishlistService = require("../services/wishlistService");
 const { responseOk } = require("../utils/apiResponse");
 const asyncHandler = require("../middlewares/asyncHandler");
 

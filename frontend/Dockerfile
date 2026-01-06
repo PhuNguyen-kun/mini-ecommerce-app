@@ -1,11 +1,20 @@
 # Stage 1: Build
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
+# Cấu hình npm để tăng timeout và retry
+RUN npm config set fetch-retries 5 && \
+    npm config set fetch-retry-mintimeout 20000 && \
+    npm config set fetch-retry-maxtimeout 120000
+
 # Copy package files
 COPY package*.json ./
-RUN npm ci
+
+# Install dependencies với retry logic
+RUN npm ci --prefer-offline --no-audit || \
+    (sleep 5 && npm ci --prefer-offline --no-audit) || \
+    (sleep 10 && npm ci --prefer-offline --no-audit)
 
 # Copy source code
 COPY . .
