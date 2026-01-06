@@ -12,37 +12,7 @@ env:
   EC2_DOMAIN: ${{ secrets.EC2_DOMAIN }}
 
 jobs:
-  build-frontend:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18"
-
-      - name: Build frontend
-        working-directory: ./frontend
-        run: |
-          echo "VITE_API_URL=http://${{ secrets.EC2_DOMAIN }}/api" > .env.production
-          npm ci
-          npm run build
-
-      - name: Upload frontend build
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ec2-user
-          key: ${{ secrets.EC2_SSH_KEY }}
-          port: 22
-          source: "frontend/dist"
-          target: "/home/ec2-user/mini-ecommerce-app/frontend"
-
   deploy-backend:
-    needs: build-frontend
     runs-on: ubuntu-latest
 
     steps:
@@ -60,5 +30,22 @@ jobs:
             git pull origin staging
             docker-compose down
             docker-compose up -d --build
-            sudo cp -r ../frontend/dist/* /usr/share/nginx/html/
-            sudo systemctl reload nginx
+
+  deploy-frontend:
+    needs: deploy-backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy frontend
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            cd ~/mini-ecommerce-app/frontend
+            git fetch origin
+            git checkout staging
+            git pull origin staging
+            VITE_API_URL=http://${{ secrets.EC2_DOMAIN }}/api docker-compose up -d --build
