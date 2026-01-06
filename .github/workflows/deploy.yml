@@ -104,20 +104,39 @@ jobs:
           port: 22
           script: |
             cd ~/mini-ecommerce-app/frontend
-            git fetch origin
-            git checkout staging
-            git pull origin staging
 
-            # Kiểm tra dist/ đã có chưa
-            if [ ! -d "dist" ]; then
-              echo "❌ Error: dist/ folder not found!"
-              echo "Please ensure build-frontend job completed successfully"
-              exit 1
+            # Backup dist/ trước khi git pull (nếu có)
+            if [ -d "dist" ] && [ -n "$(ls -A dist 2>/dev/null)" ]; then
+              echo "📦 Backing up dist/ folder..."
+              cp -r dist dist.backup
+            fi
+
+            # Git operations
+            git fetch origin
+            git reset --hard origin/staging
+
+            # Restore dist/ nếu bị mất
+            if [ ! -d "dist" ] || [ -z "$(ls -A dist 2>/dev/null)" ]; then
+              if [ -d "dist.backup" ]; then
+                echo "🔄 Restoring dist/ from backup..."
+                rm -rf dist
+                mv dist.backup dist
+              else
+                echo "❌ Error: dist/ folder not found and no backup available!"
+                echo "Please ensure build-frontend job completed successfully"
+                exit 1
+              fi
             fi
 
             # Kiểm tra dist/ có files không
             if [ -z "$(ls -A dist)" ]; then
               echo "❌ Error: dist/ folder is empty!"
+              exit 1
+            fi
+
+            # Kiểm tra docker-compose.yml có tồn tại không
+            if [ ! -f "docker-compose.yml" ]; then
+              echo "❌ Error: docker-compose.yml not found!"
               exit 1
             fi
 
