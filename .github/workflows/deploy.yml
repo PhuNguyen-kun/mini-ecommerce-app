@@ -42,8 +42,9 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
-          source: "frontend/dist/*"
-          target: "/home/ec2-user/mini-ecommerce-app/frontend/dist"
+          source: "frontend/dist"
+          target: "/home/ec2-user/mini-ecommerce-app/frontend"
+          strip_components: 1
           rm: true
 
       - name: Verify upload
@@ -63,7 +64,12 @@ jobs:
               exit 1
             fi
             echo "✅ dist/ folder uploaded successfully"
+            echo "📁 Checking dist/ structure:"
             ls -la /home/ec2-user/mini-ecommerce-app/frontend/dist | head -10
+            echo "📄 Checking for index.html:"
+            ls -la /home/ec2-user/mini-ecommerce-app/frontend/dist/*.html 2>/dev/null || echo "⚠️ No HTML files found in root"
+            echo "📦 Checking for assets folder:"
+            ls -la /home/ec2-user/mini-ecommerce-app/frontend/dist/assets 2>/dev/null | head -5 || echo "⚠️ No assets folder found"
 
   deploy-backend:
     runs-on: ubuntu-latest
