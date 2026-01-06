@@ -8,7 +8,7 @@ npm-debug.log
 README.md
 README_DOCKER.md
 .DS_Store
-dist
+# dist - KHÔNG ignore vì cần copy vào Docker image
 coverage
 .nyc_output
 *.log
