@@ -1,6 +1,97 @@
 # How To Setup
 
-## Backend
+## 🐳 Quick Start with Docker (Recommended)
+
+### Prerequisites
+- Docker và Docker Compose đã được cài đặt
+
+### Steps
+
+1. **Vào thư mục backend:**
+   ```bash
+   cd backend
+   ```
+
+2. **Tạo file .env** với các biến môi trường cần thiết:
+   ```env
+   # Database Configuration
+   DB_ROOT_PASSWORD=123456
+   DB_NAME=mini_ecommerce
+   DB_USER=appuser
+   DB_PASSWORD=123456
+
+   # JWT Configuration
+   JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+   JWT_EXPIRES_IN=7d
+
+   # Cloudinary Configuration (nếu có)
+   CLOUDINARY_CLOUD_NAME=your-cloudinary-name
+   CLOUDINARY_API_KEY=your-cloudinary-key
+   CLOUDINARY_API_SECRET=your-cloudinary-secret
+
+   # VNPay Configuration (nếu có)
+   VNPAY_URL=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+   VNPAY_TMN_CODE=your-vnpay-code
+   VNPAY_HASH_SECRET=your-vnpay-secret
+   VNPAY_RETURN_URL=http://localhost:3000/api/payment/vnpay-return
+   ```
+
+   **Quan trọng**: Tạo JWT_SECRET mạnh:
+   ```bash
+   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+   ```
+
+3. **Start containers:**
+   ```bash
+   docker-compose up -d --build
+   ```
+
+   Lệnh này sẽ:
+   - Build Docker image cho backend
+   - Tạo MySQL container
+   - Chạy migrations tự động
+   - Start backend server
+
+4. **Seed database (tùy chọn):**
+   ```bash
+   docker-compose exec backend npx sequelize-cli db:seed:all
+   ```
+
+5. **Kiểm tra:**
+   - Backend API: http://localhost:3000
+   - Health check: http://localhost:3000/health
+
+### Các lệnh hữu ích
+
+```bash
+# Xem logs
+docker-compose logs -f
+
+# Xem logs chỉ backend
+docker-compose logs -f backend
+
+# Stop containers
+docker-compose down
+
+# Stop và xóa database
+docker-compose down -v
+
+# Restart backend
+docker-compose restart backend
+
+# Rebuild và restart
+docker-compose up -d --build
+
+# Chạy migrations thủ công
+docker-compose exec backend npx sequelize-cli db:migrate
+
+# Chạy seeders
+docker-compose exec backend npx sequelize-cli db:seed:all
+```
+
+---
+
+## Backend (Manual Setup)
 
 ### Technologies
 
