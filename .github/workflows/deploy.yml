@@ -27,6 +27,10 @@ jobs:
       - name: Build frontend
         working-directory: ./frontend
         run: |
+          if [ -z "${{ secrets.EC2_DOMAIN }}" ]; then
+            echo "❌ Error: EC2_DOMAIN secret is not set!"
+            exit 1
+          fi
           echo "VITE_API_URL=http://${{ secrets.EC2_DOMAIN }}/api" > .env.production
           npm ci
           npm run build

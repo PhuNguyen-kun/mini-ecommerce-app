@@ -1,4 +1,4 @@
-import logoImage from '../../../assets/logo.svg';
+import logoImage from "../../../assets/Logo.svg";
 
 export default function Logo() {
   return (
