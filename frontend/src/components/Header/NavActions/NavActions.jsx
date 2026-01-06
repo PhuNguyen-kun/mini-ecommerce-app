@@ -5,6 +5,8 @@ import {
   HiUser,
   HiShoppingCart,
   HiOutlineHeart,
+  HiShoppingBag,
+  HiArrowRightOnRectangle,
 } from "react-icons/hi2";
 import { Dropdown, Menu } from "antd";
 import { useCart } from "../../../context/CartContext";
@@ -13,7 +15,7 @@ import authService from "../../../services/authService";
 import { message } from "antd";
 import { SUCCESS_MESSAGES } from "../../../constants/messages";
 
-export default function NavActions() {
+export default function NavActions({ mobile = false, onActionClick = () => {} }) {
   const { setIsCartOpen, getCartCount } = useCart();
   const { getWishlistCount } = useWishlist();
   const navigate = useNavigate();
@@ -91,12 +93,18 @@ export default function NavActions() {
     {
       key: "profile",
       label: "Tài khoản của tôi",
-      onClick: () => navigate("/profile"),
+      onClick: () => {
+        navigate("/profile");
+        onActionClick();
+      },
     },
     {
       key: "orders",
       label: "Lịch sử đặt hàng",
-      onClick: () => navigate("/orders"),
+      onClick: () => {
+        navigate("/orders");
+        onActionClick();
+      },
     },
     {
       key: "logout",
@@ -104,10 +112,135 @@ export default function NavActions() {
       style: {
         color: "#D0021B",
       },
-      onClick: handleLogout,
+      onClick: () => {
+        handleLogout();
+        onActionClick();
+      },
     },
   ];
 
+  // Mobile view - vertical list with labels
+  if (mobile) {
+    return (
+      <div className="flex flex-col space-y-2">
+        <Link
+          to="/search"
+          onClick={onActionClick}
+          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 rounded-lg transition-colors"
+        >
+          <HiMagnifyingGlass className="w-5 h-5" />
+          <span className="text-sm font-medium">Tìm kiếm</span>
+        </Link>
+
+        {isLoggedIn ? (
+          <>
+            {/* Account */}
+            <button
+              onClick={() => {
+                navigate("/profile");
+                onActionClick();
+              }}
+              className="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 rounded-lg transition-colors text-left w-full"
+            >
+              {userAvatar ? (
+                <img
+                  src={userAvatar}
+                  alt={userName}
+                  className="w-5 h-5 rounded-full object-cover border border-gray-200"
+                />
+              ) : (
+                <HiUser className="w-5 h-5" />
+              )}
+              <span className="text-sm font-medium">{userName || "Tài khoản"}</span>
+            </button>
+
+            {/* Orders */}
+            <button
+              onClick={() => {
+                navigate("/orders");
+                onActionClick();
+              }}
+              className="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 rounded-lg transition-colors text-left w-full"
+            >
+              <HiShoppingBag className="w-5 h-5" />
+              <span className="text-sm font-medium">Lịch sử đặt hàng</span>
+            </button>
+
+            {/* Wishlist */}
+            <Link
+              to="/wishlist"
+              onClick={onActionClick}
+              className="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <HiOutlineHeart className="w-5 h-5" />
+              <span className="text-sm font-medium">Yêu thích</span>
+              {wishlistCount > 0 && (
+                <span className="ml-auto bg-[#D0021B] text-white text-xs font-semibold rounded-full px-2 py-0.5">
+                  {wishlistCount}
+                </span>
+              )}
+            </Link>
+
+            {/* Shopping Cart */}
+            <button
+              onClick={() => {
+                setIsCartOpen(true);
+                onActionClick();
+              }}
+              className="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 rounded-lg transition-colors text-left w-full"
+            >
+              <HiShoppingCart className="w-5 h-5" />
+              <span className="text-sm font-medium">Giỏ hàng</span>
+              {cartCount > 0 && (
+                <span className="ml-auto bg-[#D0021B] text-white text-xs font-semibold rounded-full px-2 py-0.5">
+                  {cartCount}
+                </span>
+              )}
+            </button>
+
+            {/* Logout */}
+            <button
+              onClick={() => {
+                handleLogout();
+                onActionClick();
+              }}
+              className="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 rounded-lg transition-colors text-left w-full text-[#D0021B]"
+            >
+              <HiArrowRightOnRectangle className="w-5 h-5" />
+              <span className="text-sm font-medium">Đăng xuất</span>
+            </button>
+          </>
+        ) : (
+          <>
+            {/* Login */}
+            <button
+              onClick={() => {
+                navigate("/login");
+                onActionClick();
+              }}
+              className="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 rounded-lg transition-colors text-left w-full"
+            >
+              <HiUser className="w-5 h-5" />
+              <span className="text-sm font-medium">Đăng nhập</span>
+            </button>
+
+            {/* Signup */}
+            <button
+              onClick={() => {
+                navigate("/signup");
+                onActionClick();
+              }}
+              className="flex items-center gap-3 px-4 py-3 bg-black text-white hover:bg-gray-800 rounded-lg transition-colors text-left w-full"
+            >
+              <span className="text-sm font-medium">Đăng ký</span>
+            </button>
+          </>
+        )}
+      </div>
+    );
+  }
+
+  // Desktop view - horizontal icons
   return (
     <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
       <Link
