@@ -41,19 +41,19 @@ const Stores = () => {
 
   return (
     <div className="bg-white w-full">
-      <div className="w-full px-[35px] py-[30px]">
+      <div className="w-full px-4 sm:px-6 md:px-10 lg:px-[35px] py-6 sm:py-8 md:py-[30px]">
         {/* Header Section */}
-        <div className="flex flex-col gap-4 items-center text-center mb-16">
-          <h1 className="text-[32px] leading-[40px] text-black">Stores</h1>
+        <div className="flex flex-col gap-3 sm:gap-4 items-center text-center mb-8 sm:mb-12 md:mb-16">
+          <h1 className="text-2xl sm:text-3xl md:text-[32px] leading-tight sm:leading-[40px] text-black">Stores</h1>
           <p className="text-base tracking-[0.64px] leading-6 text-black">
             Find one of our 11 stores nearest you.
           </p>
         </div>
 
         {/* Store Rows */}
-        <div className="flex flex-col gap-16">
+        <div className="flex flex-col gap-8 sm:gap-12 md:gap-16">
           {stores.map((row, rowIndex) => (
-            <div key={rowIndex} className="flex gap-[30px] w-full">
+            <div key={rowIndex} className="flex flex-col sm:grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-[30px] w-full">
               {row.map((store, storeIndex) => (
                 <StoreCard key={storeIndex} {...store} />
               ))}

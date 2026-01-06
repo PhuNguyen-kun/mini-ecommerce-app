@@ -234,7 +234,7 @@ const Checkout = () => {
 
   if (isSuccess) {
     return (
-      <div className="min-h-screen bg-gray-50 py-12">
+      <div className="min-h-screen bg-gray-50 py-6 sm:py-8 md:py-12">
         <div className="max-w-7xl mx-auto px-4">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-black mb-4"></div>
@@ -250,7 +250,7 @@ const Checkout = () => {
 
   if (cart.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 py-12">
+      <div className="min-h-screen bg-gray-50 py-6 sm:py-8 md:py-12">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-4">Giỏ hàng trống</h2>

@@ -23,7 +23,7 @@ export default function SearchBar() {
   };
 
   return (
-    <section className="w-full px-4 sm:px-[156px] lg:px-[326px] py-8 border-b border-gray-200 bg-white">
+    <section className="w-full px-4 sm:px-6 md:px-10 lg:px-20 xl:px-[156px] py-6 sm:py-8 border-b border-gray-200 bg-white">
       <form onSubmit={handleSearch} className="max-w-4xl mx-auto">
         <div className="flex items-center gap-4">
           {/* Search Input */}
@@ -55,14 +55,14 @@ export default function SearchBar() {
             <button 
               type="submit"
               disabled={!searchQuery.trim()}
-              className="px-6 py-3 bg-black text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+              className="px-4 sm:px-6 py-2 sm:py-3 bg-black text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
               Tìm kiếm
             </button>
             <button 
               type="button"
               onClick={handleCancel}
-              className="px-6 py-3 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
+              className="px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
             >
               Hủy
             </button>

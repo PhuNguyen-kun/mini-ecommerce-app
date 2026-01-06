@@ -2,7 +2,7 @@ import heroImage from '../../../assets/blogpost/hero.png';
 
 const BlogPostHero = () => {
   return (
-    <div className="relative w-full h-[691px] flex items-end px-[53px] py-[70px] overflow-hidden">
+    <div className="relative w-full h-[400px] sm:h-[500px] md:h-[600px] lg:h-[691px] flex items-end px-4 sm:px-6 md:px-10 lg:px-[53px] py-8 sm:py-10 md:py-12 lg:py-[70px] overflow-hidden">
       <img 
         src={heroImage} 
         alt="Winter Whites" 

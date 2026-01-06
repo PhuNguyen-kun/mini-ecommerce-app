@@ -135,18 +135,18 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
   const displayStock = selectedVariant ? selectedVariant.stock : null;
 
   return (
-    <div className="w-full lg:w-[384px] flex flex-col gap-px">
+    <div className="w-full lg:w-[384px] xl:w-[420px] flex flex-col gap-px">
       {/* Header Section */}
       <div className="border-b border-[#F5F4F4] pb-3 sm:pb-4 flex flex-col gap-1">
         <p className="text-xs text-neutral-500 tracking-[0.2px] font-['Maison_Neue']">
           {product.category?.name || 'Product'}
         </p>
         <div className="flex gap-2 sm:gap-2.5 items-start">
-          <p className="flex-1 text-xl sm:text-2xl text-black leading-tight sm:leading-[33.24px] font-['Maison_Neue']">
+          <p className="flex-1 text-lg sm:text-xl md:text-2xl text-black leading-tight font-['Maison_Neue']">
             {product.name}
           </p>
           <div className="flex gap-1.5 sm:gap-2 items-center">
-            <div className="flex gap-1 items-center text-xl sm:text-2xl leading-tight sm:leading-[33.24px] font-['Maison_Neue']">
+            <div className="flex gap-1 items-center text-lg sm:text-xl md:text-2xl leading-tight font-['Maison_Neue'] whitespace-nowrap">
               <p className="text-black">{displayPrice}₫</p>
             </div>
             <WishlistButton productId={product.id} productData={product} size="md" />
@@ -244,9 +244,9 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
       </div>
 
       {/* Features */}
-      <div className="border-t border-[#DDDBDC] py-5 sm:py-6 flex flex-col gap-5 sm:gap-6">
+      <div className="border-t border-[#DDDBDC] py-5 sm:py-6 flex flex-col gap-4 sm:gap-5 md:gap-6">
         <div className="flex gap-3 sm:gap-4 items-center">
-          <div className="w-[30px] h-[30px] sm:w-[34px] sm:h-[34px] flex items-center justify-center flex-shrink-0">
+          <div className="w-[28px] h-[28px] sm:w-[30px] sm:h-[30px] md:w-[34px] md:h-[34px] flex items-center justify-center flex-shrink-0">
             <TbTruckDelivery className="w-full h-full" strokeWidth={1.5} />
           </div>
           <div className="flex-1 flex flex-col">
@@ -260,7 +260,7 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
         </div>
 
         <div className="flex gap-3 sm:gap-4 items-center">
-          <div className="w-[30px] h-[30px] sm:w-[34px] sm:h-[34px] flex items-center justify-center flex-shrink-0">
+          <div className="w-[28px] h-[28px] sm:w-[30px] sm:h-[30px] md:w-[34px] md:h-[34px] flex items-center justify-center flex-shrink-0">
             <TbPackage className="w-full h-full" strokeWidth={1.5} />
           </div>
           <div className="flex-1 flex flex-col">
@@ -273,12 +273,12 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
           </div>
         </div>
 
-        <div className="flex gap-4 items-center">
-          <div className="w-[34px] h-[34px] flex items-center justify-center">
-            <TbGift className="w-[34px] h-[34px]" strokeWidth={1.5} />
+        <div className="flex gap-3 sm:gap-4 items-center">
+          <div className="w-[28px] h-[28px] sm:w-[30px] sm:h-[30px] md:w-[34px] md:h-[34px] flex items-center justify-center flex-shrink-0">
+            <TbGift className="w-full h-full" strokeWidth={1.5} />
           </div>
           <div className="flex-1 flex flex-col">
-            <p className="text-sm font-semibold text-black tracking-[0.42px] font-['Maison_Neue']">
+            <p className="text-xs sm:text-sm font-semibold text-black tracking-[0.42px] font-['Maison_Neue']">
               Send It As A Gift
             </p>
             <p className="text-xs text-black tracking-[0.2px] font-['Maison_Neue']">
@@ -289,33 +289,33 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
       </div>
 
       {/* Description */}
-      <div className="border-t border-[#DDDBDC] pt-10 pb-3 flex flex-col gap-4">
-        <p className="text-base font-semibold text-black tracking-[0.2px] font-['Maison_Neue']">
+      <div className="border-t border-[#DDDBDC] pt-6 sm:pt-8 md:pt-10 pb-3 flex flex-col gap-3 sm:gap-4">
+        <p className="text-sm sm:text-base font-semibold text-black tracking-[0.2px] font-['Maison_Neue']">
           Product Details
         </p>
-        <p className="text-sm text-black tracking-[1.4px] leading-[16.8px] font-['Maison_Neue']">
+        <p className="text-xs sm:text-sm text-black tracking-[1.4px] leading-[16.8px] font-['Maison_Neue']">
           {product.description || 'No description available.'}
         </p>
       </div>
 
       {/* Model Info */}
       {product.model_info && (
-        <div className="border-b border-[#DDDBDC] py-5 flex items-center">
-          <p className="w-[106px] text-base font-semibold text-black tracking-[0.2px] font-['Maison_Neue']">
+        <div className="border-b border-[#DDDBDC] py-4 sm:py-5 flex items-center">
+          <p className="w-20 sm:w-[106px] text-sm sm:text-base font-semibold text-black tracking-[0.2px] font-['Maison_Neue']">
             Model
           </p>
-          <p className="flex-1 text-sm text-black tracking-[1.4px] leading-[16.8px] font-['Maison_Neue']">
+          <p className="flex-1 text-xs sm:text-sm text-black tracking-[1.4px] leading-[16.8px] font-['Maison_Neue']">
             {product.model_info}
           </p>
         </div>
       )}
 
       {/* Fit Info */}
-      <div className="border-b border-[#DDDBDC] py-5 flex items-start">
-        <p className="w-[106px] text-base font-semibold text-black tracking-[0.2px] font-['Maison_Neue']">
+      <div className="border-b border-[#DDDBDC] py-4 sm:py-5 flex items-start">
+        <p className="w-20 sm:w-[106px] text-sm sm:text-base font-semibold text-black tracking-[0.2px] font-['Maison_Neue']">
           Fit
         </p>
-        <div className="flex-1 text-sm text-black tracking-[1.4px] leading-[16.8px] font-['Maison_Neue']">
+        <div className="flex-1 text-xs sm:text-sm text-black tracking-[1.4px] leading-[16.8px] font-['Maison_Neue']">
           <p>Questions about fit?</p>
           <p>Contact Us</p>
           <p>Size Guide</p>
@@ -323,8 +323,8 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
       </div>
 
       {/* Sustainability */}
-      <div className="border-b border-[#DDDBDC] py-5 flex flex-col">
-        <p className="text-base font-semibold text-black tracking-[0.2px] font-['Maison_Neue']">
+      <div className="border-b border-[#DDDBDC] py-4 sm:py-5 flex flex-col">
+        <p className="text-sm sm:text-base font-semibold text-black tracking-[0.2px] font-['Maison_Neue']">
           Sustainability
         </p>
       </div>

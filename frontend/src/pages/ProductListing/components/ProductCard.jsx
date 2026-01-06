@@ -37,7 +37,7 @@ const ProductCard = ({ product }) => {
   return (
     <Link to={`/product/${product.slug || product.id}`} className="group cursor-pointer flex flex-col gap-2.5">
       {/* Image Container */}
-      <div className="relative w-full h-[280px] sm:h-[340px] lg:h-[392px] overflow-hidden bg-gray-100">
+      <div className="relative w-full h-[250px] sm:h-[280px] md:h-[320px] lg:h-[392px] overflow-hidden bg-gray-100">
         <img 
           src={primaryImage} 
           alt={product.name}
@@ -48,13 +48,13 @@ const ProductCard = ({ product }) => {
         />
         
         {/* Wishlist Button - Shows on Hover */}
-        <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" onClick={(e) => e.preventDefault()}>
+        <div className="absolute top-2 right-2 sm:top-3 sm:right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" onClick={(e) => e.preventDefault()}>
           <WishlistButton productId={product.id} productData={product} size="md" />
         </div>
         
         {/* View Details Overlay - Shows on Hover */}
         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center">
-          <span className="text-white font-medium text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span className="text-white font-medium text-xs sm:text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             View Details
           </span>
         </div>
@@ -64,10 +64,10 @@ const ProductCard = ({ product }) => {
       <div className="flex flex-col gap-[3px] w-full">
         {/* Name and Price */}
         <div className="flex gap-2 sm:gap-3 items-start py-2 w-full">
-          <p className="flex-1 text-xs sm:text-sm text-black leading-4 group-hover:underline font-['Maison_Neue']">
+          <p className="flex-1 text-xs sm:text-sm text-black leading-4 group-hover:underline font-['Maison_Neue'] line-clamp-2">
             {product.name}
           </p>
-          <div className="flex gap-1 items-center text-xs sm:text-sm leading-4 text-right">
+          <div className="flex gap-1 items-center text-xs sm:text-sm leading-4 text-right whitespace-nowrap">
             <p className="text-black font-semibold font-['Maison_Neue']">
               {formatPrice(minPrice)}₫
             </p>

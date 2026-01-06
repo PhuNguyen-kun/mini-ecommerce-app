@@ -2,15 +2,15 @@ import { HiArrowRight } from 'react-icons/hi2';
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-[#f5f4f4] pt-10 pb-0 px-[72px]">
+    <footer className="w-full bg-[#f5f4f4] pt-6 sm:pt-8 md:pt-10 pb-0 px-4 sm:px-6 md:px-10 lg:px-[72px]">
       {/* Main Content */}
-      <div className="flex w-full">
+      <div className="flex flex-col md:flex-row w-full">
         {/* Account */}
-        <div className="flex-1 flex flex-col gap-5 p-5">
-          <h4 className="text-base font-semibold leading-6 tracking-[0.2px] text-neutral-800">
+        <div className="flex-1 flex flex-col gap-3 sm:gap-4 md:gap-5 p-3 sm:p-4 md:p-5">
+          <h4 className="text-sm sm:text-base font-semibold leading-5 sm:leading-6 tracking-[0.2px] text-neutral-800">
             Acount
           </h4>
-          <div className="flex flex-col gap-2.5 text-sm leading-[16.8px] tracking-[1.4px] text-neutral-500">
+          <div className="flex flex-col gap-2 sm:gap-2.5 text-xs sm:text-sm leading-[16.8px] tracking-[1.4px] text-neutral-500">
             <a href="#" className="hover:text-neutral-800">Log In</a>
             <a href="#" className="hover:text-neutral-800">Sign Up</a>
             <a href="#" className="hover:text-neutral-800">Redeem a Gift Card</a>
@@ -18,11 +18,11 @@ export default function Footer() {
         </div>
 
         {/* Company */}
-        <div className="flex-1 flex flex-col gap-5 p-5">
-          <h4 className="text-base font-semibold leading-6 tracking-[0.2px] text-neutral-800">
+        <div className="flex-1 flex flex-col gap-3 sm:gap-4 md:gap-5 p-3 sm:p-4 md:p-5">
+          <h4 className="text-sm sm:text-base font-semibold leading-5 sm:leading-6 tracking-[0.2px] text-neutral-800">
             Company
           </h4>
-          <div className="flex flex-col gap-2.5 text-sm leading-[16.8px] tracking-[1.4px] text-neutral-500">
+          <div className="flex flex-col gap-2 sm:gap-2.5 text-xs sm:text-sm leading-[16.8px] tracking-[1.4px] text-neutral-500">
             <a href="#" className="hover:text-neutral-800">About</a>
             <a href="#" className="hover:text-neutral-800">Environmental Initiatives</a>
             <a href="#" className="hover:text-neutral-800">Factories</a>
@@ -34,11 +34,11 @@ export default function Footer() {
         </div>
 
         {/* Get Help */}
-        <div className="flex-1 flex flex-col gap-5 p-5">
-          <h4 className="text-base font-semibold leading-6 tracking-[0.2px] text-neutral-800">
+        <div className="flex-1 flex flex-col gap-3 sm:gap-4 md:gap-5 p-3 sm:p-4 md:p-5">
+          <h4 className="text-sm sm:text-base font-semibold leading-5 sm:leading-6 tracking-[0.2px] text-neutral-800">
             Get Help
           </h4>
-          <div className="flex flex-col gap-2.5 text-sm leading-[16.8px] tracking-[1.4px] text-neutral-500">
+          <div className="flex flex-col gap-2 sm:gap-2.5 text-xs sm:text-sm leading-[16.8px] tracking-[1.4px] text-neutral-500">
             <a href="#" className="hover:text-neutral-800">Help Center</a>
             <a href="#" className="hover:text-neutral-800">Return Policy</a>
             <a href="#" className="hover:text-neutral-800">Shipping Info</a>
@@ -47,11 +47,11 @@ export default function Footer() {
         </div>
 
         {/* Connect */}
-        <div className="flex-1 flex flex-col gap-5 p-5">
-          <h4 className="text-base font-semibold leading-6 tracking-[0.2px] text-neutral-800">
+        <div className="flex-1 flex flex-col gap-3 sm:gap-4 md:gap-5 p-3 sm:p-4 md:p-5">
+          <h4 className="text-sm sm:text-base font-semibold leading-5 sm:leading-6 tracking-[0.2px] text-neutral-800">
             Connect
           </h4>
-          <div className="flex flex-col gap-2.5 text-sm leading-[16.8px] tracking-[1.4px] text-neutral-500">
+          <div className="flex flex-col gap-2 sm:gap-2.5 text-xs sm:text-sm leading-[16.8px] tracking-[1.4px] text-neutral-500">
             <a href="#" className="hover:text-neutral-800">Facebook</a>
             <a href="#" className="hover:text-neutral-800">Instagram</a>
             <a href="#" className="hover:text-neutral-800">Twitter</a>
@@ -61,23 +61,23 @@ export default function Footer() {
         </div>
 
         {/* Newsletter */}
-        <div className="flex items-start p-5">
-          <div className="flex">
+        <div className="flex items-start p-3 sm:p-4 md:p-5 w-full md:w-auto">
+          <div className="flex w-full">
             <input 
               type="email" 
               placeholder="Email Address" 
-              className="w-[388px] px-[15px] py-[18px] bg-white border border-[#dddbdc] text-sm leading-[16.8px] tracking-[1.4px] text-neutral-500 focus:outline-none focus:border-neutral-800"
+              className="flex-1 md:w-[300px] lg:w-[388px] px-3 sm:px-[15px] py-3 sm:py-[18px] bg-white border border-[#dddbdc] text-xs sm:text-sm leading-[16.8px] tracking-[1.4px] text-neutral-500 focus:outline-none focus:border-neutral-800"
             />
-            <button className="bg-neutral-800 border border-neutral-800 px-3.5 py-3.5 hover:bg-neutral-700 transition-colors">
-              <HiArrowRight className="w-6 h-6 text-white" />
+            <button className="bg-neutral-800 border border-neutral-800 px-2.5 sm:px-3.5 py-2.5 sm:py-3.5 hover:bg-neutral-700 transition-colors">
+              <HiArrowRight className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </button>
           </div>
         </div>
       </div>
 
       {/* Bottom Links */}
-      <div className="flex flex-col gap-4 items-center py-4 text-xs leading-4 tracking-[0.2px] text-center text-neutral-500">
-        <div className="flex gap-6 justify-center w-full">
+      <div className="flex flex-col gap-3 sm:gap-4 items-center py-3 sm:py-4 text-[10px] sm:text-xs leading-4 tracking-[0.2px] text-center text-neutral-500">
+        <div className="flex flex-wrap gap-3 sm:gap-4 md:gap-6 justify-center w-full px-2">
           <a href="#" className="hover:text-neutral-800">Privacy Policy</a>
           <a href="#" className="hover:text-neutral-800">Terms of Service</a>
           <a href="#" className="hover:text-neutral-800">Do Not Sell or Share My Personal Information</a>
@@ -86,7 +86,7 @@ export default function Footer() {
           <a href="#" className="hover:text-neutral-800">Sitemap Pages</a>
           <a href="#" className="hover:text-neutral-800">Sitemap Products</a>
         </div>
-        <p className="w-full">© 2023 All Rights Reserved</p>
+        <p className="w-full">© 2025 All Rights Reserved</p>
       </div>
     </footer>
   );

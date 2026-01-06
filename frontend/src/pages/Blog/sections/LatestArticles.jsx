@@ -21,7 +21,7 @@ const LatestArticles = () => {
   ];
 
   return (
-    <div className="w-full px-[60px] py-[120px]">
+    <div className="w-full px-4 sm:px-6 md:px-10 lg:px-[60px] py-12 sm:py-16 md:py-20 lg:py-[120px]">
       <h2 className="text-[54px] leading-[72px] font-semibold text-black mb-3">
         The Latest
       </h2>
@@ -36,7 +36,7 @@ const LatestArticles = () => {
           ))}
         </div>
         <div className="flex justify-center">
-          <button className="bg-black text-white px-[100px] py-5 rounded-lg text-sm font-semibold tracking-[0.42px] hover:opacity-90 transition-opacity">
+          <button className="bg-black text-white px-8 sm:px-12 md:px-16 lg:px-[100px] py-4 sm:py-5 rounded-lg text-xs sm:text-sm font-semibold tracking-[0.42px] hover:opacity-90 transition-opacity w-full sm:w-auto">
             Load more Articles
           </button>
         </div>

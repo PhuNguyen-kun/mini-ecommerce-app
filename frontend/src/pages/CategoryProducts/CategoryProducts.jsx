@@ -98,13 +98,13 @@ const CategoryProducts = () => {
 
   return (
     <div className="bg-white w-full min-h-screen">
-      <div className="px-20 py-7">
+      <div className="px-4 sm:px-6 md:px-10 lg:px-16 xl:px-20 py-4 sm:py-5 md:py-7">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <p className="text-xs text-gray-600 mb-2">
             Home / {searchQuery ? 'Tìm kiếm' : (categoryInfo?.name || 'Products')}
           </p>
-          <h1 className="text-[32px] font-semibold text-black mb-4">
+          <h1 className="text-xl sm:text-2xl md:text-[28px] lg:text-[32px] font-semibold text-black mb-3 sm:mb-4">
             {searchQuery 
               ? `Kết quả tìm kiếm cho "${searchQuery}"` 
               : (categoryInfo?.name || 'Products')}
@@ -116,7 +116,7 @@ const CategoryProducts = () => {
 
         {/* Product Grid */}
         {products.length > 0 ? (
-          <div className="grid grid-cols-4 gap-5">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
             {products.map((product) => {
               // Handle both card and full view modes
               const primaryImage = product.primary_image || 
@@ -130,10 +130,10 @@ const CategoryProducts = () => {
                 <Link 
                   key={product.id}
                   to={`/product/${product.slug || product.id}`}
-                  className="group cursor-pointer flex flex-col gap-2.5"
+                  className="group cursor-pointer flex flex-col gap-1.5 sm:gap-2.5"
                 >
                   {/* Image */}
-                  <div className="relative w-full h-[350px] overflow-hidden bg-gray-100">
+                  <div className="relative w-full h-[250px] sm:h-[280px] md:h-[320px] lg:h-[350px] overflow-hidden bg-gray-100">
                     <img 
                       src={primaryImage} 
                       alt={product.name}
@@ -144,12 +144,12 @@ const CategoryProducts = () => {
                     />
                     
                     {/* Wishlist Button */}
-                    <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" onClick={(e) => e.preventDefault()}>
+                    <div className="absolute top-2 right-2 sm:top-3 sm:right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" onClick={(e) => e.preventDefault()}>
                       <WishlistButton productId={product.id} productData={product} size="md" />
                     </div>
                     
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center">
-                      <span className="text-white font-medium text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <span className="text-white font-medium text-xs sm:text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         View Details
                       </span>
                     </div>
@@ -157,11 +157,11 @@ const CategoryProducts = () => {
 
                   {/* Product Info */}
                   <div className="flex flex-col gap-1">
-                    <div className="flex gap-3 items-start">
-                      <p className="flex-1 text-sm text-black leading-4 group-hover:underline">
+                    <div className="flex gap-2 sm:gap-3 items-start">
+                      <p className="flex-1 text-xs sm:text-sm text-black leading-4 group-hover:underline line-clamp-2">
                         {product.name}
                       </p>
-                      <p className="text-sm text-black font-semibold">
+                      <p className="text-xs sm:text-sm text-black font-semibold whitespace-nowrap">
                         {formatPrice(minPrice)}₫
                       </p>
                     </div>
@@ -181,21 +181,21 @@ const CategoryProducts = () => {
 
         {/* Pagination */}
         {!loading && pagination.total_pages > 1 && (
-          <div className="flex justify-center items-center gap-4 mt-12">
+          <div className="flex justify-center items-center gap-2 sm:gap-4 mt-8 sm:mt-12">
             <button
               onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}
               disabled={pagination.page === 1}
-              className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-3 py-1.5 sm:px-4 sm:py-2 text-sm border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Previous
             </button>
-            <span className="text-sm text-gray-600">
+            <span className="text-xs sm:text-sm text-gray-600">
               Page {pagination.page} of {pagination.total_pages}
             </span>
             <button
               onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
               disabled={pagination.page === pagination.total_pages}
-              className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-3 py-1.5 sm:px-4 sm:py-2 text-sm border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Next
             </button>

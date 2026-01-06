@@ -92,14 +92,14 @@ const ProductGrid = ({ category, onTotalChange, selectedFilters }) => {
   return (
     <div className="flex-1">
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-6 sm:mb-8">
         <p className="text-xs text-gray-600 mb-2">Home / {category}</p>
-        <h1 className="text-[32px] font-semibold text-black mb-4">
+        <h1 className="text-xl sm:text-2xl md:text-[28px] lg:text-[32px] font-semibold text-black mb-3 sm:mb-4">
           {category}'s Clothing & Apparel - New Arrivals
         </h1>
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <select 
-            className="text-sm border-none outline-none cursor-pointer"
+            className="text-sm border border-gray-300 rounded px-2 py-1 sm:border-none sm:outline-none cursor-pointer"
             value={sortBy}
             onChange={handleSortChange}
             disabled={loading}
@@ -135,7 +135,7 @@ const ProductGrid = ({ category, onTotalChange, selectedFilters }) => {
 
       {/* Product Grid */}
       {!loading && products.length > 0 && (
-        <div className="grid grid-cols-3 gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-5">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

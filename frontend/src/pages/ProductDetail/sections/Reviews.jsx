@@ -138,7 +138,7 @@ const Reviews = ({ productId, autoOpenModal = false, onModalClose }) => {
 
   if (loading && !reviews.length) {
     return (
-      <div className="px-[196px] py-16">
+      <div className="px-3 sm:px-4 md:px-6 lg:px-10 xl:px-20 py-8 sm:py-12 md:py-16">
         <div className="text-center">
           <Spin size="large" tip="Đang tải đánh giá..." />
         </div>
@@ -147,43 +147,45 @@ const Reviews = ({ productId, autoOpenModal = false, onModalClose }) => {
   }
 
   return (
-    <div className="px-[196px] py-16">
+    <div className="px-3 sm:px-4 md:px-6 lg:px-10 xl:px-20 py-8 sm:py-12 md:py-16">
       {/* Header */}
-      <h2 className="text-3xl font-bold mb-8">Đánh giá sản phẩm</h2>
+      <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6 md:mb-8">Đánh giá sản phẩm</h2>
 
       {/* Stats Overview */}
       {stats && (
-        <div className="grid grid-cols-3 gap-8 mb-8 bg-gray-50 p-8 rounded-lg">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mb-4 sm:mb-6 md:mb-8 bg-gray-50 p-4 sm:p-6 md:p-8 rounded-lg">
           {/* Overall Rating */}
           <div className="text-center">
             <Statistic
               value={stats.averageRating}
               precision={1}
-              valueStyle={{ fontSize: "3rem", fontWeight: "bold" }}
+              valueStyle={{ fontSize: "2rem", fontWeight: "bold" }}
+              className="[&_.ant-statistic-content]:text-2xl sm:[&_.ant-statistic-content]:text-4xl md:[&_.ant-statistic-content]:text-5xl"
             />
             <div className="flex justify-center mb-2">
               <Rate
                 disabled
                 allowHalf
                 value={stats.averageRating}
-                style={{ fontSize: 24 }}
+                style={{ fontSize: 18 }}
+                className="text-base sm:text-lg md:text-2xl"
               />
             </div>
-            <p className="text-gray-600">{stats.totalReviews} đánh giá</p>
+            <p className="text-sm sm:text-base text-gray-600">{stats.totalReviews} đánh giá</p>
           </div>
 
           {/* Rating Breakdown */}
-          <div className="col-span-2">
+          <div className="md:col-span-2">
             {[5, 4, 3, 2, 1].map((rating) => (
               <div
                 key={rating}
-                className="flex items-center gap-3 mb-2 cursor-pointer hover:bg-gray-100 p-2 rounded transition"
+                className="flex items-center gap-2 sm:gap-3 mb-1.5 sm:mb-2 cursor-pointer hover:bg-gray-100 p-1.5 sm:p-2 rounded transition"
                 onClick={() => {
                   setSelectedRating(selectedRating === rating ? null : rating);
                   setPage(1);
                 }}
               >
-                <span className="text-sm w-8">
+                <span className="text-xs sm:text-sm w-6 sm:w-8">
                   {rating} <StarFilled style={{ color: "#fadb14" }} />
                 </span>
                 <Progress
@@ -192,10 +194,10 @@ const Reviews = ({ productId, autoOpenModal = false, onModalClose }) => {
                   className="flex-1"
                   showInfo={false}
                 />
-                <span className="text-sm w-12 text-right text-gray-600">
+                <span className="text-xs sm:text-sm w-10 sm:w-12 text-right text-gray-600">
                   {getRatingPercentage(rating)}%
                 </span>
-                <span className="text-sm w-16 text-right text-gray-500">
+                <span className="text-xs sm:text-sm w-12 sm:w-16 text-right text-gray-500">
                   ({stats.ratingBreakdown[rating]})
                 </span>
               </div>
@@ -206,18 +208,18 @@ const Reviews = ({ productId, autoOpenModal = false, onModalClose }) => {
 
       {/* Media Stats */}
       {stats && (
-        <Space size="middle" className="mb-8">
-          <Tag icon={<PictureOutlined />} color="blue">
+        <Space size="small" wrap className="mb-4 sm:mb-6 md:mb-8">
+          <Tag icon={<PictureOutlined />} color="blue" className="text-xs sm:text-sm">
             {stats.withImagesPercentage}% có ảnh ({stats.withImagesCount})
           </Tag>
-          <Tag icon={<VideoCameraOutlined />} color="purple">
+          <Tag icon={<VideoCameraOutlined />} color="purple" className="text-xs sm:text-sm">
             {stats.withVideosPercentage}% có video ({stats.withVideosCount})
           </Tag>
         </Space>
       )}
 
       {/* Write Review Button */}
-      <div className="mb-8">
+      <div className="mb-4 sm:mb-6 md:mb-8">
         {canReview ? (
           <Button
             type="primary"
@@ -234,7 +236,7 @@ const Reviews = ({ productId, autoOpenModal = false, onModalClose }) => {
       </div>
 
       {/* Filters */}
-      <Space size="middle" className="mb-6 pb-4 border-b">
+      <Space size="small" wrap className="mb-4 sm:mb-6 pb-3 sm:pb-4 border-b">
         {/* Sort */}
         <Select
           value={selectedSort}
@@ -242,7 +244,8 @@ const Reviews = ({ productId, autoOpenModal = false, onModalClose }) => {
             setSelectedSort(value);
             setPage(1);
           }}
-          style={{ width: 200 }}
+          style={{ width: '100%', minWidth: 150, maxWidth: 200 }}
+          className="w-full sm:w-auto"
           options={[
             { value: "newest", label: "Mới nhất" },
             { value: "rating_high", label: "Đánh giá cao nhất" },
@@ -257,7 +260,8 @@ const Reviews = ({ productId, autoOpenModal = false, onModalClose }) => {
             setSelectedFilter(value);
             setPage(1);
           }}
-          style={{ width: 180 }}
+          style={{ width: '100%', minWidth: 140, maxWidth: 180 }}
+          className="w-full sm:w-auto"
           options={[
             { value: "all", label: "Tất cả" },
             { value: "with_images", label: "Có ảnh" },
@@ -308,11 +312,12 @@ const Reviews = ({ productId, autoOpenModal = false, onModalClose }) => {
 
             {/* Load More */}
             {hasMore && (
-              <div className="text-center mt-8">
+              <div className="text-center mt-6 sm:mt-8">
                 <Button
                   onClick={() => setPage((prev) => prev + 1)}
                   loading={loading}
                   size="large"
+                  className="w-full sm:w-auto"
                 >
                   Xem thêm đánh giá
                 </Button>

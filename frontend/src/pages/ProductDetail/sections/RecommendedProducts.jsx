@@ -68,7 +68,7 @@ const RecommendedProducts = ({ currentProductId, gender, categoryId }) => {
 
   if (loading) {
     return (
-      <div className="px-[196px] py-16 flex flex-col gap-2">
+      <div className="px-3 sm:px-4 md:px-6 lg:px-10 xl:px-20 py-8 sm:py-12 md:py-16 flex flex-col gap-2">
         <p className="text-base font-semibold text-neutral-800 tracking-[0.2px] font-['Maison_Neue']">
           Recommended Products
         </p>
@@ -87,7 +87,7 @@ const RecommendedProducts = ({ currentProductId, gender, categoryId }) => {
   const canGoNext = currentIndex < products.length - 4;
 
   return (
-    <div className="px-[196px] py-16 flex flex-col gap-2">
+    <div className="px-3 sm:px-4 md:px-6 lg:px-10 xl:px-20 py-8 sm:py-12 md:py-16 flex flex-col gap-2">
       <div className="flex items-center justify-between">
         <p className="text-base font-semibold text-neutral-800 tracking-[0.2px] font-['Maison_Neue']">
           Recommended Products

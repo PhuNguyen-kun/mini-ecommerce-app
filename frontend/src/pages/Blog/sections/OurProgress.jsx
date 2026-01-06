@@ -19,7 +19,7 @@ const OurProgress = () => {
   ];
 
   return (
-    <div className="w-full px-[60px] py-[120px]">
+    <div className="w-full px-4 sm:px-6 md:px-10 lg:px-[60px] py-12 sm:py-16 md:py-20 lg:py-[120px]">
       <h2 className="text-[54px] leading-[72px] font-semibold text-black mb-3">
         Our Progress
       </h2>

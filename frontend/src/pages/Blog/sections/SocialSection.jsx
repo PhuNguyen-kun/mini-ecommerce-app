@@ -1,6 +1,6 @@
 const SocialSection = () => {
   return (
-    <div className="w-full px-[60px] py-[90px] bg-black">
+    <div className="w-full px-4 sm:px-6 md:px-10 lg:px-[60px] py-12 sm:py-16 md:py-20 lg:py-[90px] bg-black">
       <h2 className="text-[54px] leading-[72px] font-semibold text-white mb-8">
         Follow us on social for more
       </h2>

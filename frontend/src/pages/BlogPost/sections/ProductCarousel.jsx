@@ -46,7 +46,7 @@ const ProductCarousel = () => {
   ];
 
   return (
-    <div className="px-[60px] py-[60px]">
+    <div className="px-4 sm:px-6 md:px-10 lg:px-[60px] py-8 sm:py-10 md:py-12 lg:py-[60px]">
       <h2 className="text-[40px] leading-[48px] font-semibold text-black text-center mb-10">
         The White Whites Edit
       </h2>
@@ -81,7 +81,7 @@ const ProductCarousel = () => {
       </div>
 
       <div className="flex justify-center">
-        <button className="bg-black text-white px-[100px] py-5 rounded-lg text-sm font-semibold tracking-wide hover:bg-gray-800 transition-colors">
+        <button className="bg-black text-white px-8 sm:px-12 md:px-16 lg:px-[100px] py-4 sm:py-5 rounded-lg text-xs sm:text-sm font-semibold tracking-wide hover:bg-gray-800 transition-colors w-full sm:w-auto">
           Shop Now
         </button>
       </div>

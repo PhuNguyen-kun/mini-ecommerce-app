@@ -4,7 +4,7 @@ import careersImage from '../../../assets/about/explore-careers.png';
 
 const ExploreSection = () => {
   return (
-    <div className="w-full py-[82px] px-[200px]">
+    <div className="w-full py-8 sm:py-10 md:py-12 lg:py-[82px] px-4 sm:px-6 md:px-10 lg:px-20 xl:px-[200px]">
       <h2 className="text-[32px] leading-[40px] text-black text-center mb-5">
         More to Explore
       </h2>

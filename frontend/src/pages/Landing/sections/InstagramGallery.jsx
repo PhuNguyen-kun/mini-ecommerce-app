@@ -46,14 +46,14 @@ export default function InstagramGallery() {
   };
 
   return (
-    <section className="w-full py-[90px]">
+    <section className="w-full py-12 sm:py-16 md:py-20 lg:py-[90px]">
       {/* Header */}
-      <div className="text-center mb-12 px-[54px] pt-[90px] pb-0 border-t border-neutral-800">
-        <h2 className="text-[32px] leading-[40px] font-normal mb-6">
+      <div className="text-center mb-8 sm:mb-10 md:mb-12 px-4 sm:px-6 md:px-10 lg:px-[54px] pt-12 sm:pt-16 md:pt-20 lg:pt-[90px] pb-0 border-t border-neutral-800">
+        <h2 className="text-2xl sm:text-3xl md:text-[32px] leading-tight sm:leading-[40px] font-normal mb-4 sm:mb-6">
           Everlane On You
         </h2>
         <div className="space-y-1">
-          <p className="text-sm leading-[16.8px] tracking-[1.4px]">
+          <p className="text-xs sm:text-sm leading-relaxed sm:leading-[16.8px] tracking-[1.4px]">
             Share your latest look with #EverlaneOnYou for a chance to be
             featured.
           </p>
@@ -64,11 +64,11 @@ export default function InstagramGallery() {
       </div>
 
       {/* Gallery */}
-      <div className="px-10 flex items-center gap-[18px]">
+      <div className="px-4 sm:px-6 md:px-10 flex items-center gap-3 sm:gap-4 md:gap-[18px]">
         {/* Left Arrow */}
         <button
           onClick={() => scroll("left")}
-          className="w-10 h-10 flex items-center justify-center hover:bg-gray-100 transition-colors flex-shrink-0"
+          className="hidden sm:flex w-8 h-8 sm:w-10 sm:h-10 items-center justify-center hover:bg-gray-100 transition-colors flex-shrink-0"
         >
           <HiChevronLeft className="w-6 h-6" />
         </button>

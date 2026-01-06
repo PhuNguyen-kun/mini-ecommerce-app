@@ -10,7 +10,7 @@ const FactoriesSection = () => {
           className="w-full h-full object-cover"
         />
       </div>
-      <div className="flex-1 h-full flex flex-col items-center justify-center px-[70px] text-black">
+      <div className="flex-1 h-full flex flex-col items-center justify-center px-4 sm:px-6 md:px-10 lg:px-[70px] text-black">
         <div className="w-full mb-5">
           <p className="text-xs tracking-[0.2px] font-semibold mb-0">OUR FACTORIES</p>
           <p className="text-[40px] leading-[48px]">Our ethical approach.</p>

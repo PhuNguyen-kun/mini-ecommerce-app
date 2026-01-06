@@ -2,7 +2,7 @@ import { FaTwitter, FaFacebookF, FaLinkedinIn } from 'react-icons/fa';
 
 const IntroSection = () => {
   return (
-    <div className="px-[60px] py-[115px]">
+    <div className="px-4 sm:px-6 md:px-10 lg:px-[60px] py-12 sm:py-16 md:py-20 lg:py-[115px]">
       <div className="w-full h-[14px] bg-black mb-10" />
       <div className="flex gap-[148px]">
         <div className="flex gap-1.5 items-start shrink-0">

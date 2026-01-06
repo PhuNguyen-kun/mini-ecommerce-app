@@ -109,13 +109,13 @@ export default function NavActions() {
   ];
 
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
       <Link
         to="/search"
         className="hover:opacity-70 transition-opacity"
         aria-label="Search"
       >
-        <HiMagnifyingGlass className="w-5 h-5" />
+        <HiMagnifyingGlass className="w-5 h-5 sm:w-5 sm:h-5" />
       </Link>
 
       {isLoggedIn ? (
@@ -146,7 +146,7 @@ export default function NavActions() {
                 style={{ display: userAvatar ? "none" : "block" }}
               />
               {userName && (
-                <span className="text-sm font-medium text-black max-w-[100px] truncate">
+                <span className="hidden sm:inline text-sm font-medium text-black max-w-[100px] truncate">
                   {userName}
                 </span>
               )}
@@ -186,15 +186,17 @@ export default function NavActions() {
           {/* Login and Signup buttons */}
           <button
             onClick={() => navigate("/login")}
-            className="px-4 py-2 text-sm font-medium text-black hover:opacity-70 transition-opacity"
+            className="px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-black hover:opacity-70 transition-opacity"
           >
-            Đăng nhập
+            <span className="hidden sm:inline">Đăng nhập</span>
+            <HiUser className="w-5 h-5 sm:hidden" />
           </button>
           <button
             onClick={() => navigate("/signup")}
-            className="px-4 py-2 text-sm font-medium bg-black text-white hover:bg-gray-800 transition-colors rounded"
+            className="px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium bg-black text-white hover:bg-gray-800 transition-colors rounded"
           >
-            Đăng ký
+            <span className="hidden sm:inline">Đăng ký</span>
+            <span className="sm:hidden">+</span>
           </button>
         </>
       )}

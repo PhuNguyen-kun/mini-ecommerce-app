@@ -58,7 +58,7 @@ export default function PopularCategories() {
 
   if (loading) {
     return (
-      <section className="w-full px-4 sm:px-[156px] py-12 bg-gray-50">
+      <section className="w-full px-4 sm:px-6 md:px-10 lg:px-20 py-8 sm:py-10 md:py-12 bg-gray-50">
         <div className="max-w-7xl mx-auto">
           <div className="h-6 w-48 bg-gray-200 animate-pulse mb-8 rounded"></div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">

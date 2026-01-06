@@ -5,17 +5,17 @@ const BlogContent = () => {
   return (
     <>
       {/* Image Section 1 */}
-      <div className="px-[60px] py-[100px] flex justify-center">
+      <div className="px-4 sm:px-6 md:px-10 lg:px-[60px] py-12 sm:py-16 md:py-20 lg:py-[100px] flex justify-center">
         <img 
           src={image1} 
           alt="Winter white outfit" 
-          className="w-[790px] h-[1054px] object-cover"
+          className="w-full max-w-[790px] h-auto object-cover"
         />
       </div>
 
       {/* Text Content Section 1 */}
-      <div className="px-[228px] py-[100px]">
-        <h2 className="text-[40px] leading-[48px] font-semibold text-black mb-11">
+      <div className="px-4 sm:px-6 md:px-10 lg:px-20 xl:px-[228px] py-12 sm:py-16 md:py-20 lg:py-[100px]">
+        <h2 className="text-2xl sm:text-3xl md:text-[40px] leading-tight sm:leading-[48px] font-semibold text-black mb-6 sm:mb-8 md:mb-11">
           Nail the Classics
         </h2>
         <p className="text-2xl leading-[33px] text-black mb-11">
@@ -39,17 +39,17 @@ const BlogContent = () => {
       </div>
 
       {/* Image Section 2 */}
-      <div className="px-[60px] py-[100px] flex justify-center">
+      <div className="px-4 sm:px-6 md:px-10 lg:px-[60px] py-12 sm:py-16 md:py-20 lg:py-[100px] flex justify-center">
         <img 
           src={image2} 
           alt="Winter white layers" 
-          className="w-[790px] h-[1054px] object-cover"
+          className="w-full max-w-[790px] h-auto object-cover"
         />
       </div>
 
       {/* Text Content Section 2 */}
-      <div className="px-[228px] py-[100px]">
-        <h2 className="text-[40px] leading-[48px] font-semibold text-black mb-11">
+      <div className="px-4 sm:px-6 md:px-10 lg:px-20 xl:px-[228px] py-12 sm:py-16 md:py-20 lg:py-[100px]">
+        <h2 className="text-2xl sm:text-3xl md:text-[40px] leading-tight sm:leading-[48px] font-semibold text-black mb-6 sm:mb-8 md:mb-11">
           Textures and Layers
         </h2>
         <p className="text-2xl leading-[33px] text-black mb-11">

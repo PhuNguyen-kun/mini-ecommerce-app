@@ -417,7 +417,7 @@ const Orders = () => {
 
   if (isInitialLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 py-12">
+      <div className="min-h-screen bg-gray-50 py-6 sm:py-8 md:py-12">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-black"></div>

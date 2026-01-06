@@ -15,16 +15,16 @@ export default function AboutSubNav() {
   ];
 
   return (
-    <div className="flex items-center justify-center gap-6 px-6 py-5 border-b border-gray-200">
+    <div className="flex items-center justify-start lg:justify-center gap-4 md:gap-6 px-4 sm:px-6 py-3 sm:py-5 border-b border-gray-200 overflow-x-auto scrollbar-hide">
       {navItems.map((item, index) => (
         <Link 
           key={index} 
           to={item.path}
-          className={`cursor-pointer hover:opacity-70 ${
+          className={`cursor-pointer hover:opacity-70 whitespace-nowrap flex-shrink-0 ${
             currentPath === item.path ? 'relative' : ''
           }`}
         >
-          <p className="text-xs text-gray-700">{item.text}</p>
+          <p className="text-[10px] sm:text-xs text-gray-700">{item.text}</p>
           {currentPath === item.path && (
             <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black" />
           )}

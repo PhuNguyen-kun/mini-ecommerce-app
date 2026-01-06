@@ -170,7 +170,7 @@ const FilterSidebar = ({ totalProducts = 0, gender, availableFilters, onFiltersC
   const clothingSizes = sizes.filter(s => /^[A-Z]+$/.test(s.name));
 
   return (
-    <div className="w-[196px] shrink-0">
+    <div className="w-full lg:w-[196px] lg:shrink-0">
       {/* Product Count */}
       <div className="py-4">
         <p className="text-xs text-gray-600">
@@ -193,7 +193,7 @@ const FilterSidebar = ({ totalProducts = 0, gender, availableFilters, onFiltersC
               <p className="text-xs text-gray-500">Loading...</p>
             ) : categories.length > 0 ? (
               <>
-                <div className="h-[169px] overflow-y-auto space-y-3 mb-2">
+                <div className="max-h-[169px] overflow-y-auto space-y-3 mb-2">
                   {categories.map((cat) => (
                     <label key={cat.id} className="flex items-start gap-2 cursor-pointer">
                       <input 
@@ -233,9 +233,9 @@ const FilterSidebar = ({ totalProducts = 0, gender, availableFilters, onFiltersC
               <p className="text-xs text-gray-500">Loading...</p>
             ) : colors.length > 0 ? (
               <>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-3 gap-3 sm:gap-4">
                   {colors.slice(0, 9).map((color, index) => (
-                    <div key={index} className="flex flex-col items-center gap-2">
+                    <div key={index} className="flex flex-col items-center gap-1.5 sm:gap-2">
                       <button 
                         className={`w-6 h-6 rounded-full border-2 transition-colors ${
                           selectedFilters?.colors?.includes(color.name) 
@@ -281,7 +281,7 @@ const FilterSidebar = ({ totalProducts = 0, gender, availableFilters, onFiltersC
                 {waistSizes.length > 0 && (
                   <div>
                     <p className="text-xs text-gray-600 mb-2">Waist</p>
-                    <div className="grid grid-cols-4 gap-2">
+                    <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-4 gap-2">
                       {waistSizes.map((size) => (
                         <button 
                           key={size.name}
@@ -307,7 +307,7 @@ const FilterSidebar = ({ totalProducts = 0, gender, availableFilters, onFiltersC
                 {clothingSizes.length > 0 && (
                   <div>
                     <p className="text-xs text-gray-600 mb-2">Clothing</p>
-                    <div className="grid grid-cols-4 gap-2">
+                    <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-4 gap-2">
                       {clothingSizes.map((size) => (
                         <button 
                           key={size.name}

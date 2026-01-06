@@ -140,21 +140,21 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-light mb-2">Thông Tin Cá Nhân</h1>
-          <p className="text-gray-600">Quản lý thông tin của bạn</p>
+        <div className="text-center mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-light mb-2">Thông Tin Cá Nhân</h1>
+          <p className="text-gray-600 text-sm sm:text-base">Quản lý thông tin của bạn</p>
         </div>
 
         {/* Profile Card */}
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
           {/* Avatar Section */}
-          <div className="p-8 border-b border-gray-200">
+          <div className="p-4 sm:p-6 md:p-8 border-b border-gray-200">
             <div className="flex flex-col items-center">
               <div className="relative">
                 {/* Avatar */}
-                <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
                   {user.avatar_url ? (
                     <img
                       src={user.avatar_url}
@@ -174,9 +174,9 @@ const Profile = () => {
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploadingAvatar}
-                  className="absolute bottom-0 right-0 bg-black text-white p-2 rounded-full hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="absolute bottom-0 right-0 bg-black text-white p-1.5 sm:p-2 rounded-full hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <HiOutlineCamera className="w-5 h-5" />
+                  <HiOutlineCamera className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
 
                 <input
@@ -211,7 +211,7 @@ const Profile = () => {
             form={form}
             onFinish={handleSaveProfile}
             layout="vertical"
-            className="p-8"
+            className="p-4 sm:p-6 md:p-8"
           >
             {/* Email */}
             <Form.Item
@@ -271,14 +271,14 @@ const Profile = () => {
             </Form.Item>
 
             {/* Action Buttons */}
-            <div className="mt-8 flex gap-4">
+            <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
               {!isEditing ? (
                 <Button
                   type="primary"
                   size="large"
                   onClick={() => setIsEditing(true)}
                   style={{ height: '48px', backgroundColor: '#000', borderColor: '#000' }}
-                  className="flex-1 hover:!bg-gray-800 hover:!border-gray-800"
+                  className="w-full hover:!bg-gray-800 hover:!border-gray-800"
                 >
                   Chỉnh sửa thông tin
                 </Button>
@@ -288,7 +288,7 @@ const Profile = () => {
                     size="large"
                     onClick={handleCancel}
                     disabled={isSaving}
-                    className="flex-1"
+                    className="w-full sm:flex-1"
                     style={{ height: '48px' }}
                   >
                     Hủy
@@ -299,7 +299,7 @@ const Profile = () => {
                     htmlType="submit"
                     loading={isSaving}
                     style={{ height: '48px', backgroundColor: '#000', borderColor: '#000' }}
-                    className="flex-1 hover:!bg-gray-800 hover:!border-gray-800"
+                    className="w-full sm:flex-1 hover:!bg-gray-800 hover:!border-gray-800"
                   >
                     Lưu thay đổi
                   </Button>
