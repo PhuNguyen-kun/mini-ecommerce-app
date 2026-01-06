@@ -42,8 +42,28 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
-          source: "frontend/dist"
-          target: "/home/ec2-user/mini-ecommerce-app/frontend"
+          source: "frontend/dist/*"
+          target: "/home/ec2-user/mini-ecommerce-app/frontend/dist"
+          rm: true
+
+      - name: Verify upload
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            if [ ! -d "/home/ec2-user/mini-ecommerce-app/frontend/dist" ]; then
+              echo "❌ Error: dist/ folder not found after upload!"
+              exit 1
+            fi
+            if [ -z "$(ls -A /home/ec2-user/mini-ecommerce-app/frontend/dist)" ]; then
+              echo "❌ Error: dist/ folder is empty!"
+              exit 1
+            fi
+            echo "✅ dist/ folder uploaded successfully"
+            ls -la /home/ec2-user/mini-ecommerce-app/frontend/dist | head -10
 
   deploy-backend:
     runs-on: ubuntu-latest
@@ -81,4 +101,19 @@ jobs:
             git fetch origin
             git checkout staging
             git pull origin staging
+
+            # Kiểm tra dist/ đã có chưa
+            if [ ! -d "dist" ]; then
+              echo "❌ Error: dist/ folder not found!"
+              echo "Please ensure build-frontend job completed successfully"
+              exit 1
+            fi
+
+            # Kiểm tra dist/ có files không
+            if [ -z "$(ls -A dist)" ]; then
+              echo "❌ Error: dist/ folder is empty!"
+              exit 1
+            fi
+
+            echo "✅ dist/ folder found, deploying..."
             docker compose up -d --build
