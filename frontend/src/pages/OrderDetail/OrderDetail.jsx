@@ -81,7 +81,7 @@ const getTimelineSteps = (order) => {
         date:
           order.paid_at ||
           (order.status !== "PENDING_PAYMENT" &&
-          order.payment_status === "SUCCESS"
+            order.payment_status === "SUCCESS"
             ? order.created_at
             : null),
         amount: order.total_amount,
@@ -216,17 +216,15 @@ const OrderDetail = () => {
             {/* Timeline line */}
             <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gray-200">
               <div
-                className={`absolute top-0 left-0 w-full transition-all duration-500 ${
-                  isCancelled ? "bg-red-300" : "bg-green-500"
-                }`}
+                className={`absolute top-0 left-0 w-full transition-all duration-500 ${isCancelled ? "bg-red-300" : "bg-green-500"
+                  }`}
                 style={{
-                  height: `${
-                    isCancelled
-                      ? "0%"
-                      : (timelineSteps.filter((s) => s.completed).length /
-                          timelineSteps.length) *
-                        100
-                  }%`,
+                  height: `${isCancelled
+                    ? "0%"
+                    : (timelineSteps.filter((s) => s.completed).length /
+                      timelineSteps.length) *
+                    100
+                    }%`,
                 }}
               />
             </div>
@@ -242,13 +240,12 @@ const OrderDetail = () => {
                   >
                     {/* Step icon */}
                     <div
-                      className={`relative z-10 flex items-center justify-center w-12 h-12 rounded-full border-2 transition-all ${
-                        step.completed && !isCancelled
-                          ? "bg-green-500 border-green-500 text-white shadow-lg"
-                          : isCancelled
+                      className={`relative z-10 flex items-center justify-center w-12 h-12 rounded-full border-2 transition-all ${step.completed && !isCancelled
+                        ? "bg-green-500 border-green-500 text-white shadow-lg"
+                        : isCancelled
                           ? "bg-gray-200 border-gray-300 text-gray-400"
                           : "bg-white border-gray-300 text-gray-400"
-                      }`}
+                        }`}
                     >
                       <div
                         className={
@@ -263,13 +260,12 @@ const OrderDetail = () => {
                     <div className="flex-1 pt-1">
                       <div className="flex items-center justify-between mb-1">
                         <h3
-                          className={`font-semibold ${
-                            step.completed && !isCancelled
-                              ? "text-green-600"
-                              : isCancelled
+                          className={`font-semibold ${step.completed && !isCancelled
+                            ? "text-green-600"
+                            : isCancelled
                               ? "text-gray-400"
                               : "text-gray-600"
-                          }`}
+                            }`}
                         >
                           {step.label}
                         </h3>

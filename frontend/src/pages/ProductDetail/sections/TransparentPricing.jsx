@@ -2,32 +2,32 @@ const TransparentPricing = () => {
   const pricingItems = [
     {
       id: 1,
-      name: "Materials",
-      price: "$47.96",
+      name: "Nguyên liệu",
+      price: "1.219.000₫",
       icon: "🧵"
     },
     {
       id: 2,
-      name: "Hardware",
-      price: "$5.74",
+      name: "Phụ kiện",
+      price: "146.000₫",
       icon: "🔩"
     },
     {
       id: 3,
-      name: "Labor",
-      price: "$13.75",
+      name: "Nhân công",
+      price: "349.000₫",
       icon: "👷"
     },
     {
       id: 4,
-      name: "Duties",
-      price: "$8.09",
+      name: "Thuế",
+      price: "205.000₫",
       icon: "📋"
     },
     {
       id: 5,
-      name: "Transport",
-      price: "$1.53",
+      name: "Vận chuyển",
+      price: "39.000₫",
       icon: "🚚"
     }
   ];
@@ -37,10 +37,10 @@ const TransparentPricing = () => {
       {/* Header */}
       <div className="w-[684px] flex flex-col gap-4 items-center text-center text-neutral-800">
         <p className="text-2xl leading-[33.24px] font-semibold font-['Maison_Neue']">
-          Transparent Pricing
+          Giá Cả Minh Bạch
         </p>
         <p className="text-sm tracking-[1.4px] leading-[16.8px] font-['Maison_Neue']">
-          We publish what it costs us to make every one of our products. There are a lot of costs we can't neatly account for - like design, fittings, wear testing, rent on office and retail space - but we believe you deserve to know what goes into making the products you love.
+          Chúng tôi công khai chi phí sản xuất cho từng sản phẩm. Có nhiều chi phí không thể tính toán chính xác - như thiết kế, may mẫu, kiểm tra chất lượng, thuê văn phòng và cửa hàng - nhưng chúng tôi tin rằng bạn xứng đáng biết những gì tạo nên sản phẩm bạn yêu thích.
         </p>
       </div>
 

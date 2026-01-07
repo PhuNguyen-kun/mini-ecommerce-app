@@ -16,7 +16,33 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
     return new Intl.NumberFormat('vi-VN').format(price);
   };
 
-  const { colors, sizes, minPrice } = useMemo(() => {
+  // Map màu hex
+  const colorHexMap = {
+    'Đen': '#000000', 'Trắng': '#FFFFFF', 'Xám': '#9CA3AF', 'Xám Đậm': '#4B5563', 'Xám Nhạt': '#E5E7EB',
+    'Be': '#D2B48C', 'Nâu': '#8B4513', 'Nâu Đậm': '#654321', 'Nâu Nhạt': '#D2691E',
+    'Đỏ': '#EF4444', 'Đỏ Đô': '#DC143C', 'Đỏ Tươi': '#FF0000',
+    'Hồng': '#EC4899', 'Hồng Nhạt': '#FFC0CB', 'Hồng Đậm': '#FF1493',
+    'Cam': '#F97316', 'Cam Đậm': '#FF8C00',
+    'Vàng': '#FCD34D', 'Vàng Nhạt': '#FFFFE0', 'Vàng Gold': '#FFD700',
+    'Xanh Lá': '#22C55E', 'Xanh lá': '#22C55E', 'Xanh Lá Đậm': '#15803D', 'Xanh Lá Nhạt': '#86EFAC',
+    'Xanh Dương': '#3B82F6', 'Xanh dương': '#3B82F6', 'Xanh Navy': '#1E3A8A', 'Xanh navy': '#1E3A8A',
+    'Xanh Da Trời': '#60A5FA', 'Xanh Ngọc': '#14B8A6', 'Xanh Mint': '#6EE7B7',
+    'Tím': '#A855F7', 'Tím Đậm': '#7C3AED', 'Tím Nhạt': '#C4B5FD',
+    'Black': '#000000', 'White': '#FFFFFF', 'Grey': '#9CA3AF', 'Gray': '#9CA3AF',
+    'Dark Grey': '#4B5563', 'Dark Gray': '#4B5563', 'Light Grey': '#E5E7EB', 'Light Gray': '#E5E7EB',
+    'Beige': '#D2B48C', 'Brown': '#8B4513', 'Dark Brown': '#654321', 'Light Brown': '#D2691E',
+    'Red': '#EF4444', 'Crimson': '#DC143C', 'Bright Red': '#FF0000',
+    'Pink': '#EC4899', 'Light Pink': '#FFC0CB', 'Hot Pink': '#FF1493',
+    'Orange': '#F97316', 'Dark Orange': '#FF8C00',
+    'Yellow': '#FCD34D', 'Light Yellow': '#FFFFE0', 'Gold': '#FFD700',
+    'Green': '#22C55E', 'Dark Green': '#15803D', 'Light Green': '#86EFAC',
+    'Blue': '#3B82F6', 'Navy': '#1E3A8A', 'Sky Blue': '#60A5FA', 'Teal': '#14B8A6', 'Mint': '#6EE7B7',
+    'Purple': '#A855F7', 'Dark Purple': '#7C3AED', 'Light Purple': '#C4B5FD',
+    'Olive': '#808000', 'Khaki': '#C3B091', 'Maroon': '#800000', 'Burgundy': '#800020',
+    'Coral': '#FF7F50', 'Salmon': '#FA8072', 'Peach': '#FFDAB9', 'Ivory': '#FFFFF0', 'Cream': '#FFFDD0'
+  };
+
+  const { allColors, allSizes, minPrice } = useMemo(() => {
     const colorMap = new Map();
     const sizeSet = new Set();
     let min = Infinity;
@@ -30,30 +56,6 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
         const optionName = optVal.option?.name?.toLowerCase();
         if (optionName === 'màu sắc' || optionName === 'color') {
           if (!colorMap.has(optVal.value)) {
-            const colorHexMap = {
-              'Đen': '#000000', 'Trắng': '#FFFFFF', 'Xám': '#9CA3AF', 'Xám Đậm': '#4B5563', 'Xám Nhạt': '#E5E7EB',
-              'Be': '#D2B48C', 'Nâu': '#8B4513', 'Nâu Đậm': '#654321', 'Nâu Nhạt': '#D2691E',
-              'Đỏ': '#EF4444', 'Đỏ Đô': '#DC143C', 'Đỏ Tươi': '#FF0000',
-              'Hồng': '#EC4899', 'Hồng Nhạt': '#FFC0CB', 'Hồng Đậm': '#FF1493',
-              'Cam': '#F97316', 'Cam Đậm': '#FF8C00',
-              'Vàng': '#FCD34D', 'Vàng Nhạt': '#FFFFE0', 'Vàng Gold': '#FFD700',
-              'Xanh Lá': '#22C55E', 'Xanh lá': '#22C55E', 'Xanh Lá Đậm': '#15803D', 'Xanh Lá Nhạt': '#86EFAC',
-              'Xanh Dương': '#3B82F6', 'Xanh dương': '#3B82F6', 'Xanh Navy': '#1E3A8A', 'Xanh navy': '#1E3A8A',
-              'Xanh Da Trời': '#60A5FA', 'Xanh Ngọc': '#14B8A6', 'Xanh Mint': '#6EE7B7',
-              'Tím': '#A855F7', 'Tím Đậm': '#7C3AED', 'Tím Nhạt': '#C4B5FD',
-              'Black': '#000000', 'White': '#FFFFFF', 'Grey': '#9CA3AF', 'Gray': '#9CA3AF',
-              'Dark Grey': '#4B5563', 'Dark Gray': '#4B5563', 'Light Grey': '#E5E7EB', 'Light Gray': '#E5E7EB',
-              'Beige': '#D2B48C', 'Brown': '#8B4513', 'Dark Brown': '#654321', 'Light Brown': '#D2691E',
-              'Red': '#EF4444', 'Crimson': '#DC143C', 'Bright Red': '#FF0000',
-              'Pink': '#EC4899', 'Light Pink': '#FFC0CB', 'Hot Pink': '#FF1493',
-              'Orange': '#F97316', 'Dark Orange': '#FF8C00',
-              'Yellow': '#FCD34D', 'Light Yellow': '#FFFFE0', 'Gold': '#FFD700',
-              'Green': '#22C55E', 'Dark Green': '#15803D', 'Light Green': '#86EFAC',
-              'Blue': '#3B82F6', 'Navy': '#1E3A8A', 'Sky Blue': '#60A5FA', 'Teal': '#14B8A6', 'Mint': '#6EE7B7',
-              'Purple': '#A855F7', 'Dark Purple': '#7C3AED', 'Light Purple': '#C4B5FD',
-              'Olive': '#808000', 'Khaki': '#C3B091', 'Maroon': '#800000', 'Burgundy': '#800020',
-              'Coral': '#FF7F50', 'Salmon': '#FA8072', 'Peach': '#FFDAB9', 'Ivory': '#FFFFF0', 'Cream': '#FFFDD0'
-            };
             colorMap.set(optVal.value, colorHexMap[optVal.value] || '#000000');
           }
         } else if (optionName === 'kích cỡ' || optionName === 'size') {
@@ -63,11 +65,65 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
     });
 
     return {
-      colors: Array.from(colorMap.entries()).map(([name, value]) => ({ name, value })),
-      sizes: Array.from(sizeSet),
+      allColors: Array.from(colorMap.entries()).map(([name, value]) => ({ name, value })),
+      allSizes: Array.from(sizeSet),
       minPrice: formatPrice(min === Infinity ? 0 : min)
     };
   }, [product.variants, formatPrice]);
+
+  // Lấy các màu khả dụng dựa trên size đã chọn
+  const availableColors = useMemo(() => {
+    if (!selectedSize) return allColors;
+
+    const activeVariants = product.variants?.filter(variant => variant.is_active !== false) || [];
+    const colorSet = new Set();
+
+    activeVariants.forEach(variant => {
+      const hasSize = variant.option_values?.some(optVal =>
+        (optVal.option?.name?.toLowerCase().includes('kích cỡ') ||
+          optVal.option?.name?.toLowerCase().includes('size')) &&
+        optVal.value === selectedSize
+      );
+
+      if (hasSize) {
+        variant.option_values?.forEach(optVal => {
+          const optionName = optVal.option?.name?.toLowerCase();
+          if (optionName === 'màu sắc' || optionName === 'color') {
+            colorSet.add(optVal.value);
+          }
+        });
+      }
+    });
+
+    return allColors.filter(color => colorSet.has(color.name));
+  }, [selectedSize, allColors, product.variants]);
+
+  // Lấy các size khả dụng dựa trên màu đã chọn
+  const availableSizes = useMemo(() => {
+    if (!selectedColor) return allSizes;
+
+    const activeVariants = product.variants?.filter(variant => variant.is_active !== false) || [];
+    const sizeSet = new Set();
+
+    activeVariants.forEach(variant => {
+      const hasColor = variant.option_values?.some(optVal =>
+        (optVal.option?.name?.toLowerCase().includes('màu') ||
+          optVal.option?.name?.toLowerCase().includes('color')) &&
+        optVal.value === selectedColor
+      );
+
+      if (hasColor) {
+        variant.option_values?.forEach(optVal => {
+          const optionName = optVal.option?.name?.toLowerCase();
+          if (optionName === 'kích cỡ' || optionName === 'size') {
+            sizeSet.add(optVal.value);
+          }
+        });
+      }
+    });
+
+    return allSizes.filter(size => sizeSet.has(size));
+  }, [selectedColor, allSizes, product.variants]);
 
   // === LOGIC MỚI: XỬ LÝ CHỌN/BỎ CHỌN MÀU ===
   const handleColorClick = (colorName) => {
@@ -139,7 +195,7 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
       {/* Header Section */}
       <div className="border-b border-[#F5F4F4] pb-3 sm:pb-4 flex flex-col gap-1">
         <p className="text-xs text-neutral-500 tracking-[0.2px] font-['Maison_Neue']">
-          {product.category?.name || 'Product'}
+          {product.category?.name || 'Sản phẩm'}
         </p>
         <div className="flex gap-2 sm:gap-2.5 items-start">
           <p className="flex-1 text-lg sm:text-xl md:text-2xl text-black leading-tight font-['Maison_Neue']">
@@ -162,18 +218,18 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
         <div className="flex gap-2.5 items-center">
           {renderStars(product.rating)}
           <p className="text-xs text-neutral-500 tracking-[0.2px] font-['Maison_Neue']">
-            {product.rating || 0} ({product.review_count || 0} Reviews)
+            {product.rating || 0} ({product.review_count || 0} Đánh giá)
           </p>
         </div>
       </div>
 
       {/* Color Selection */}
-      {colors.length > 0 && (
+      {allColors.length > 0 && (
         <div className="py-4 sm:py-[18px] flex flex-col gap-2.5">
           <div className="flex gap-2 sm:gap-3 items-center justify-between text-xs text-black tracking-[0.2px]">
             <div className="flex gap-2 items-center">
-              <p className="font-semibold font-['Maison_Neue']">Color</p>
-              <p className="font-['Maison_Neue']">{selectedColor || 'All colors'}</p>
+              <p className="font-semibold font-['Maison_Neue']">Màu sắc</p>
+              <p className="font-['Maison_Neue']">{selectedColor || 'Tất cả màu'}</p>
             </div>
             {/* Nút Clear nhanh nếu đang chọn màu */}
             {selectedColor && (
@@ -181,21 +237,21 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
                 onClick={() => setSelectedColor(null)}
                 className="text-neutral-500 underline hover:text-black flex items-center gap-1"
               >
-                Clear <FiX />
+                Xóa <FiX />
               </button>
             )}
           </div>
           <div className="flex gap-2 sm:gap-3 flex-wrap">
-            {colors.map((color, index) => (
+            {availableColors.map((color, index) => (
               <button
                 key={index}
-                onClick={() => handleColorClick(color.name)} // Sử dụng hàm toggle mới
+                onClick={() => handleColorClick(color.name)}
                 className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 transition-all ${selectedColor === color.name
                     ? 'border-black scale-110'
                     : 'border-gray-300 hover:border-gray-400'
                   }`}
                 style={{ backgroundColor: color.value }}
-                title={`${color.name} (Click to toggle)`}
+                title={color.name}
               />
             ))}
           </div>
@@ -203,23 +259,23 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
       )}
 
       {/* Size Selection */}
-      {sizes.length > 0 && (
+      {allSizes.length > 0 && (
         <div className="py-4 sm:py-[18px] flex flex-col gap-2.5">
           <div className="flex items-start justify-between text-xs tracking-[0.2px]">
             <div className="flex gap-2 items-center">
-              <p className="font-semibold text-black font-['Maison_Neue']">Size</p>
+              <p className="font-semibold text-black font-['Maison_Neue']">Kích cỡ</p>
               {selectedSize && <p className="font-['Maison_Neue'] text-neutral-600">({selectedSize})</p>}
             </div>
-            <p className="underline text-neutral-800 font-['Maison_Neue'] cursor-pointer">Size Guide</p>
+            <p className="underline text-neutral-800 font-['Maison_Neue'] cursor-pointer">Hướng dẫn chọn size</p>
           </div>
           <div className="flex gap-2 sm:gap-3 flex-wrap">
-            {sizes.map((size) => (
+            {availableSizes.map((size) => (
               <button
                 key={size}
-                onClick={() => handleSizeClick(size)} // Sử dụng hàm toggle mới cho size luôn
-                className={`min-w-[40px] sm:min-w-[45px] px-2.5 sm:px-3 py-2.5 sm:py-3 text-xs text-neutral-800 tracking-[0.2px] font-['Maison_Neue'] transition-colors ${selectedSize === size
+                onClick={() => handleSizeClick(size)}
+                className={`min-w-[40px] sm:min-w-[45px] px-2.5 sm:px-3 py-2.5 sm:py-3 text-xs tracking-[0.2px] font-['Maison_Neue'] transition-colors ${selectedSize === size
                     ? 'bg-neutral-800 text-white'
-                    : 'bg-[#F5F4F4] hover:bg-[#e5e5e5]'
+                    : 'bg-[#F5F4F4] hover:bg-[#e5e5e5] text-neutral-800'
                   }`}
               >
                 {size}
@@ -238,7 +294,7 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
             } ${isAdding ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
           <p className="text-xs sm:text-sm text-white text-center tracking-[1.4px] font-['Maison_Neue']">
-            {addedToCart ? 'ADDED TO CART!' : isAdding ? 'ADDING...' : 'ADD TO BAG'}
+            {addedToCart ? 'ĐÃ THÊM VÀO GIỞ!' : isAdding ? 'ĐANG THÊM...' : 'THÊM VÀO GIỞ'}
           </p>
         </button>
       </div>
@@ -251,10 +307,10 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
           </div>
           <div className="flex-1 flex flex-col">
             <p className="text-xs sm:text-sm font-semibold text-black tracking-[0.42px] font-['Maison_Neue']">
-              Free Shipping
+              Miễn phí vận chuyển
             </p>
             <p className="text-xs text-black tracking-[0.2px] font-['Maison_Neue']">
-              On all U.S. orders over $100 <span className="underline">Learn more.</span>
+              Cho tất cả đơn hàng trên 500.000₫ <span className="underline">Tìm hiểu thêm.</span>
             </p>
           </div>
         </div>
@@ -265,10 +321,10 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
           </div>
           <div className="flex-1 flex flex-col">
             <p className="text-xs sm:text-sm font-semibold text-black tracking-[0.42px] font-['Maison_Neue']">
-              Easy Returns
+              Dễ dàng đổi trả
             </p>
             <p className="text-xs text-black tracking-[0.2px] font-['Maison_Neue']">
-              Extended returns through January 31. <span className="underline">Returns Details.</span>
+              Miễn phí đổi trả trong vòng 30 ngày. <span className="underline">Chi tiết đổi trả.</span>
             </p>
           </div>
         </div>
@@ -279,10 +335,10 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
           </div>
           <div className="flex-1 flex flex-col">
             <p className="text-xs sm:text-sm font-semibold text-black tracking-[0.42px] font-['Maison_Neue']">
-              Send It As A Gift
+              Gửi làm quà tặng
             </p>
             <p className="text-xs text-black tracking-[0.2px] font-['Maison_Neue']">
-              Add a free personalized note during checkout.
+              Thêm lời nhắn miễn phí khi thanh toán.
             </p>
           </div>
         </div>
@@ -291,10 +347,10 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
       {/* Description */}
       <div className="border-t border-[#DDDBDC] pt-6 sm:pt-8 md:pt-10 pb-3 flex flex-col gap-3 sm:gap-4">
         <p className="text-sm sm:text-base font-semibold text-black tracking-[0.2px] font-['Maison_Neue']">
-          Product Details
+          Chi tiết sản phẩm
         </p>
         <p className="text-xs sm:text-sm text-black tracking-[1.4px] leading-[16.8px] font-['Maison_Neue']">
-          {product.description || 'No description available.'}
+          {product.description || 'Chưa có mô tả.'}
         </p>
       </div>
 
@@ -302,7 +358,7 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
       {product.model_info && (
         <div className="border-b border-[#DDDBDC] py-4 sm:py-5 flex items-center">
           <p className="w-20 sm:w-[106px] text-sm sm:text-base font-semibold text-black tracking-[0.2px] font-['Maison_Neue']">
-            Model
+            Mẫu
           </p>
           <p className="flex-1 text-xs sm:text-sm text-black tracking-[1.4px] leading-[16.8px] font-['Maison_Neue']">
             {product.model_info}
@@ -313,19 +369,19 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
       {/* Fit Info */}
       <div className="border-b border-[#DDDBDC] py-4 sm:py-5 flex items-start">
         <p className="w-20 sm:w-[106px] text-sm sm:text-base font-semibold text-black tracking-[0.2px] font-['Maison_Neue']">
-          Fit
+          Dáng
         </p>
         <div className="flex-1 text-xs sm:text-sm text-black tracking-[1.4px] leading-[16.8px] font-['Maison_Neue']">
-          <p>Questions about fit?</p>
-          <p>Contact Us</p>
-          <p>Size Guide</p>
+          <p>Câu hỏi về size?</p>
+          <p>Liên hệ chúng tôi</p>
+          <p>Hướng dẫn chọn size</p>
         </div>
       </div>
 
       {/* Sustainability */}
       <div className="border-b border-[#DDDBDC] py-4 sm:py-5 flex flex-col">
         <p className="text-sm sm:text-base font-semibold text-black tracking-[0.2px] font-['Maison_Neue']">
-          Sustainability
+          Thân thiện môi trường
         </p>
       </div>
     </div>

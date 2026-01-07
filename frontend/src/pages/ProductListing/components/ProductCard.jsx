@@ -2,26 +2,26 @@ import { Link } from 'react-router-dom';
 import WishlistButton from '../../../components/WishlistButton';
 
 const ProductCard = ({ product }) => {
-  
+
   // Handle both card and full view modes
   // Card mode: has primary_image, price_from
   // Full mode: has images[], variants[]
-  
-  const primaryImage = product.primary_image || 
-                       product.images?.find(img => img.is_primary)?.image_url || 
-                       product.images?.[0]?.image_url || 
-                       '/placeholder.png';
-  
-  const minPrice = product.price_from || 
-                   product.variants?.reduce((min, variant) => Math.min(min, variant.price), Infinity) || 
-                   0;
-  
+
+  const primaryImage = product.primary_image ||
+    product.images?.find(img => img.is_primary)?.image_url ||
+    product.images?.[0]?.image_url ||
+    '/placeholder.png';
+
+  const minPrice = product.price_from ||
+    product.variants?.reduce((min, variant) => Math.min(min, variant.price), Infinity) ||
+    0;
+
   // Format price to VND
   const formatPrice = (price) => {
     if (!price) return '0';
     return new Intl.NumberFormat('vi-VN').format(price);
   };
-  
+
   // Get unique colors from variants (only in full mode)
   const colors = product.variants?.reduce((acc, variant) => {
     variant.option_values?.forEach(opt => {
@@ -38,24 +38,24 @@ const ProductCard = ({ product }) => {
     <Link to={`/product/${product.slug || product.id}`} className="group cursor-pointer flex flex-col gap-2.5">
       {/* Image Container */}
       <div className="relative w-full h-[250px] sm:h-[280px] md:h-[320px] lg:h-[392px] overflow-hidden bg-gray-100">
-        <img 
-          src={primaryImage} 
+        <img
+          src={primaryImage}
           alt={product.name}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           onError={(e) => {
             e.target.src = '/placeholder.png';
           }}
         />
-        
+
         {/* Wishlist Button - Shows on Hover */}
         <div className="absolute top-2 right-2 sm:top-3 sm:right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" onClick={(e) => e.preventDefault()}>
           <WishlistButton productId={product.id} productData={product} size="md" />
         </div>
-        
+
         {/* View Details Overlay - Shows on Hover */}
         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center">
           <span className="text-white font-medium text-xs sm:text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            View Details
+            Xem Chi Tiết
           </span>
         </div>
       </div>
@@ -84,7 +84,7 @@ const ProductCard = ({ product }) => {
       {colors.length > 0 && (
         <div className="flex gap-2.5 items-center w-full">
           {colors.slice(0, 4).map((color, index) => (
-            <div 
+            <div
               key={index}
               className="w-5 h-5 rounded-full border border-gray-300 cursor-pointer hover:border-gray-500 transition-colors"
               style={{ backgroundColor: color }}

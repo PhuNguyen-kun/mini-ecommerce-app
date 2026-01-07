@@ -6,10 +6,10 @@ export default function TopBar() {
     <div className="bg-black text-white py-2 px-4 sm:px-6 flex justify-center items-center text-xs relative">
       <div className="flex items-center gap-1.5 sm:gap-2">
         <p className="tracking-wide text-[10px] sm:text-xs hidden sm:block">
-          Get early access on launches and offers.
+          Nhận sớm thông tin về sản phẩm mới và ưu đãi.
         </p>
         <p className="underline cursor-pointer hover:opacity-80 text-[10px] sm:text-xs">
-          Sign Up For Texts
+          Đăng Ký Nhận Tin
         </p>
         <HiArrowRight className="w-3 h-3" />
       </div>

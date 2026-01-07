@@ -44,9 +44,9 @@ const Stores = () => {
       <div className="w-full px-4 sm:px-6 md:px-10 lg:px-[35px] py-6 sm:py-8 md:py-[30px]">
         {/* Header Section */}
         <div className="flex flex-col gap-3 sm:gap-4 items-center text-center mb-8 sm:mb-12 md:mb-16">
-          <h1 className="text-2xl sm:text-3xl md:text-[32px] leading-tight sm:leading-[40px] text-black">Stores</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-[32px] leading-tight sm:leading-[40px] text-black">Cửa Hàng</h1>
           <p className="text-base tracking-[0.64px] leading-6 text-black">
-            Find one of our 11 stores nearest you.
+            Tìm một trong 11 cửa hàng gần bạn nhất.
           </p>
         </div>
 

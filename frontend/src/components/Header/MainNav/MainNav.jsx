@@ -9,15 +9,15 @@ export default function MainNav() {
   const currentPath = location.pathname;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  
+
   // About section includes: /about, /stores, /factories, etc.
-  const isAboutSection = currentPath.startsWith('/about') || 
-                         currentPath === '/stores' || 
-                         currentPath === '/factories' ||
-                         currentPath === '/environmental' ||
-                         currentPath === '/carbon' ||
-                         currentPath === '/impact' ||
-                         currentPath === '/cleaner-fashion';
+  const isAboutSection = currentPath.startsWith('/about') ||
+    currentPath === '/stores' ||
+    currentPath === '/factories' ||
+    currentPath === '/environmental' ||
+    currentPath === '/carbon' ||
+    currentPath === '/impact' ||
+    currentPath === '/cleaner-fashion';
 
   useEffect(() => {
     const handleResize = () => {
@@ -34,19 +34,19 @@ export default function MainNav() {
         {/* Left - Navigation Links (Always visible) */}
         <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 lg:gap-4">
           <Link to="/women" className={`px-1 sm:px-1.5 md:px-2 py-1.5 sm:py-2 cursor-pointer hover:opacity-70 ${currentPath === '/women' ? 'relative' : ''}`}>
-            <p className="text-[10px] sm:text-xs md:text-sm font-medium">Women</p>
+            <p className="text-[10px] sm:text-xs md:text-sm font-medium">Nữ</p>
             {currentPath === '/women' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black" />}
           </Link>
           <Link to="/men" className={`px-1 sm:px-1.5 md:px-2 py-1.5 sm:py-2 cursor-pointer hover:opacity-70 ${currentPath === '/men' ? 'relative' : ''}`}>
-            <p className="text-[10px] sm:text-xs md:text-sm font-medium">Men</p>
+            <p className="text-[10px] sm:text-xs md:text-sm font-medium">Nam</p>
             {currentPath === '/men' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black" />}
           </Link>
           <Link to="/about" className={`flex px-1 sm:px-1.5 md:px-2 py-1.5 sm:py-2 cursor-pointer hover:opacity-70 ${isAboutSection ? 'relative' : ''}`}>
-            <p className="text-[10px] sm:text-xs md:text-sm font-medium">About</p>
+            <p className="text-[10px] sm:text-xs md:text-sm font-medium">Giới thiệu</p>
             {isAboutSection && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black" />}
           </Link>
           <Link to="/blog" className={`flex px-1 sm:px-1.5 md:px-2 py-1.5 sm:py-2 cursor-pointer hover:opacity-70 ${currentPath === '/blog' ? 'relative' : ''}`}>
-            <p className="text-[9px] sm:text-[10px] md:text-xs font-medium whitespace-nowrap">Everworld Stories</p>
+            <p className="text-[9px] sm:text-[10px] md:text-xs font-medium whitespace-nowrap">Câu chuyện</p>
             {currentPath === '/blog' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black" />}
           </Link>
         </div>

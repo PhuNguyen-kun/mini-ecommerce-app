@@ -48,19 +48,19 @@ const ProductCarousel = () => {
   return (
     <div className="px-4 sm:px-6 md:px-10 lg:px-[60px] py-8 sm:py-10 md:py-12 lg:py-[60px]">
       <h2 className="text-[40px] leading-[48px] font-semibold text-black text-center mb-10">
-        The White Whites Edit
+        Bộ Sưu Tập Trắng Tiều
       </h2>
-      
+
       <div className="flex gap-[22px] items-center mb-10">
         <button className="w-10 h-10 flex items-center justify-center hover:opacity-70 transition-opacity">
           <FaChevronLeft size={20} />
         </button>
-        
+
         {products.map((product) => (
           <Link key={product.id} to={`/product/${product.id}`} className={`flex flex-col gap-1.5 group cursor-pointer ${product.id === 5 ? 'w-[120px]' : 'flex-1'}`}>
             <div className={`${product.id === 5 ? 'w-[120px]' : 'w-full'} h-[350px] bg-gray-100 overflow-hidden`}>
-              <img 
-                src={product.image} 
+              <img
+                src={product.image}
                 alt={product.name}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
@@ -74,7 +74,7 @@ const ProductCarousel = () => {
             </div>
           </Link>
         ))}
-        
+
         <button className="w-10 h-10 flex items-center justify-center hover:opacity-70 transition-opacity">
           <FaChevronRight size={20} />
         </button>
@@ -82,7 +82,7 @@ const ProductCarousel = () => {
 
       <div className="flex justify-center">
         <button className="bg-black text-white px-8 sm:px-12 md:px-16 lg:px-[100px] py-4 sm:py-5 rounded-lg text-xs sm:text-sm font-semibold tracking-wide hover:bg-gray-800 transition-colors w-full sm:w-auto">
-          Shop Now
+          Mua Ngay
         </button>
       </div>
     </div>

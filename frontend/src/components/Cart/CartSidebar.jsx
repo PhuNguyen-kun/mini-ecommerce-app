@@ -44,7 +44,7 @@ const CartSidebar = () => {
             className="text-xl sm:text-2xl font-[600] leading-[33.24px]"
             style={{ fontFamily: "Maison Neue, sans-serif" }}
           >
-            Your Cart
+            Giỏ hàng của bạn
           </h2>
           <button
             onClick={() => setIsCartOpen(false)}
@@ -58,14 +58,14 @@ const CartSidebar = () => {
         <div className="flex-1 overflow-y-auto px-4 sm:px-5">
           {cart.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-[#737373] text-base sm:text-lg">Your cart is empty</p>
+              <p className="text-[#737373] text-base sm:text-lg">Giỏ hàng trống</p>
             </div>
           ) : (
             <div className="space-y-4">
               {cart.map((item) => {
                 // Lấy ảnh theo màu của variant (nếu có), nếu không thì lấy ảnh đầu tiên
                 let itemImage = item.variantImage; // Ảnh theo màu đã được xử lý trong CartContext
-                
+
                 if (!itemImage) {
                   // Fallback: tìm ảnh theo colorOptionValueId
                   if (item.colorOptionValueId && item.images) {
@@ -74,13 +74,13 @@ const CartSidebar = () => {
                     );
                     itemImage = colorImage?.image_url;
                   }
-                  
+
                   // Fallback: ảnh primary hoặc ảnh đầu tiên
                   if (!itemImage) {
                     itemImage = item.images?.find((img) => img.is_primary)?.image_url ||
-                                item.images?.[0]?.image_url ||
-                                item.image ||
-                                "/placeholder.png";
+                      item.images?.[0]?.image_url ||
+                      item.image ||
+                      "/placeholder.png";
                   }
                 }
 
@@ -145,8 +145,8 @@ const CartSidebar = () => {
                             >
                               {formatPrice(
                                 item.unit_price ||
-                                  item.selectedVariant?.price ||
-                                  item.price
+                                item.selectedVariant?.price ||
+                                item.price
                               )}
                               ₫
                             </span>
@@ -196,13 +196,13 @@ const CartSidebar = () => {
                   className="text-base font-[600] text-black leading-6 tracking-[0.2px]"
                   style={{ fontFamily: "Maison Neue, sans-serif" }}
                 >
-                  Subtotal
+                  Tạm tính
                 </span>
                 <span
                   className="text-sm font-[400] text-black leading-[16.8px] tracking-[1.4px]"
                   style={{ fontFamily: "Maison Neue, sans-serif" }}
                 >
-                  ({getCartCount()} {getCartCount() === 1 ? "item" : "items"})
+                  ({getCartCount()} {getCartCount() === 1 ? "sản phẩm" : "sản phẩm"})
                 </span>
               </div>
               <span
@@ -218,14 +218,14 @@ const CartSidebar = () => {
               className="w-full bg-[#262626] text-white py-3 font-[400] text-sm leading-[16.8px] tracking-[1.4px] hover:bg-black transition-colors mb-8"
               style={{ fontFamily: "Maison Neue, sans-serif" }}
             >
-              CONTINUE TO CHECKOUT
+              THANH TOÁN
             </button>
 
             <p
               className="text-xs text-center text-black leading-4 tracking-[0.2px] font-[600]"
               style={{ fontFamily: "Maison Neue, sans-serif" }}
             >
-              Psst, get it now before it sells out.
+              Mua ngay trước khi hết hàng!
             </p>
           </div>
         )}

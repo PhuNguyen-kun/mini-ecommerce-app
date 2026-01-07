@@ -43,14 +43,13 @@ const OrderCard = ({ order, onCancel, onRefresh }) => {
 
   const canCancel =
     order.status === "PENDING_PAYMENT" ||
-    order.status === "CONFIRMED" ||
-    order.status === "PAYMENT_FAILED";
+    order.status === "CONFIRMED";
 
   const canConfirmReceived = order.status === "SHIPPING";
 
   const getCancelTooltip = () => {
     if (canCancel) return "";
-    
+
     if (order.payment_method === "COD") {
       return "Bạn chỉ có thể hủy khi đơn hàng chưa được giao";
     } else {
@@ -203,7 +202,7 @@ const OrderCard = ({ order, onCancel, onRefresh }) => {
 
                 // Find image by color option value ID
                 let productImage = "/placeholder.png";
-                
+
                 if (colorOptionValueId && item.variant?.product?.images) {
                   const colorImage = item.variant.product.images.find(
                     img => img.product_option_value_id === colorOptionValueId
@@ -483,7 +482,7 @@ const Orders = () => {
                   "SHIPPING",
                   "COMPLETED",
                   "CANCELLED",
-                  "PAYMENT_FAILED",
+
                 ].map((status) => {
                   const config = getStatusConfig(status);
                   const IconComponent = config.IconComponent;

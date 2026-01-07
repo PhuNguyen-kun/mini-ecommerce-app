@@ -50,15 +50,14 @@ export default function InstagramGallery() {
       {/* Header */}
       <div className="text-center mb-8 sm:mb-10 md:mb-12 px-4 sm:px-6 md:px-10 lg:px-[54px] pt-12 sm:pt-16 md:pt-20 lg:pt-[90px] pb-0 border-t border-neutral-800">
         <h2 className="text-2xl sm:text-3xl md:text-[32px] leading-tight sm:leading-[40px] font-normal mb-4 sm:mb-6">
-          Everlane On You
+          Phong cách của bạn
         </h2>
         <div className="space-y-1">
           <p className="text-xs sm:text-sm leading-relaxed sm:leading-[16.8px] tracking-[1.4px]">
-            Share your latest look with #EverlaneOnYou for a chance to be
-            featured.
+            Chia sẻ phong cách của bạn với hashtag #PhongCachCuaBan để có cơ hội được giới thiệu.
           </p>
           <p className="text-sm leading-5 tracking-[1.4px] underline cursor-pointer hover:opacity-70">
-            Add Your Photo
+            Thêm ảnh của bạn
           </p>
         </div>
       </div>

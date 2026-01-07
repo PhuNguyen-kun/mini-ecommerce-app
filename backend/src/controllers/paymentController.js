@@ -89,9 +89,10 @@ class PaymentController {
           });
         }
       } else {
+        // Thanh toán thất bại -> Tự động hủy đơn hàng
         await order.update(
           {
-            status: "PAYMENT_FAILED",
+            status: "CANCELLED",
             payment_status: "FAILED",
           },
           { transaction }
@@ -175,6 +176,51 @@ class PaymentController {
     };
     return messages[code] || "Lỗi không xác định";
   }
+
+  // Thanh toán lại đơn hàng thất bại
+  repayOrder = asyncHandler(async (req, res) => {
+    const { orderId } = req.params;
+    const userId = req.user.id;
+
+    const order = await db.Order.findOne({
+      where: {
+        id: orderId,
+        user_id: userId,
+      },
+    });
+
+    if (!order) {
+      throw new BadRequestError("Không tìm thấy đơn hàng");
+    }
+
+    // Chỉ cho phép thanh toán lại đơn hàng thất bại hoặc chờ thanh toán
+    if (order.status !== "PAYMENT_FAILED" && order.status !== "PENDING_PAYMENT") {
+      throw new BadRequestError("Đơn hàng không thể thanh toán lại");
+    }
+
+    // Chỉ hỗ trợ thanh toán lại cho VNPay
+    if (order.payment_method !== "VNPAY") {
+      throw new BadRequestError("Chỉ hỗ trợ thanh toán lại cho đơn hàng VNPay");
+    }
+
+    const ipAddr =
+      req.headers["x-forwarded-for"] ||
+      req.connection.remoteAddress ||
+      req.ip ||
+      "127.0.0.1";
+
+    const paymentUrl = vnpayService.createPaymentUrl({
+      orderId: order.id,
+      amount: order.total_amount,
+      orderInfo: `Thanh toan don hang ${order.order_code}`,
+      orderType: "other",
+      ipAddr: ipAddr.split(",")[0].trim(),
+      locale: "vn",
+      orderCode: order.order_code,
+    });
+
+    return responseOk(res, { paymentUrl }, "Payment URL created successfully");
+  });
 }
 
 module.exports = new PaymentController();

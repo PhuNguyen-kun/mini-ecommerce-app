@@ -60,7 +60,7 @@ export default function CategorySection() {
     return (
       <section className="w-full px-4 sm:px-6 lg:px-10 py-12 sm:py-16 lg:py-[90px]">
         <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-normal mb-8 sm:mb-12 lg:mb-[55px] text-center font-['Maison_Neue']">
-          Shop by Category
+          Mua sắm theo danh mục
         </h2>
         <div className="flex gap-3 sm:gap-4 lg:gap-5 overflow-x-auto">
           {[...Array(6)].map((_, i) => (
@@ -77,13 +77,13 @@ export default function CategorySection() {
   return (
     <section className="w-full px-4 sm:px-6 lg:px-10 py-12 sm:py-16 lg:py-[90px]">
       <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-normal mb-8 sm:mb-12 lg:mb-[55px] text-center font-['Maison_Neue']">
-        Shop by Category
+        Mua sắm theo danh mục
       </h2>
-      
+
       {/* Carousel Container */}
       <div className="relative flex items-center gap-2 sm:gap-3">
         {/* Left Arrow */}
-        <button 
+        <button
           onClick={scrollLeft}
           className="hidden sm:flex w-8 h-8 sm:w-10 sm:h-10 items-center justify-center hover:bg-gray-100 transition-colors rounded-full flex-shrink-0 z-10"
           aria-label="Scroll left"
@@ -92,20 +92,20 @@ export default function CategorySection() {
         </button>
 
         {/* Categories Carousel */}
-        <div 
+        <div
           ref={scrollContainerRef}
           className="flex gap-3 sm:gap-4 lg:gap-5 overflow-x-auto scrollbar-hide scroll-smooth"
         >
           {categories.map((category) => (
-            <Link 
-              key={category.id} 
+            <Link
+              key={category.id}
               to={`/products?category=${category.id}`}
               className="flex-shrink-0 w-[150px] sm:w-[180px] lg:w-[200px] cursor-pointer hover:opacity-80 transition-opacity"
             >
               <div className="w-full h-[180px] sm:h-[220px] lg:h-[263px] rounded-lg overflow-hidden mb-2 sm:mb-3 bg-gray-100">
-                <img 
-                  src={categoryImages[category.slug] || 'https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=400'} 
-                  alt={category.name} 
+                <img
+                  src={categoryImages[category.slug] || 'https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=400'}
+                  alt={category.name}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -117,7 +117,7 @@ export default function CategorySection() {
         </div>
 
         {/* Right Arrow */}
-        <button 
+        <button
           onClick={scrollRight}
           className="hidden sm:flex w-8 h-8 sm:w-10 sm:h-10 items-center justify-center hover:bg-gray-100 transition-colors rounded-full flex-shrink-0 z-10"
           aria-label="Scroll right"

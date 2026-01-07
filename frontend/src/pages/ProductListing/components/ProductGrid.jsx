@@ -34,7 +34,7 @@ const ProductGrid = ({ category, onTotalChange, selectedFilters }) => {
         setError(null);
 
         const gender = category.toLowerCase() === 'men' ? 'male' : 'female';
-        
+
         const params = {
           page: currentPage,
           limit: pageSize,
@@ -59,11 +59,11 @@ const ProductGrid = ({ category, onTotalChange, selectedFilters }) => {
         }
 
         const response = await productService.getProducts(params);
-        
+
         if (response.success) {
           setProducts(response.data.products);
           setTotal(response.data.pagination.total);
-          
+
           // Update total products count in parent
           if (onTotalChange) {
             onTotalChange(response.data.pagination.total);
@@ -71,7 +71,7 @@ const ProductGrid = ({ category, onTotalChange, selectedFilters }) => {
         }
       } catch (err) {
         console.error('Error fetching products:', err);
-        setError('Failed to load products. Please try again.');
+        setError('Tải sản phẩm thất bại. Vui lòng thử lại.');
       } finally {
         setLoading(false);
       }
@@ -93,26 +93,26 @@ const ProductGrid = ({ category, onTotalChange, selectedFilters }) => {
     <div className="flex-1">
       {/* Header */}
       <div className="mb-6 sm:mb-8">
-        <p className="text-xs text-gray-600 mb-2">Home / {category}</p>
+        <p className="text-xs text-gray-600 mb-2">Trang chủ / {category}</p>
         <h1 className="text-xl sm:text-2xl md:text-[28px] lg:text-[32px] font-semibold text-black mb-3 sm:mb-4">
-          {category}'s Clothing & Apparel - New Arrivals
+          Quần Áo {category} - Hàng Mới Về
         </h1>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <select 
+          <select
             className="text-sm border border-gray-300 rounded px-2 py-1 sm:border-none sm:outline-none cursor-pointer"
             value={sortBy}
             onChange={handleSortChange}
             disabled={loading}
           >
-            <option value="featured">Featured</option>
-            <option value="price_asc">Price: Low to High</option>
-            <option value="price_desc">Price: High to Low</option>
-            <option value="newest">Newest</option>
-            <option value="oldest">Oldest</option>
+            <option value="featured">Nổi bật</option>
+            <option value="price_asc">Giá: Thấp đến Cao</option>
+            <option value="price_desc">Giá: Cao đến Thấp</option>
+            <option value="newest">Mới nhất</option>
+            <option value="oldest">Cũ nhất</option>
           </select>
           {!loading && (
             <p className="text-sm text-gray-600">
-              {total} products
+              {total} sản phẩm
             </p>
           )}
         </div>
@@ -129,7 +129,7 @@ const ProductGrid = ({ category, onTotalChange, selectedFilters }) => {
       {loading && (
         <div className="text-center py-12">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-          <p className="mt-4 text-gray-600">Loading products...</p>
+          <p className="mt-4 text-gray-600">Đang tải sản phẩm...</p>
         </div>
       )}
 
@@ -145,7 +145,7 @@ const ProductGrid = ({ category, onTotalChange, selectedFilters }) => {
       {/* No Products */}
       {!loading && products.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-gray-600">No products found.</p>
+          <p className="text-gray-600">Không tìm thấy sản phẩm nào.</p>
         </div>
       )}
 
@@ -158,7 +158,7 @@ const ProductGrid = ({ category, onTotalChange, selectedFilters }) => {
             pageSize={pageSize}
             onChange={handlePageChange}
             showSizeChanger={false}
-            showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} products`}
+            showTotal={(total, range) => `${range[0]}-${range[1]} trong tổng ${total} sản phẩm`}
           />
         </div>
       )}

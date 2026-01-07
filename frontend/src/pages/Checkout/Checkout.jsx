@@ -190,7 +190,30 @@ const Checkout = () => {
 
       if (response.success) {
         if (paymentMethod === "vnpay" && response.data.paymentUrl) {
-          window.location.href = response.data.paymentUrl;
+          // Mở VNPay trong tab mới thay vì redirect
+          const vnpayWindow = window.open(response.data.paymentUrl, '_blank');
+
+          if (vnpayWindow) {
+            // Hiển thị thông báo cho user
+            message.info({
+              content: 'Cửa sổ thanh toán VNPay đã được mở. Vui lòng hoàn tất thanh toán và quay lại trang này.',
+              duration: 5,
+            });
+
+            // Lưu orderId để có thể check status sau
+            if (response.data.orderId) {
+              sessionStorage.setItem('pendingVNPayOrder', response.data.orderId);
+            }
+
+            // Reset form nhưng giữ nguyên trang để user có thể quay lại
+            setIsSubmitting(false);
+          } else {
+            // Nếu popup bị chặn, fallback về redirect
+            message.warning('Popup bị chặn. Đang chuyển hướng đến trang thanh toán...');
+            setTimeout(() => {
+              window.location.href = response.data.paymentUrl;
+            }, 1000);
+          }
           return;
         }
 
@@ -289,9 +312,8 @@ const Checkout = () => {
                       name="fullName"
                       value={formData.fullName}
                       onChange={handleInputChange}
-                      className={`w-full px-3 sm:px-4 py-2 border ${
-                        errors.fullName ? "border-red-500" : "border-gray-300"
-                      } rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm sm:text-base font-['Maison_Neue']`}
+                      className={`w-full px-3 sm:px-4 py-2 border ${errors.fullName ? "border-red-500" : "border-gray-300"
+                        } rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm sm:text-base font-['Maison_Neue']`}
                       placeholder="Nguyễn Văn A"
                     />
                     {errors.fullName && (
@@ -311,9 +333,8 @@ const Checkout = () => {
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
-                        className={`w-full px-3 sm:px-4 py-2 border ${
-                          errors.phone ? "border-red-500" : "border-gray-300"
-                        } rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm sm:text-base font-['Maison_Neue']`}
+                        className={`w-full px-3 sm:px-4 py-2 border ${errors.phone ? "border-red-500" : "border-gray-300"
+                          } rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm sm:text-base font-['Maison_Neue']`}
                         placeholder="0912345678"
                       />
                       {errors.phone && (
@@ -332,9 +353,8 @@ const Checkout = () => {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className={`w-full px-3 sm:px-4 py-2 border ${
-                          errors.email ? "border-red-500" : "border-gray-300"
-                        } rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm sm:text-base font-['Maison_Neue']`}
+                        className={`w-full px-3 sm:px-4 py-2 border ${errors.email ? "border-red-500" : "border-gray-300"
+                          } rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm sm:text-base font-['Maison_Neue']`}
                         placeholder="email@example.com"
                       />
                       {errors.email && (
@@ -472,9 +492,8 @@ const Checkout = () => {
                       name="address"
                       value={formData.address}
                       onChange={handleInputChange}
-                      className={`w-full px-4 py-2 border ${
-                        errors.address ? "border-red-500" : "border-gray-300"
-                      } rounded-lg focus:outline-none focus:ring-2 focus:ring-black`}
+                      className={`w-full px-4 py-2 border ${errors.address ? "border-red-500" : "border-gray-300"
+                        } rounded-lg focus:outline-none focus:ring-2 focus:ring-black`}
                       placeholder="Số nhà, tên đường"
                     />
                     {errors.address && (
@@ -559,7 +578,7 @@ const Checkout = () => {
                 {cart.map((item) => {
                   // Lấy ảnh theo màu của variant (giống CartSidebar)
                   let itemImage = item.variantImage; // Ảnh theo màu đã được xử lý trong CartContext
-                  
+
                   if (!itemImage) {
                     // Fallback: tìm ảnh theo colorOptionValueId
                     if (item.colorOptionValueId && item.images) {
@@ -568,26 +587,28 @@ const Checkout = () => {
                       );
                       itemImage = colorImage?.image_url;
                     }
-                    
+
                     // Fallback: ảnh primary hoặc ảnh đầu tiên
                     if (!itemImage) {
                       itemImage = item.images?.find((img) => img.is_primary)?.image_url ||
-                                  item.images?.[0]?.image_url ||
-                                  "/placeholder.png";
+                        item.images?.[0]?.image_url ||
+                        "/placeholder.png";
                     }
                   }
-                  
+
                   const itemPrice = item.selectedVariant?.price || item.price;
 
                   return (
                     <div key={item.cartId} className="flex gap-2 sm:gap-3">
-                      <div className="relative">
-                        <img
-                          src={itemImage}
-                          alt={item.name}
-                          className="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded"
-                        />
-                        <span className="absolute -top-2 -right-2 bg-gray-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-['Maison_Neue']">
+                      <div className="relative flex-shrink-0 pt-2 pr-2">
+                        <div className="w-16 h-20 sm:w-20 sm:h-24 rounded bg-gray-100 overflow-hidden">
+                          <img
+                            src={itemImage}
+                            alt={item.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <span className="absolute top-0 right-0 bg-gray-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-['Maison_Neue']">
                           {item.quantity}
                         </span>
                       </div>
@@ -634,8 +655,8 @@ const Checkout = () => {
                 {isSubmitting
                   ? "Đang xử lý..."
                   : paymentMethod === "vnpay"
-                  ? "Thanh toán qua VNPay"
-                  : "Đặt hàng"}
+                    ? "Thanh toán qua VNPay"
+                    : "Đặt hàng"}
               </button>
 
               <p className="text-xs text-gray-500 text-center mt-4">

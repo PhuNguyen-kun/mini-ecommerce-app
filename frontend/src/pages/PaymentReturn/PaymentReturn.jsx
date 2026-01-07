@@ -102,10 +102,10 @@ const PaymentReturn = () => {
                   Xem đơn hàng
                 </button>
                 <button
-                  onClick={() => navigate("/cart")}
+                  onClick={() => navigate("/")}
                   className="bg-white text-black px-8 py-3 rounded border border-gray-300 hover:bg-gray-50 transition-colors font-medium"
                 >
-                  Quay lại giỏ hàng
+                  Tiếp tục mua sắm
                 </button>
               </div>
             </>

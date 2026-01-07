@@ -26,8 +26,13 @@ class VNPayService {
       throw new BadRequestError("VNPAY configuration is missing");
     }
 
-    const createDate = this.formatDate(new Date());
-    const expireDate = this.formatDate(new Date(Date.now() + 15 * 60 * 1000));
+    // Tính thời gian theo UTC+7 (Việt Nam timezone)
+    const now = new Date();
+    const vnTime = new Date(now.getTime() + (7 * 60 * 60 * 1000)); // UTC + 7 giờ
+    const expireTime = new Date(vnTime.getTime() + 15 * 60 * 1000); // +15 phút
+
+    const createDate = this.formatDate(vnTime);
+    const expireDate = this.formatDate(expireTime);
 
     let vnpParams = {
       vnp_Version: "2.1.0",

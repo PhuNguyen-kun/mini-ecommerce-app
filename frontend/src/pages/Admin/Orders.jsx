@@ -182,17 +182,17 @@ const Orders = () => {
 
   const getStatusOptions = (currentStatus, paymentMethod) => {
     const statusFlow = {
-      PENDING_PAYMENT: ["CONFIRMED", "PAID", "CANCELLED", "PAYMENT_FAILED"],
-      CONFIRMED: ["PAID", "SHIPPING", "CANCELLED"],
+      PENDING_PAYMENT: ["CONFIRMED", "CANCELLED"],
+      CONFIRMED: ["SHIPPING", "CANCELLED"],
       PAID: ["SHIPPING", "CANCELLED"],
       SHIPPING: ["COMPLETED"],
-      PAYMENT_FAILED: ["PENDING_PAYMENT", "CANCELLED"],
     };
 
     let allowedStatuses = statusFlow[currentStatus] || [];
 
-    if (paymentMethod === "COD") {
-      allowedStatuses = allowedStatuses.filter((status) => status !== "PAID");
+    // Đơn COD: cho phép chuyển CONFIRMED → PAID khi đã nhận tiền
+    if (paymentMethod === "COD" && currentStatus === "CONFIRMED") {
+      allowedStatuses = [...allowedStatuses, "PAID"];
     }
 
     return allowedStatuses;
@@ -299,13 +299,11 @@ const Orders = () => {
             style={{ width: 200 }}
           >
             {[
-              "PENDING_PAYMENT",
               "CONFIRMED",
               "PAID",
               "SHIPPING",
               "COMPLETED",
               "CANCELLED",
-              "PAYMENT_FAILED",
             ].map((status) => {
               const config = getStatusConfig(status);
               const IconComponent = config.IconComponent;
@@ -407,8 +405,8 @@ const Orders = () => {
                           {order.payment_method === "COD"
                             ? "COD"
                             : order.payment_method === "VNPAY_FAKE"
-                            ? "VNPay"
-                            : order.payment_method}
+                              ? "VNPay"
+                              : order.payment_method}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -527,12 +525,11 @@ const Orders = () => {
                 </p>
                 <div className="mb-2">
                   <div
-                    className={`px-3 py-1.5 rounded-full border flex items-center gap-2 inline-flex ${
-                      getStatusConfig(
-                        selectedOrder.status,
-                        selectedOrder.payment_status
-                      ).color
-                    }`}
+                    className={`px-3 py-1.5 rounded-full border flex items-center gap-2 inline-flex ${getStatusConfig(
+                      selectedOrder.status,
+                      selectedOrder.payment_status
+                    ).color
+                      }`}
                   >
                     {(() => {
                       const statusConfig = getStatusConfig(
@@ -557,8 +554,8 @@ const Orders = () => {
                     {selectedOrder.payment_method === "COD"
                       ? "COD"
                       : selectedOrder.payment_method === "VNPAY_FAKE"
-                      ? "VNPay"
-                      : selectedOrder.payment_method}
+                        ? "VNPay"
+                        : selectedOrder.payment_method}
                   </span>
                 </p>
               </div>

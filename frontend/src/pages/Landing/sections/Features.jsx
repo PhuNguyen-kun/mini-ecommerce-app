@@ -9,45 +9,45 @@ export default function Features() {
         {/* Complimentary Shipping */}
         <div className="flex-1 flex flex-col items-center text-center">
           <div className="w-16 h-16 sm:w-[78px] sm:h-[78px] mb-4 sm:mb-5">
-            <img 
-              src={shippingIcon} 
-              alt="Shipping" 
+            <img
+              src={shippingIcon}
+              alt="Vận chuyển"
               className="w-full h-full object-contain"
             />
           </div>
-          <h3 className="text-lg sm:text-xl md:text-[21px] font-normal mb-1.5">Complimentary Shipping</h3>
+          <h3 className="text-lg sm:text-xl md:text-[21px] font-normal mb-1.5">Miễn phí vận chuyển</h3>
           <p className="text-xs sm:text-sm leading-relaxed text-gray-600">
-            Enjoy free shipping on U.S. orders over $100.
+            Miễn phí vận chuyển cho đơn hàng trên 500.000₫.
           </p>
         </div>
 
         {/* Consciously Crafted */}
         <div className="flex-1 flex flex-col items-center text-center">
           <div className="w-16 h-16 sm:w-[78px] sm:h-[78px] mb-4 sm:mb-5">
-            <img 
-              src={craftedIcon} 
-              alt="Crafted" 
+            <img
+              src={craftedIcon}
+              alt="Chất lượng"
               className="w-full h-full object-contain"
             />
           </div>
-          <h3 className="text-lg sm:text-xl md:text-[21px] font-normal mb-1.5">Consciously Crafted</h3>
+          <h3 className="text-lg sm:text-xl md:text-[21px] font-normal mb-1.5">Sản xuất tâm huyết</h3>
           <p className="text-xs sm:text-sm leading-relaxed text-gray-600">
-            Designed with you and the planet in mind.
+            Thiết kế với tâm huyết và thân thiện với môi trường.
           </p>
         </div>
 
         {/* Come Say Hi */}
         <div className="flex-1 flex flex-col items-center text-center">
           <div className="w-16 h-16 sm:w-[78px] sm:h-[78px] mb-4 sm:mb-5">
-            <img 
-              src={storeIcon} 
-              alt="Store" 
+            <img
+              src={storeIcon}
+              alt="Cửa hàng"
               className="w-full h-full object-contain"
             />
           </div>
-          <h3 className="text-lg sm:text-xl md:text-[21px] font-normal mb-1.5">Come Say Hi</h3>
+          <h3 className="text-lg sm:text-xl md:text-[21px] font-normal mb-1.5">Ghé thăm cửa hàng</h3>
           <p className="text-sm sm:text-base md:text-[17px] text-gray-600">
-            We have 11 stores across the U.S.
+            Chúng tôi có 11 cửa hàng trên toàn quốc.
           </p>
         </div>
       </div>

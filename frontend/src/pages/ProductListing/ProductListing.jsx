@@ -64,7 +64,7 @@ const ProductListing = () => {
             className="flex items-center gap-2 text-sm font-medium"
           >
             <HiAdjustmentsHorizontal className="w-5 h-5" />
-            Filters ({totalProducts} products)
+            Bộ lọc ({totalProducts} sản phẩm)
           </button>
         </div>
       )}
@@ -72,8 +72,8 @@ const ProductListing = () => {
       <div className="flex flex-col lg:flex-row gap-4 lg:gap-4 px-4 sm:px-6 md:px-10 lg:px-20 py-4 sm:py-5 lg:py-7">
         {/* Desktop Sidebar - Always visible */}
         {!isMobile && (
-          <FilterSidebar 
-            totalProducts={totalProducts} 
+          <FilterSidebar
+            totalProducts={totalProducts}
             gender={gender}
             availableFilters={filters}
             onFiltersChange={setFilters}
@@ -85,18 +85,18 @@ const ProductListing = () => {
         {/* Mobile Filter Modal/Drawer */}
         {isMobile && isFilterOpen && (
           <div className="fixed inset-0 z-50 bg-black bg-opacity-50" onClick={() => setIsFilterOpen(false)}>
-            <div 
+            <div
               className="absolute left-0 top-0 h-full w-[280px] bg-white overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="sticky top-0 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
-                <h3 className="font-semibold">Filters</h3>
+                <h3 className="font-semibold">Bộ lọc</h3>
                 <button onClick={() => setIsFilterOpen(false)}>
                   <HiXMark className="w-6 h-6" />
                 </button>
               </div>
-              <FilterSidebar 
-                totalProducts={totalProducts} 
+              <FilterSidebar
+                totalProducts={totalProducts}
                 gender={gender}
                 availableFilters={filters}
                 onFiltersChange={setFilters}
@@ -107,8 +107,8 @@ const ProductListing = () => {
           </div>
         )}
 
-        <ProductGrid 
-          category={category} 
+        <ProductGrid
+          category={category}
           gender={gender}
           onTotalChange={setTotalProducts}
           selectedFilters={selectedFilters}

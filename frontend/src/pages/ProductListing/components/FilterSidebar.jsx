@@ -43,7 +43,7 @@ const FilterSidebar = ({ totalProducts = 0, gender, availableFilters, onFiltersC
     const newCategoryIds = selectedFilters?.categoryIds?.includes(categoryId)
       ? selectedFilters.categoryIds.filter(id => id !== categoryId)
       : [...(selectedFilters?.categoryIds || []), categoryId];
-    
+
     onSelectedFiltersChange({
       ...selectedFilters,
       categoryIds: newCategoryIds
@@ -54,7 +54,7 @@ const FilterSidebar = ({ totalProducts = 0, gender, availableFilters, onFiltersC
     const newColors = selectedFilters?.colors?.includes(colorName)
       ? selectedFilters.colors.filter(c => c !== colorName)
       : [...(selectedFilters?.colors || []), colorName];
-    
+
     onSelectedFiltersChange({
       ...selectedFilters,
       colors: newColors
@@ -65,7 +65,7 @@ const FilterSidebar = ({ totalProducts = 0, gender, availableFilters, onFiltersC
     const newSizes = selectedFilters?.sizes?.includes(sizeName)
       ? selectedFilters.sizes.filter(s => s !== sizeName)
       : [...(selectedFilters?.sizes || []), sizeName];
-    
+
     onSelectedFiltersChange({
       ...selectedFilters,
       sizes: newSizes
@@ -119,7 +119,7 @@ const FilterSidebar = ({ totalProducts = 0, gender, availableFilters, onFiltersC
     'Ivory': '#FFFFF0',
     'Cream': '#FFFDD0',
     'Tan': '#D2B48C',
-    
+
     // Vietnamese colors
     'Đen': '#000000',
     'Trắng': '#FFFFFF',
@@ -180,24 +180,24 @@ const FilterSidebar = ({ totalProducts = 0, gender, availableFilters, onFiltersC
 
       {/* Category Section */}
       <div className="border-t border-gray-200 py-4">
-        <button 
+        <button
           onClick={() => toggleSection('category')}
           className="flex items-center justify-between w-full mb-4"
         >
-          <h3 className="text-sm font-semibold">Category</h3>
+          <h3 className="text-sm font-semibold">Danh mục</h3>
           {expandedSections.category ? <FaChevronUp size={12} /> : <FaChevronDown size={12} />}
         </button>
         {expandedSections.category && (
           <>
             {loading ? (
-              <p className="text-xs text-gray-500">Loading...</p>
+              <p className="text-xs text-gray-500">Đang tải...</p>
             ) : categories.length > 0 ? (
               <>
                 <div className="max-h-[169px] overflow-y-auto space-y-3 mb-2">
                   {categories.map((cat) => (
                     <label key={cat.id} className="flex items-start gap-2 cursor-pointer">
-                      <input 
-                        type="checkbox" 
+                      <input
+                        type="checkbox"
                         className="mt-1"
                         checked={selectedFilters?.categoryIds?.includes(cat.id) || false}
                         onChange={() => handleCategoryChange(cat.id)}
@@ -208,11 +208,11 @@ const FilterSidebar = ({ totalProducts = 0, gender, availableFilters, onFiltersC
                   ))}
                 </div>
                 {categories.length > 10 && (
-                  <button className="text-xs text-gray-700 hover:underline">View More +</button>
+                  <button className="text-xs text-gray-700 hover:underline">Xem thêm +</button>
                 )}
               </>
             ) : (
-              <p className="text-xs text-gray-500">No categories available</p>
+              <p className="text-xs text-gray-500">Không có danh mục</p>
             )}
           </>
         )}
@@ -220,28 +220,27 @@ const FilterSidebar = ({ totalProducts = 0, gender, availableFilters, onFiltersC
 
       {/* Color Section */}
       <div className="border-t border-gray-200 py-4">
-        <button 
+        <button
           onClick={() => toggleSection('color')}
           className="flex items-center justify-between w-full mb-4"
         >
-          <h3 className="text-sm font-semibold">Color</h3>
+          <h3 className="text-sm font-semibold">Màu sắc</h3>
           {expandedSections.color ? <FaChevronUp size={12} /> : <FaChevronDown size={12} />}
         </button>
         {expandedSections.color && (
           <>
             {loading ? (
-              <p className="text-xs text-gray-500">Loading...</p>
+              <p className="text-xs text-gray-500">Đang tải...</p>
             ) : colors.length > 0 ? (
               <>
                 <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-3 gap-3 sm:gap-4">
                   {colors.slice(0, 9).map((color, index) => (
                     <div key={index} className="flex flex-col items-center gap-1.5 sm:gap-2">
-                      <button 
-                        className={`w-6 h-6 rounded-full border-2 transition-colors ${
-                          selectedFilters?.colors?.includes(color.name) 
-                            ? 'border-black ring-2 ring-black ring-offset-2' 
+                      <button
+                        className={`w-6 h-6 rounded-full border-2 transition-colors ${selectedFilters?.colors?.includes(color.name)
+                            ? 'border-black ring-2 ring-black ring-offset-2'
                             : 'border-gray-300 hover:border-gray-500'
-                        }`}
+                          }`}
                         style={{ backgroundColor: getColorHex(color.name) }}
                         title={`${color.name} (${color.count})`}
                         onClick={() => handleColorChange(color.name)}
@@ -252,11 +251,11 @@ const FilterSidebar = ({ totalProducts = 0, gender, availableFilters, onFiltersC
                   ))}
                 </div>
                 {colors.length > 9 && (
-                  <button className="text-xs text-gray-700 hover:underline mt-4">View More +</button>
+                  <button className="text-xs text-gray-700 hover:underline mt-4">Xem thêm +</button>
                 )}
               </>
             ) : (
-              <p className="text-xs text-gray-500">No colors available</p>
+              <p className="text-xs text-gray-500">Không có màu sắc</p>
             )}
           </>
         )}
@@ -264,32 +263,31 @@ const FilterSidebar = ({ totalProducts = 0, gender, availableFilters, onFiltersC
 
       {/* Size Section */}
       <div className="border-t border-gray-200 py-4">
-        <button 
+        <button
           onClick={() => toggleSection('size')}
           className="flex items-center justify-between w-full mb-4"
         >
-          <h3 className="text-sm font-semibold">Size</h3>
+          <h3 className="text-sm font-semibold">Kích cỡ</h3>
           {expandedSections.size ? <FaChevronUp size={12} /> : <FaChevronDown size={12} />}
         </button>
         {expandedSections.size && (
           <>
             {loading ? (
-              <p className="text-xs text-gray-500">Loading...</p>
+              <p className="text-xs text-gray-500">Đang tải...</p>
             ) : (
               <div className="space-y-4">
                 {/* Waist Sizes */}
                 {waistSizes.length > 0 && (
                   <div>
-                    <p className="text-xs text-gray-600 mb-2">Waist</p>
+                    <p className="text-xs text-gray-600 mb-2">Vòng eo</p>
                     <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-4 gap-2">
                       {waistSizes.map((size) => (
-                        <button 
+                        <button
                           key={size.name}
-                          className={`border px-2 py-2 text-xs transition-colors relative ${
-                            selectedFilters?.sizes?.includes(size.name)
+                          className={`border px-2 py-2 text-xs transition-colors relative ${selectedFilters?.sizes?.includes(size.name)
                               ? 'border-black bg-black text-white'
                               : 'border-gray-300 hover:border-black'
-                          }`}
+                            }`}
                           title={`${size.count} products`}
                           onClick={() => handleSizeChange(size.name)}
                         >
@@ -306,16 +304,15 @@ const FilterSidebar = ({ totalProducts = 0, gender, availableFilters, onFiltersC
                 {/* Clothing Sizes */}
                 {clothingSizes.length > 0 && (
                   <div>
-                    <p className="text-xs text-gray-600 mb-2">Clothing</p>
+                    <p className="text-xs text-gray-600 mb-2">Quần áo</p>
                     <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-4 gap-2">
                       {clothingSizes.map((size) => (
-                        <button 
+                        <button
                           key={size.name}
-                          className={`border px-2 py-2 text-xs transition-colors relative ${
-                            selectedFilters?.sizes?.includes(size.name)
+                          className={`border px-2 py-2 text-xs transition-colors relative ${selectedFilters?.sizes?.includes(size.name)
                               ? 'border-black bg-black text-white'
                               : 'border-gray-300 hover:border-black'
-                          }`}
+                            }`}
                           title={`${size.count} products`}
                           onClick={() => handleSizeChange(size.name)}
                         >
@@ -330,7 +327,7 @@ const FilterSidebar = ({ totalProducts = 0, gender, availableFilters, onFiltersC
                 )}
 
                 {waistSizes.length === 0 && clothingSizes.length === 0 && (
-                  <p className="text-xs text-gray-500">No sizes available</p>
+                  <p className="text-xs text-gray-500">Không có kích cỡ</p>
                 )}
               </div>
             )}
