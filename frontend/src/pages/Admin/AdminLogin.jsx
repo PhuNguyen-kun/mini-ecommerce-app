@@ -54,7 +54,8 @@ const AdminLogin = () => {
     try {
       const response = await authService.login(
         formData.email,
-        formData.password
+        formData.password,
+        true
       );
 
       if (response.success) {
@@ -115,9 +116,8 @@ const AdminLogin = () => {
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              className={`w-full px-4 py-3 border ${
-                errors.email ? "border-red-500" : "border-gray-300"
-              } rounded-lg focus:outline-none focus:ring-2 focus:ring-black transition-colors`}
+              className={`w-full px-4 py-3 border ${errors.email ? "border-red-500" : "border-gray-300"
+                } rounded-lg focus:outline-none focus:ring-2 focus:ring-black transition-colors`}
               placeholder="email@example.com"
               disabled={isLoading}
             />
@@ -140,9 +140,8 @@ const AdminLogin = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleInputChange}
-                className={`w-full px-4 py-3 pr-12 border ${
-                  errors.password ? "border-red-500" : "border-gray-300"
-                } rounded-lg focus:outline-none focus:ring-2 focus:ring-black transition-colors`}
+                className={`w-full px-4 py-3 pr-12 border ${errors.password ? "border-red-500" : "border-gray-300"
+                  } rounded-lg focus:outline-none focus:ring-2 focus:ring-black transition-colors`}
                 placeholder="••••••••"
                 disabled={isLoading}
               />

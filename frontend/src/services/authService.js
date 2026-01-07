@@ -30,8 +30,8 @@ class AuthService {
 
       if (!response.ok) {
         // Handle validation errors or other errors
-        const errorMessage = data.errors && Array.isArray(data.errors) 
-          ? data.errors.join(', ') 
+        const errorMessage = data.errors && Array.isArray(data.errors)
+          ? data.errors.join(', ')
           : data.message || 'Registration failed';
         throw new Error(errorMessage);
       }
@@ -55,16 +55,17 @@ class AuthService {
    * Login user
    * @param {string} email - User's email
    * @param {string} password - User's password
+   * @param {boolean} isAdminLogin - Whether this is admin login
    * @returns {Promise} Response data with user and token
    */
-  async login(email, password) {
+  async login(email, password, isAdminLogin = false) {
     try {
       const response = await fetch(API_ENDPOINTS.AUTH.LOGIN, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password, isAdminLogin })
       });
 
       let data;
@@ -105,7 +106,7 @@ class AuthService {
   async logout() {
     try {
       const token = localStorage.getItem('token');
-      
+
       if (token) {
         const response = await fetch(API_ENDPOINTS.AUTH.LOGOUT, {
           method: 'POST',

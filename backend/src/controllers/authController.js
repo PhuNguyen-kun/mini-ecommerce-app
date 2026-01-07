@@ -15,8 +15,8 @@ class AuthController {
   });
 
   login = asyncHandler(async (req, res) => {
-    const { email, password } = req.body;
-    const result = await authService.login(email, password);
+    const { email, password, isAdminLogin } = req.body;
+    const result = await authService.login(email, password, isAdminLogin);
     return responseOk(res, result, "Login successful");
   });
 

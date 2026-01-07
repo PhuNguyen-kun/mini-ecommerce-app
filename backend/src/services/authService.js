@@ -37,7 +37,7 @@ class AuthService {
     };
   }
 
-  async login(email, password) {
+  async login(email, password, isAdminLogin = false) {
     const user = await db.User.findOne({ where: { email } });
 
     if (!user) {
@@ -46,6 +46,16 @@ class AuthService {
 
     if (!user.is_active) {
       throw new UnauthorizedError("Account is inactive");
+    }
+
+    // Nếu login từ trang user mà là admin thì reject
+    if (!isAdminLogin && user.role === USER_ROLES.ADMIN) {
+      throw new UnauthorizedError("Admin không thể đăng nhập ở trang này");
+    }
+
+    // Nếu login từ trang admin mà là user thì reject
+    if (isAdminLogin && user.role === USER_ROLES.CUSTOMER) {
+      throw new UnauthorizedError("Bạn không có quyền truy cập trang admin");
     }
 
     const isPasswordValid = await user.comparePassword(password);
