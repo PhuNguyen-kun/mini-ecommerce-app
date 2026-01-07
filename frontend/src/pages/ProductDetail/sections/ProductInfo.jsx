@@ -198,11 +198,11 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
           {product.category?.name || 'Sản phẩm'}
         </p>
         <div className="flex gap-2 sm:gap-2.5 items-start">
-          <p className="flex-1 text-lg sm:text-xl md:text-2xl text-black leading-tight font-['Maison_Neue']">
+          <p className="flex-1 text-lg sm:text-xl md:text-2xl text-black leading-tight ">
             {product.name}
           </p>
           <div className="flex gap-1.5 sm:gap-2 items-center">
-            <div className="flex gap-1 items-center text-lg sm:text-xl md:text-2xl leading-tight font-['Maison_Neue'] whitespace-nowrap">
+            <div className="flex gap-1 items-center text-lg sm:text-xl md:text-2xl leading-tight  whitespace-nowrap">
               <p className="text-black">{displayPrice}₫</p>
             </div>
             <WishlistButton productId={product.id} productData={product} size="md" />
@@ -210,7 +210,7 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
         </div>
 
         {displayStock !== null && (
-          <div className="text-xs sm:text-sm text-gray-600 mt-1 font-['Maison_Neue']">
+          <div className="text-xs sm:text-sm text-gray-600 mt-1 ">
             Tồn kho: <span className="font-semibold">{displayStock}</span>
           </div>
         )}
@@ -360,7 +360,7 @@ const ProductInfo = ({ product, selectedSize, setSelectedSize, selectedColor, se
           <p className="w-20 sm:w-[106px] text-sm sm:text-base font-semibold text-black tracking-[0.2px] font-['Maison_Neue']">
             Mẫu
           </p>
-          <p className="flex-1 text-xs sm:text-sm text-black tracking-[1.4px] leading-[16.8px] font-['Maison_Neue']">
+          <p className="flex-1 text-xs sm:text-sm text-black tracking-[1.4px] leading-[16.8px] ">
             {product.model_info}
           </p>
         </div>

@@ -191,25 +191,31 @@ const Checkout = () => {
       if (response.success) {
         if (paymentMethod === "vnpay" && response.data.paymentUrl) {
           // Mở VNPay trong tab mới thay vì redirect
-          const vnpayWindow = window.open(response.data.paymentUrl, '_blank');
+          const vnpayWindow = window.open(response.data.paymentUrl, "_blank");
 
           if (vnpayWindow) {
             // Hiển thị thông báo cho user
             message.info({
-              content: 'Cửa sổ thanh toán VNPay đã được mở. Vui lòng hoàn tất thanh toán và quay lại trang này.',
+              content:
+                "Cửa sổ thanh toán VNPay đã được mở. Vui lòng hoàn tất thanh toán và quay lại trang này.",
               duration: 5,
             });
 
             // Lưu orderId để có thể check status sau
             if (response.data.orderId) {
-              sessionStorage.setItem('pendingVNPayOrder', response.data.orderId);
+              sessionStorage.setItem(
+                "pendingVNPayOrder",
+                response.data.orderId
+              );
             }
 
             // Reset form nhưng giữ nguyên trang để user có thể quay lại
             setIsSubmitting(false);
           } else {
             // Nếu popup bị chặn, fallback về redirect
-            message.warning('Popup bị chặn. Đang chuyển hướng đến trang thanh toán...');
+            message.warning(
+              "Popup bị chặn. Đang chuyển hướng đến trang thanh toán..."
+            );
             setTimeout(() => {
               window.location.href = response.data.paymentUrl;
             }, 1000);
@@ -292,7 +298,9 @@ const Checkout = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-4 sm:py-6 lg:py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 font-['Maison_Neue']">Thanh toán</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 ">
+          Thanh toán
+        </h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Left: Form */}
@@ -300,11 +308,13 @@ const Checkout = () => {
             <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
               {/* Shipping Information */}
               <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm">
-                <h2 className="text-lg sm:text-xl font-bold mb-4 font-['Maison_Neue']">Thông tin giao hàng</h2>
+                <h2 className="text-lg sm:text-xl font-bold mb-4 ">
+                  Thông tin giao hàng
+                </h2>
 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium mb-1 font-['Maison_Neue']">
+                    <label className="block text-sm font-medium mb-1 ">
                       Họ tên <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -312,8 +322,9 @@ const Checkout = () => {
                       name="fullName"
                       value={formData.fullName}
                       onChange={handleInputChange}
-                      className={`w-full px-3 sm:px-4 py-2 border ${errors.fullName ? "border-red-500" : "border-gray-300"
-                        } rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm sm:text-base font-['Maison_Neue']`}
+                      className={`w-full px-3 sm:px-4 py-2 border ${
+                        errors.fullName ? "border-red-500" : "border-gray-300"
+                      } rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm sm:text-base font-['Maison_Neue']`}
                       placeholder="Nguyễn Văn A"
                     />
                     {errors.fullName && (
@@ -325,7 +336,7 @@ const Checkout = () => {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium mb-1 font-['Maison_Neue']">
+                      <label className="block text-sm font-medium mb-1 ">
                         Số điện thoại <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -333,8 +344,9 @@ const Checkout = () => {
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
-                        className={`w-full px-3 sm:px-4 py-2 border ${errors.phone ? "border-red-500" : "border-gray-300"
-                          } rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm sm:text-base font-['Maison_Neue']`}
+                        className={`w-full px-3 sm:px-4 py-2 border ${
+                          errors.phone ? "border-red-500" : "border-gray-300"
+                        } rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm sm:text-base font-['Maison_Neue']`}
                         placeholder="0912345678"
                       />
                       {errors.phone && (
@@ -345,7 +357,7 @@ const Checkout = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium mb-1 font-['Maison_Neue']">
+                      <label className="block text-sm font-medium mb-1 ">
                         Email <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -353,8 +365,9 @@ const Checkout = () => {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className={`w-full px-3 sm:px-4 py-2 border ${errors.email ? "border-red-500" : "border-gray-300"
-                          } rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm sm:text-base font-['Maison_Neue']`}
+                        className={`w-full px-3 sm:px-4 py-2 border ${
+                          errors.email ? "border-red-500" : "border-gray-300"
+                        } rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm sm:text-base font-['Maison_Neue']`}
                         placeholder="email@example.com"
                       />
                       {errors.email && (
@@ -492,8 +505,9 @@ const Checkout = () => {
                       name="address"
                       value={formData.address}
                       onChange={handleInputChange}
-                      className={`w-full px-4 py-2 border ${errors.address ? "border-red-500" : "border-gray-300"
-                        } rounded-lg focus:outline-none focus:ring-2 focus:ring-black`}
+                      className={`w-full px-4 py-2 border ${
+                        errors.address ? "border-red-500" : "border-gray-300"
+                      } rounded-lg focus:outline-none focus:ring-2 focus:ring-black`}
                       placeholder="Số nhà, tên đường"
                     />
                     {errors.address && (
@@ -569,7 +583,7 @@ const Checkout = () => {
           {/* Right: Order Summary */}
           <div className="lg:col-span-1">
             <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm sticky top-4">
-              <h2 className="text-lg sm:text-xl font-bold mb-4 font-['Maison_Neue']">
+              <h2 className="text-lg sm:text-xl font-bold mb-4 ">
                 Đơn hàng ({cart.length} sản phẩm)
               </h2>
 
@@ -583,14 +597,17 @@ const Checkout = () => {
                     // Fallback: tìm ảnh theo colorOptionValueId
                     if (item.colorOptionValueId && item.images) {
                       const colorImage = item.images.find(
-                        img => img.product_option_value_id === item.colorOptionValueId
+                        (img) =>
+                          img.product_option_value_id ===
+                          item.colorOptionValueId
                       );
                       itemImage = colorImage?.image_url;
                     }
 
                     // Fallback: ảnh primary hoặc ảnh đầu tiên
                     if (!itemImage) {
-                      itemImage = item.images?.find((img) => img.is_primary)?.image_url ||
+                      itemImage =
+                        item.images?.find((img) => img.is_primary)?.image_url ||
                         item.images?.[0]?.image_url ||
                         "/placeholder.png";
                     }
@@ -613,13 +630,13 @@ const Checkout = () => {
                         </span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="text-xs sm:text-sm font-medium truncate font-['Maison_Neue']">
+                        <h4 className="text-xs sm:text-sm font-medium truncate ">
                           {item.name}
                         </h4>
-                        <p className="text-xs text-gray-500 font-['Maison_Neue']">
+                        <p className="text-xs text-gray-500 ">
                           {item.selectedColor} / {item.selectedSize}
                         </p>
-                        <p className="text-xs sm:text-sm font-medium mt-1 font-['Maison_Neue']">
+                        <p className="text-xs sm:text-sm font-medium mt-1 ">
                           {formatPrice(itemPrice * item.quantity)}₫
                         </p>
                       </div>
@@ -631,18 +648,18 @@ const Checkout = () => {
               {/* Pricing */}
               <div className="border-t pt-4 space-y-3">
                 <div className="flex justify-between text-xs sm:text-sm">
-                  <span className="text-gray-600 font-['Maison_Neue']">Tạm tính</span>
-                  <span className="font-medium font-['Maison_Neue']">{formatPrice(subtotal)}₫</span>
+                  <span className="text-gray-600 ">Tạm tính</span>
+                  <span className="font-medium ">{formatPrice(subtotal)}₫</span>
                 </div>
                 <div className="flex justify-between text-xs sm:text-sm">
-                  <span className="text-gray-600 font-['Maison_Neue']">Phí vận chuyển</span>
-                  <span className="font-medium font-['Maison_Neue']">
+                  <span className="text-gray-600 ">Phí vận chuyển</span>
+                  <span className="font-medium ">
                     {formatPrice(shippingFee)}₫
                   </span>
                 </div>
                 <div className="border-t pt-3 flex justify-between font-bold text-base sm:text-lg">
-                  <span className="font-['Maison_Neue']">Tổng cộng</span>
-                  <span className="text-red-600 font-['Maison_Neue']">{formatPrice(total)}₫</span>
+                  <span className="">Tổng cộng</span>
+                  <span className="text-red-600 ">{formatPrice(total)}₫</span>
                 </div>
               </div>
 
@@ -650,13 +667,13 @@ const Checkout = () => {
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className="w-full bg-black text-white py-3 mt-6 font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-['Maison_Neue'] text-sm sm:text-base"
+                className="w-full bg-black text-white py-3 mt-6 font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed  text-sm sm:text-base"
               >
                 {isSubmitting
                   ? "Đang xử lý..."
                   : paymentMethod === "vnpay"
-                    ? "Thanh toán qua VNPay"
-                    : "Đặt hàng"}
+                  ? "Thanh toán qua VNPay"
+                  : "Đặt hàng"}
               </button>
 
               <p className="text-xs text-gray-500 text-center mt-4">

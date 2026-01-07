@@ -69,6 +69,23 @@ const Login = () => {
       );
 
       if (response.success) {
+        // Check if user is admin - block admin from logging into user site
+        const userStr = localStorage.getItem("user");
+        if (userStr) {
+          try {
+            const user = JSON.parse(userStr);
+            if (user.role === "admin") {
+              await authService.logout();
+              setErrors({
+                submit: "Tài khoản admin không thể đăng nhập vào trang người dùng. Vui lòng sử dụng trang admin.",
+              });
+              return;
+            }
+          } catch (e) {
+            // Ignore parsing errors
+          }
+        }
+        
         message.success(SUCCESS_MESSAGES.LOGIN_SUCCESS);
         // Redirect to home page or previous page
         const from =

@@ -1,54 +1,103 @@
-import { Link, useLocation } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { HiOutlineBars3, HiXMark } from 'react-icons/hi2';
-import Logo from '../Logo/Logo';
-import NavActions from '../NavActions/NavActions';
+import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { HiOutlineBars3, HiXMark } from "react-icons/hi2";
+import Logo from "../Logo/Logo";
+import NavActions from "../NavActions/NavActions";
 
 export default function MainNav() {
   const location = useLocation();
   const currentPath = location.pathname;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   // About section includes: /about, /stores, /factories, etc.
-  const isAboutSection = currentPath.startsWith('/about') ||
-    currentPath === '/stores' ||
-    currentPath === '/factories' ||
-    currentPath === '/environmental' ||
-    currentPath === '/carbon' ||
-    currentPath === '/impact' ||
-    currentPath === '/cleaner-fashion';
+  const isAboutSection =
+    currentPath.startsWith("/about") ||
+    currentPath === "/stores" ||
+    currentPath === "/factories" ||
+    currentPath === "/environmental" ||
+    currentPath === "/carbon" ||
+    currentPath === "/impact" ||
+    currentPath === "/cleaner-fashion";
+
+  // Breakpoints: mobile < 768px, tablet 768px-1024px, desktop > 1024px
+  const isMobile = windowWidth < 768;
+  const isTablet = windowWidth >= 768 && windowWidth < 1024;
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
+      setWindowWidth(window.innerWidth);
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (
     <>
-      <div className="grid grid-cols-3 items-center px-2 sm:px-3 md:px-6 py-2 sm:py-2.5 md:py-3 border-b border-gray-200">
-        {/* Left - Navigation Links (Always visible) */}
-        <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 lg:gap-4">
-          <Link to="/women" className={`px-1 sm:px-1.5 md:px-2 py-1.5 sm:py-2 cursor-pointer hover:opacity-70 ${currentPath === '/women' ? 'relative' : ''}`}>
-            <p className="text-[10px] sm:text-xs md:text-sm font-medium">Nữ</p>
-            {currentPath === '/women' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black" />}
-          </Link>
-          <Link to="/men" className={`px-1 sm:px-1.5 md:px-2 py-1.5 sm:py-2 cursor-pointer hover:opacity-70 ${currentPath === '/men' ? 'relative' : ''}`}>
-            <p className="text-[10px] sm:text-xs md:text-sm font-medium">Nam</p>
-            {currentPath === '/men' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black" />}
-          </Link>
-          <Link to="/about" className={`flex px-1 sm:px-1.5 md:px-2 py-1.5 sm:py-2 cursor-pointer hover:opacity-70 ${isAboutSection ? 'relative' : ''}`}>
-            <p className="text-[10px] sm:text-xs md:text-sm font-medium">Giới thiệu</p>
-            {isAboutSection && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black" />}
-          </Link>
-          <Link to="/blog" className={`flex px-1 sm:px-1.5 md:px-2 py-1.5 sm:py-2 cursor-pointer hover:opacity-70 ${currentPath === '/blog' ? 'relative' : ''}`}>
-            <p className="text-[9px] sm:text-[10px] md:text-xs font-medium whitespace-nowrap">Câu chuyện</p>
-            {currentPath === '/blog' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black" />}
-          </Link>
+      <div className="grid grid-cols-3 items-center px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 md:py-3.5 border-b border-gray-200">
+        {/* Left - Navigation Links (Hidden on mobile/tablet, visible on desktop) */}
+        <div className="flex items-center justify-start">
+          {/* Mobile/Tablet: Hamburger menu button */}
+          {isMobile || isTablet ? (
+            <button
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              aria-label="Menu"
+            >
+              <HiOutlineBars3 className="w-5 h-5 sm:w-6 sm:h-6" />
+            </button>
+          ) : (
+            // Desktop: Navigation links
+            <div className="flex items-center gap-3 lg:gap-4">
+              <Link
+                to="/women"
+                className={`px-2 py-2 cursor-pointer hover:opacity-70 ${
+                  currentPath === "/women" ? "relative" : ""
+                }`}
+              >
+                <p className="text-sm lg:text-base font-medium">Nữ</p>
+                {currentPath === "/women" && (
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black" />
+                )}
+              </Link>
+              <Link
+                to="/men"
+                className={`px-2 py-2 cursor-pointer hover:opacity-70 ${
+                  currentPath === "/men" ? "relative" : ""
+                }`}
+              >
+                <p className="text-sm lg:text-base font-medium">Nam</p>
+                {currentPath === "/men" && (
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black" />
+                )}
+              </Link>
+              <Link
+                to="/about"
+                className={`px-2 py-2 cursor-pointer hover:opacity-70 ${
+                  isAboutSection ? "relative" : ""
+                }`}
+              >
+                <p className="text-sm lg:text-base font-medium">Giới thiệu</p>
+                {isAboutSection && (
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black" />
+                )}
+              </Link>
+              <Link
+                to="/blog"
+                className={`px-2 py-2 cursor-pointer hover:opacity-70 ${
+                  currentPath === "/blog" ? "relative" : ""
+                }`}
+              >
+                <p className="text-sm lg:text-base font-medium whitespace-nowrap">
+                  Câu chuyện
+                </p>
+                {currentPath === "/blog" && (
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black" />
+                )}
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* Center Logo */}
@@ -56,45 +105,83 @@ export default function MainNav() {
           <Logo />
         </Link>
 
-        {/* Right - Actions on desktop, Hamburger on mobile */}
+        {/* Right - Actions */}
         <div className="flex justify-end items-center">
-          {!isMobile && <NavActions />}
-          {isMobile && (
-            <button
-              onClick={() => setIsMobileMenuOpen(true)}
-              className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <HiOutlineBars3 className="w-6 h-6" />
-            </button>
-          )}
+          <NavActions />
         </div>
       </div>
 
-      {/* Mobile Menu Drawer */}
+      {/* Mobile/Tablet Menu Drawer */}
       {isMobileMenuOpen && (
         <>
           {/* Overlay */}
           <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+            className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
             onClick={() => setIsMobileMenuOpen(false)}
           />
 
           {/* Menu Content */}
-          <div className="fixed top-0 left-0 h-full w-[280px] bg-white z-50 shadow-2xl flex flex-col md:hidden">
+          <div className="fixed top-0 left-0 h-full w-[280px] sm:w-[320px] bg-white z-50 shadow-2xl flex flex-col lg:hidden">
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-gray-200">
-              <h2 className="text-lg font-semibold">Menu</h2>
+            <div className="flex items-center justify-between p-4 sm:p-5 border-b border-gray-200">
+              <h2 className="text-lg sm:text-xl font-semibold">Menu</h2>
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                aria-label="Close menu"
               >
                 <HiXMark className="w-6 h-6" />
               </button>
             </div>
 
+            {/* Navigation Links in Menu */}
+            <div className="border-b border-gray-200 p-4">
+              <div className="flex flex-col space-y-1">
+                <Link
+                  to="/women"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors ${
+                    currentPath === "/women" ? "bg-gray-100 font-medium" : ""
+                  }`}
+                >
+                  <span className="text-base">Nữ</span>
+                </Link>
+                <Link
+                  to="/men"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors ${
+                    currentPath === "/men" ? "bg-gray-100 font-medium" : ""
+                  }`}
+                >
+                  <span className="text-base">Nam</span>
+                </Link>
+                <Link
+                  to="/about"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors ${
+                    isAboutSection ? "bg-gray-100 font-medium" : ""
+                  }`}
+                >
+                  <span className="text-base">Giới thiệu</span>
+                </Link>
+                <Link
+                  to="/blog"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors ${
+                    currentPath === "/blog" ? "bg-gray-100 font-medium" : ""
+                  }`}
+                >
+                  <span className="text-base">Câu chuyện</span>
+                </Link>
+              </div>
+            </div>
+
             {/* Actions in Mobile Menu */}
             <div className="flex-1 overflow-y-auto p-4">
-              <NavActions mobile onActionClick={() => setIsMobileMenuOpen(false)} />
+              <NavActions
+                mobile
+                onActionClick={() => setIsMobileMenuOpen(false)}
+              />
             </div>
           </div>
         </>

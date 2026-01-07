@@ -18,8 +18,14 @@ const authMiddleware = async (req, res, next) => {
       attributes: { exclude: ["password_hash"] },
     });
 
-    if (!user || !user.is_active) {
-      return responseError(res, "User not found or inactive", 401);
+    if (!user) {
+      return responseError(res, "User not found", 401);
+    }
+
+    // Admin không bị chặn bởi is_active check
+    // Chỉ chặn user thường nếu is_active = false
+    if (user.role !== USER_ROLES.ADMIN && !user.is_active) {
+      return responseError(res, "User account is inactive", 401);
     }
 
     req.user = user;

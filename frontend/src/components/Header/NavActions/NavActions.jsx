@@ -240,15 +240,15 @@ export default function NavActions({ mobile = false, onActionClick = () => {} })
     );
   }
 
-  // Desktop view - horizontal icons
+  // Desktop/Tablet view - horizontal icons
   return (
     <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
       <Link
         to="/search"
-        className="hover:opacity-70 transition-opacity"
+        className="hover:opacity-70 transition-opacity p-1"
         aria-label="Search"
       >
-        <HiMagnifyingGlass className="w-5 h-5 sm:w-5 sm:h-5" />
+        <HiMagnifyingGlass className="w-5 h-5 sm:w-5" />
       </Link>
 
       {isLoggedIn ? (
@@ -256,18 +256,18 @@ export default function NavActions({ mobile = false, onActionClick = () => {} })
           {/* Account dropdown */}
           <Dropdown
             menu={{ items: menuItems }}
-            trigger={["hover"]}
+            trigger={["hover", "click"]}
             placement="bottomRight"
           >
             <button
-              className="flex items-center gap-2 hover:opacity-70 transition-opacity"
+              className="flex items-center gap-1.5 sm:gap-2 hover:opacity-70 transition-opacity p-1"
               aria-label="Account"
             >
               {userAvatar ? (
                 <img
                   src={userAvatar}
                   alt={userName}
-                  className="w-8 h-8 rounded-full object-cover border border-gray-200"
+                  className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-gray-200"
                   onError={(e) => {
                     e.target.style.display = "none";
                     e.target.nextElementSibling.style.display = "block";
@@ -279,7 +279,7 @@ export default function NavActions({ mobile = false, onActionClick = () => {} })
                 style={{ display: userAvatar ? "none" : "block" }}
               />
               {userName && (
-                <span className="hidden sm:inline text-sm font-medium text-black max-w-[100px] truncate">
+                <span className="hidden md:inline text-sm font-medium text-black max-w-[100px] truncate">
                   {userName}
                 </span>
               )}
@@ -289,27 +289,27 @@ export default function NavActions({ mobile = false, onActionClick = () => {} })
           {/* Wishlist */}
           <Link
             to="/wishlist"
-            className="hover:opacity-70 transition-opacity relative"
+            className="hover:opacity-70 transition-opacity relative p-1"
             aria-label="Wishlist"
           >
             <HiOutlineHeart className="w-5 h-5" />
             {wishlistCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-[#D0021B] text-white text-xs font-[600] rounded-full w-5 h-5 flex items-center justify-center">
-                {wishlistCount}
+              <span className="absolute -top-1 -right-1 bg-[#D0021B] text-white text-[10px] font-[600] rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center">
+                {wishlistCount > 9 ? '9+' : wishlistCount}
               </span>
             )}
           </Link>
 
           {/* Shopping Cart */}
           <button
-            className="hover:opacity-70 transition-opacity relative"
+            className="hover:opacity-70 transition-opacity relative p-1"
             aria-label="Shopping Cart"
             onClick={() => setIsCartOpen(true)}
           >
             <HiShoppingCart className="w-5 h-5" />
             {cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-[#D0021B] text-white text-xs font-[600] rounded-full w-5 h-5 flex items-center justify-center">
-                {cartCount}
+              <span className="absolute -top-1 -right-1 bg-[#D0021B] text-white text-[10px] font-[600] rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center">
+                {cartCount > 9 ? '9+' : cartCount}
               </span>
             )}
           </button>
@@ -321,15 +321,15 @@ export default function NavActions({ mobile = false, onActionClick = () => {} })
             onClick={() => navigate("/login")}
             className="px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-black hover:opacity-70 transition-opacity"
           >
-            <span className="hidden sm:inline">Đăng nhập</span>
-            <HiUser className="w-5 h-5 sm:hidden" />
+            <span className="hidden md:inline">Đăng nhập</span>
+            <HiUser className="w-5 h-5 md:hidden" />
           </button>
           <button
             onClick={() => navigate("/signup")}
             className="px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium bg-black text-white hover:bg-gray-800 transition-colors rounded"
           >
-            <span className="hidden sm:inline">Đăng ký</span>
-            <span className="sm:hidden">+</span>
+            <span className="hidden md:inline">Đăng ký</span>
+            <span className="md:hidden">+</span>
           </button>
         </>
       )}

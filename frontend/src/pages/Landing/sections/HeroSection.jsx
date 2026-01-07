@@ -1,4 +1,4 @@
-import heroImage from '../../../assets/landing/hero-banner.png';
+import heroImage from "../../../assets/landing/hero-banner.png";
 
 export default function HeroSection() {
   return (
@@ -12,7 +12,6 @@ export default function HeroSection() {
 
       {/* Content */}
       <div className="relative z-10 max-w-[632px] flex flex-col items-center gap-5 sm:gap-7 ml-2 sm:ml-4 lg:ml-6">
-
         <div className="flex flex-col items-center gap-2 sm:gap-3.5 text-center text-white">
           <h1 className="text-3xl sm:text-4xl lg:text-[46px] leading-tight sm:leading-[55.2px] tracking-[0.92px] font-normal font-['Maison_Neue']">
             Phong Cách Thoải Mái
@@ -22,7 +21,6 @@ export default function HeroSection() {
             <p>với bộ sưu tập mùa đông mới nhất.</p>
           </div>
         </div>
-
 
         <button className="bg-white text-neutral-800 px-6 sm:px-0 py-2.5 sm:py-3 w-48 sm:w-60 text-xs sm:text-sm tracking-[1.4px] font-normal hover:bg-gray-100 transition-colors font-['Maison_Neue']">
           MUA NGAY

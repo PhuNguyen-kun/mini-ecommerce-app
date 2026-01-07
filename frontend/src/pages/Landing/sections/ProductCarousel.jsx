@@ -93,10 +93,10 @@ export default function ProductCarousel() {
     <section className="w-full py-12 sm:py-16 lg:py-[90px]">
       {/* Title Section */}
       <div className="px-4 sm:px-6 lg:px-10 mb-12 sm:mb-16 lg:mb-[100px]">
-        <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-normal mb-2 sm:mb-3 text-center font-['Maison_Neue']">
+        <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-normal mb-2 sm:mb-3 text-center ">
           Sản Phẩm Yêu Thích Của Bạn
         </h2>
-        <p className="text-base sm:text-lg text-gray-600 text-center font-['Maison_Neue']">
+        <p className="text-base sm:text-lg text-gray-600 text-center ">
           Đẹp. Chức năng. Thiết kế hoàn hảo.
         </p>
       </div>
@@ -149,14 +149,14 @@ export default function ProductCarousel() {
                   </div>
                   <div className="space-y-1">
                     <div className="flex justify-between items-start">
-                      <p className="text-xs sm:text-sm flex-1 group-hover:underline font-['Maison_Neue']">
+                      <p className="text-xs sm:text-sm flex-1 group-hover:underline ">
                         {product.name}
                       </p>
-                      <p className="text-xs sm:text-sm font-medium font-['Maison_Neue']">
+                      <p className="text-xs sm:text-sm font-medium ">
                         {formatPrice(minPrice)}₫
                       </p>
                     </div>
-                    {color && <p className="text-xs sm:text-sm text-gray-600 font-['Maison_Neue']">{color}</p>}
+                    {color && <p className="text-xs sm:text-sm text-gray-600 ">{color}</p>}
                   </div>
                 </Link>
               </div>

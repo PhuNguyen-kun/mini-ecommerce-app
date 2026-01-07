@@ -120,11 +120,11 @@ const OrderCard = ({ order, onCancel, onRefresh }) => {
           <div className="flex-1 w-full">
             <div className="flex items-center gap-2 sm:gap-3 mb-2">
               <FiPackage className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
-              <h3 className="text-base sm:text-lg font-semibold text-gray-900 font-['Maison_Neue']">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 ">
                 {order.order_code}
               </h3>
             </div>
-            <p className="text-xs sm:text-sm text-gray-500 font-['Maison_Neue']">
+            <p className="text-xs sm:text-sm text-gray-500 ">
               Đặt hàng lúc: {formatDate(order.created_at)}
             </p>
           </div>
@@ -138,22 +138,22 @@ const OrderCard = ({ order, onCancel, onRefresh }) => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 mb-4">
           <div>
-            <p className="text-xs sm:text-sm text-gray-500 mb-1 font-['Maison_Neue']">Phương thức thanh toán</p>
-            <p className="text-xs sm:text-sm font-medium text-gray-900 font-['Maison_Neue']">
+            <p className="text-xs sm:text-sm text-gray-500 mb-1 ">Phương thức thanh toán</p>
+            <p className="text-xs sm:text-sm font-medium text-gray-900 ">
               {order.payment_method === "COD"
                 ? "Thanh toán khi nhận hàng"
                 : "VNPay"}
             </p>
           </div>
           <div>
-            <p className="text-xs sm:text-sm text-gray-500 mb-1 font-['Maison_Neue']">Số lượng sản phẩm</p>
-            <p className="text-xs sm:text-sm font-medium text-gray-900 font-['Maison_Neue']">
+            <p className="text-xs sm:text-sm text-gray-500 mb-1 ">Số lượng sản phẩm</p>
+            <p className="text-xs sm:text-sm font-medium text-gray-900 ">
               {order.items?.length || 0} sản phẩm
             </p>
           </div>
           <div>
-            <p className="text-xs sm:text-sm text-gray-500 mb-1 font-['Maison_Neue']">Tổng tiền</p>
-            <p className="text-base sm:text-lg font-bold text-red-600 font-['Maison_Neue']">
+            <p className="text-xs sm:text-sm text-gray-500 mb-1 ">Tổng tiền</p>
+            <p className="text-base sm:text-lg font-bold text-red-600 ">
               {formatPrice(order.total_amount)}₫
             </p>
           </div>
@@ -161,20 +161,20 @@ const OrderCard = ({ order, onCancel, onRefresh }) => {
 
         <div className="border-t pt-4">
           <div className="mb-4">
-            <p className="text-xs sm:text-sm font-medium text-gray-700 mb-1 font-['Maison_Neue']">
+            <p className="text-xs sm:text-sm font-medium text-gray-700 mb-1 ">
               Địa chỉ giao hàng
             </p>
-            <p className="text-xs sm:text-sm text-gray-600 font-['Maison_Neue']">
+            <p className="text-xs sm:text-sm text-gray-600 ">
               {order.shipping_full_name} - {order.shipping_phone}
             </p>
-            <p className="text-xs sm:text-sm text-gray-600 font-['Maison_Neue']">
+            <p className="text-xs sm:text-sm text-gray-600 ">
               {order.shipping_address_line}, {order.shipping_ward},{" "}
               {order.shipping_district}, {order.shipping_province}
             </p>
           </div>
 
           <div className="mt-4 pt-4 border-t">
-            <h4 className="text-xs sm:text-sm font-semibold text-gray-900 mb-3 font-['Maison_Neue']">
+            <h4 className="text-xs sm:text-sm font-semibold text-gray-900 mb-3 ">
               Chi tiết sản phẩm
             </h4>
             <div className="space-y-3">
@@ -247,21 +247,21 @@ const OrderCard = ({ order, onCancel, onRefresh }) => {
                         }
                         className="text-left w-full"
                       >
-                        <h5 className="text-xs sm:text-sm font-medium text-gray-900 mb-1 hover:text-black transition-colors font-['Maison_Neue']">
+                        <h5 className="text-xs sm:text-sm font-medium text-gray-900 mb-1 hover:text-black transition-colors ">
                           {item.product_name_snapshot}
                         </h5>
                       </button>
                       {variantText && (
-                        <p className="text-xs text-gray-500 mb-1 font-['Maison_Neue']">
+                        <p className="text-xs text-gray-500 mb-1 ">
                           {variantText}
                         </p>
                       )}
                       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-2 gap-2">
-                        <span className="text-xs sm:text-sm text-gray-600 font-['Maison_Neue']">
+                        <span className="text-xs sm:text-sm text-gray-600 ">
                           Số lượng: {item.quantity}
                         </span>
                         <div className="flex items-center gap-2">
-                          <span className="text-xs sm:text-sm font-medium text-gray-900 font-['Maison_Neue']">
+                          <span className="text-xs sm:text-sm font-medium text-gray-900 ">
                             {formatPrice(item.subtotal)}₫
                           </span>
                           {canReview && (

@@ -48,6 +48,24 @@ function AppContent() {
     location.pathname === "/login" || location.pathname === "/signup";
   const isAdminPage = location.pathname.startsWith("/admin");
 
+  // Check if current user is admin and block from user site
+  useEffect(() => {
+    if (!isAdminPage) {
+      const userStr = localStorage.getItem("user");
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          if (user.role === "admin") {
+            // Redirect admin to admin dashboard if they try to access user site
+            window.location.href = "/admin/dashboard";
+          }
+        } catch (e) {
+          // Ignore parsing errors
+        }
+      }
+    }
+  }, [location.pathname, isAdminPage]);
+
   // Scroll to top when route changes
   useEffect(() => {
     window.scrollTo(0, 0);

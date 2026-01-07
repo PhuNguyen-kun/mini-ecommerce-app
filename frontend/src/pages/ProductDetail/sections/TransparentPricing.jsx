@@ -51,7 +51,7 @@ const TransparentPricing = () => {
             <div className="w-[58px] h-[59px] flex items-center justify-center text-4xl">
               {item.icon}
             </div>
-            <div className="text-xs text-center text-neutral-800 tracking-[0.2px] font-['Maison_Neue']">
+            <div className="text-xs text-center text-neutral-800 tracking-[0.2px] ">
               <p>{item.name}</p>
               <p>{item.price}</p>
             </div>

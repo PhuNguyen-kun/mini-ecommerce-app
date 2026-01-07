@@ -59,7 +59,7 @@ export default function CategorySection() {
   if (loading) {
     return (
       <section className="w-full px-4 sm:px-6 lg:px-10 py-12 sm:py-16 lg:py-[90px]">
-        <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-normal mb-8 sm:mb-12 lg:mb-[55px] text-center font-['Maison_Neue']">
+        <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-normal mb-8 sm:mb-12 lg:mb-[55px] text-center">
           Mua sắm theo danh mục
         </h2>
         <div className="flex gap-3 sm:gap-4 lg:gap-5 overflow-x-auto">
@@ -76,7 +76,7 @@ export default function CategorySection() {
 
   return (
     <section className="w-full px-4 sm:px-6 lg:px-10 py-12 sm:py-16 lg:py-[90px]">
-      <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-normal mb-8 sm:mb-12 lg:mb-[55px] text-center font-['Maison_Neue']">
+      <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-normal mb-8 sm:mb-12 lg:mb-[55px] text-center">
         Mua sắm theo danh mục
       </h2>
 
@@ -85,10 +85,10 @@ export default function CategorySection() {
         {/* Left Arrow */}
         <button
           onClick={scrollLeft}
-          className="hidden sm:flex w-8 h-8 sm:w-10 sm:h-10 items-center justify-center hover:bg-gray-100 transition-colors rounded-full flex-shrink-0 z-10"
+          className="hidden md:flex w-10 h-10 items-center justify-center hover:bg-gray-100 transition-colors rounded-full flex-shrink-0 z-10"
           aria-label="Scroll left"
         >
-          <HiChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+          <HiChevronLeft className="w-6 h-6" />
         </button>
 
         {/* Categories Carousel */}
@@ -109,7 +109,7 @@ export default function CategorySection() {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <p className="text-xs sm:text-sm text-center font-medium tracking-wide font-['Maison_Neue']">
+              <p className="text-xs sm:text-sm text-center font-medium tracking-wide">
                 {category.name.toUpperCase()}
               </p>
             </Link>
@@ -119,10 +119,10 @@ export default function CategorySection() {
         {/* Right Arrow */}
         <button
           onClick={scrollRight}
-          className="hidden sm:flex w-8 h-8 sm:w-10 sm:h-10 items-center justify-center hover:bg-gray-100 transition-colors rounded-full flex-shrink-0 z-10"
+          className="hidden md:flex w-10 h-10 items-center justify-center hover:bg-gray-100 transition-colors rounded-full flex-shrink-0 z-10"
           aria-label="Scroll right"
         >
-          <HiChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+          <HiChevronRight className="w-6 h-6" />
         </button>
       </div>
     </section>
