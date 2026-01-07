@@ -36,6 +36,7 @@ const signinSchema = Joi.object({
     "any.required": "Password is required",
     "string.empty": "Password is required",
   }),
+  isAdminLogin: Joi.boolean().optional().default(false),
 });
 
 const validate = (schema) => {

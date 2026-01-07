@@ -52,7 +52,7 @@ class AuthService {
 
     // Nếu login từ trang user mà là admin thì reject
     if (!isAdminLogin && user.role === USER_ROLES.ADMIN) {
-      throw new UnauthorizedError("Admin không thể đăng nhập ở trang này");
+      throw new UnauthorizedError("Tài khoản admin không thể đăng nhập vào trang người dùng. Vui lòng sử dụng trang admin.");
     }
 
     // Nếu login từ trang admin mà là user thì reject
