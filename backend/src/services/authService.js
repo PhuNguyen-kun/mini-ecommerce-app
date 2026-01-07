@@ -44,7 +44,9 @@ class AuthService {
       throw new UnauthorizedError("Invalid email or password");
     }
 
-    if (!user.is_active) {
+    // Admin không bị chặn bởi is_active check
+    // Chỉ chặn user thường nếu is_active = false
+    if (user.role !== USER_ROLES.ADMIN && !user.is_active) {
       throw new UnauthorizedError("Account is inactive");
     }
 
